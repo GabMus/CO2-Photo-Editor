@@ -1,19 +1,23 @@
 package com.gabmus.co2photoeditor;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,6 +26,7 @@ import android.widget.SeekBar;
 import android.widget.ShareActionProvider;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -40,6 +45,7 @@ public class MainActivity extends Activity {
     private DrawerLayout fxDrawer;
 
     public static int FXselected=-1;
+    public LinearLayout customViewLayout;
 
     public static Switch fxToggle;
 
@@ -62,6 +68,8 @@ public class MainActivity extends Activity {
     public static LinearLayout sst4;
     public static LinearLayout sst5;
 
+    FilterSurfaceView fsv;
+
     public static FXHandler FX = new FXHandler();
 
     ListView effectsList;
@@ -80,6 +88,15 @@ public class MainActivity extends Activity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        customViewLayout= (LinearLayout) findViewById(R.id.customViewLayout);
+
+        fsv = new FilterSurfaceView(getApplicationContext(),this);
+
+        fsv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        //setContentView(fsv);
+        customViewLayout.addView(fsv);
 
         fxToggle = (Switch) findViewById(R.id.switch1);
 
@@ -247,11 +264,20 @@ public class MainActivity extends Activity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode==RESULT_OK) {
-            Uri imgPath = data.getData();
-            imgView.setImageURI(imgPath);
+
+            //todo: implement working bitmap to gl support
+            /*String imgPath = data.getData().getPath();
+            File img = new File(imgPath);
+            BitmapFactory.Options bmpOptions = new BitmapFactory.Options();
+            Bitmap bitmap = BitmapFactory.decodeFile(img.getAbsolutePath(),bmpOptions);
+
+            bitmap = Bitmap.createBitmap(bitmap);*/
+            /*imgView.setImageURI(imgPath);
 
             abmp = (BitmapDrawable)imgView.getDrawable();
-            bmp = abmp.getBitmap();
+            bmp = abmp.getBitmap();*/
+
+            //fsv.LoadBitmap(bitmapTest);
         }
             super.onActivityResult(requestCode, resultCode, data);
     }
