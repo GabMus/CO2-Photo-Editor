@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
+
+    <!-- <item android:id="@+id/action_show_fx" android:title="@string/action_show_fx"
+        android:orderInCategory="0" android:icon="@android:drawable/ic_menu_view" android:showAsAction="always" /> -->
+
+    <item android:id="@+id/action_settings" android:title="@string/action_settings"
+        android:orderInCategory="100" android:showAsAction="never" />
+    <item android:id="@+id/action_save" android:title="@string/action_save"
+        android:orderInCategory="90" android:icon="@android:drawable/ic_menu_save" android:showAsAction="always" />
+    <item android:id="@+id/action_selectpic" android:title="@string/action_selectpic"
+        android:orderInCategory="80" android:icon="@android:drawable/ic_menu_edit" android:showAsAction="always" />
+
+    <!-- <item android:id="@+id/action_restore_originals" android:title="@string/action_restore_originals"
+        android:orderInCategory="93" android:icon="@android:drawable/ic_menu_revert" android:showAsAction="always" /> -->
+
+    <item android:id="@+id/menu_item_share" android:showAsAction="ifRoom"
+        android:orderInCategory="95"
+        android:title="@string/action_share"
+        android:actionProviderClass="android.widget.ShareActionProvider" />
+</menu>

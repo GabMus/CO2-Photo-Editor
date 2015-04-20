@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">CO₂</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="action_save">Save</string>
+    <string name="action_selectpic">Select picture to edit</string>
+    <string name="action_share">Share</string>
+    <string name="effect_title_textview">No effect selected</string>
+    <string name="action_restore_originals">Restore original values</string>
+    <string name="action_show_fx">Show effects</string>
+
+</resources>
