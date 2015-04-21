@@ -47,9 +47,9 @@ public class RenderTarget2D
         catch(Exception e){ }
     }
 
-    public static void SetDefault(int w, int h)
+    public static void SetDefault(int x, int y, int w, int h)
     {
-        GLES20.glViewport(0, 0, w, h);
+        GLES20.glViewport(x, y, w, h);
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
 
         GLES20.glClearColor(.0f, .0f, .0f, 1.0f);
