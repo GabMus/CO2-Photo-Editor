@@ -1,23 +1,23 @@
 package com.gabmus.co2photoeditor;
+import android.app.Activity;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.opengl.GLES20;
+import android.opengl.GLSurfaceView;
+import android.opengl.GLUtils;
 
-        import android.app.Activity;
-        import android.content.Context;
-        import android.graphics.Bitmap;
-        import android.graphics.BitmapFactory;
-        import android.graphics.Canvas;
-        import android.graphics.Color;
-        import android.graphics.Paint;
-        import android.opengl.GLES20;
-        import android.opengl.GLSurfaceView;
-        import android.opengl.GLUtils;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+import java.nio.ShortBuffer;
 
-        import java.nio.ByteBuffer;
-        import java.nio.ByteOrder;
-        import java.nio.FloatBuffer;
-        import java.nio.ShortBuffer;
-
-        import javax.microedition.khronos.opengles.GL10;
-        import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.khronos.egl.EGLConfig;
 
 class FilterSurfaceView extends GLSurfaceView
 {
@@ -36,18 +36,30 @@ class FilterSurfaceView extends GLSurfaceView
 
     public Bitmap toLoad = null;
 
+
+    public boolean IsUsedBitmap()
+    {
+        return !default_b;
+    }
+    private boolean startup = true;
+    private boolean default_b = true;
     public void LoadBitmap(Bitmap bmp)
     {
+        if (!startup && default_b) default_b = false;
+        startup = false;
+        if (default_b)
         toLoad = bmp;
         renderer.BOOL_LoadTexture = true;
     }
     public void LoadTexture(Bitmap bmp)
     {
+        renderer.ImageHeigth = bmp.getHeight();
+        renderer.ImageWidth = bmp.getWidth();
         renderer.hToFilterTexture = loadTexture(bmp);
         if (renderer.target1 != null)
-            renderer.target1.Release();
+        renderer.target1.Release();
         if (renderer.target2 != null)
-            renderer.target2.Release();
+        renderer.target2.Release();
         renderer.target1 = new RenderTarget2D(bmp.getWidth(), bmp.getHeight());
         renderer.target2 = new RenderTarget2D(bmp.getWidth(), bmp.getHeight());
     }
@@ -101,18 +113,44 @@ class FilterSurfaceView extends GLSurfaceView
 
     public Bitmap generateTestBitmap()
     {
-        int width = 600;
-        int height = 800;
+        int width = getWidth();
+        int height = getHeight();
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        bitmap.setPixel(10, 10, 0xFFFFFFFF);
+        Canvas c = new Canvas(bitmap);
+        Paint p = new Paint();
+        p.setColor(0x0000FFFF);
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++)
             {
-                bitmap.setPixel(x, y, 0xFFFFFFFF);
+                bitmap.setPixel(x, y, 0x9FF9F9FF);
             }
         }
+        p.setColor(0xFFFFFFFF);
+        c.drawLine(2, 52, 152, 350, p);
+        p.setColor(0xFF00FFFF);
+        p.setTextSize(15);
+        c.drawText("CASHMADAFFACCA", 300, 300, p);
+
+        //Bitmap bemp = BitmapFactory.decodeResource(getResources(), R.drawable.abc_list_selector_disabled_holo_light);
+        return bitmap;
+    }
+
+    public Bitmap generateTestBitmap2()
+    {
+        int width = 600;
+        int height = 800;
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        bitmap.setPixel(10, 10, 0xFFFFFFFF);
+        Canvas c = new Canvas(bitmap);
+        Paint p = new Paint();
+        p.setColor(0xFFFFFFFF);
+        c.drawLine(2, 52, 152, 350, p);
+        p.setColor(0xFF0FFFFF);
+        p.setTextSize(15);
+        c.drawText("CASHMADAFFACCA2", 300, 300, p);
+
         //Bitmap bemp = BitmapFactory.decodeResource(getResources(), R.drawable.abc_list_selector_disabled_holo_light);
         return bitmap;
     }
 }
-
-
