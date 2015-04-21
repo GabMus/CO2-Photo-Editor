@@ -197,7 +197,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
             drawquad();
         }
 
-        firstshit= false;
+        if (didshit) firstshit= false;
         RenderTarget2D.SetDefault();
         GLES20.glUseProgram(hShaderProgramFinalPass);
         setVSParams(hShaderProgramFinalPass);

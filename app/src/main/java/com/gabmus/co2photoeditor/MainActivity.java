@@ -68,7 +68,7 @@ public class MainActivity extends Activity {
     public static LinearLayout sst4;
     public static LinearLayout sst5;
 
-    FilterSurfaceView fsv;
+    public FilterSurfaceView fsv;
 
     public static FXHandler FX = new FXHandler();
 
@@ -206,8 +206,14 @@ public class MainActivity extends Activity {
         fxToggle.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) FX.FXList[FXselected].fxActive = true;
-                else FX.FXList[FXselected].fxActive = false;
+                if (b) {
+                    FX.FXList[FXselected].fxActive = true;
+                    fsv.renderer.PARAMS_EnableBlackAndWhite = true;
+                }
+                else {
+                    FX.FXList[FXselected].fxActive = false;
+                    fsv.renderer.PARAMS_EnableBlackAndWhite = false;
+                }
             }
 
 
@@ -266,18 +272,19 @@ public class MainActivity extends Activity {
         if (resultCode==RESULT_OK) {
 
             //todo: implement working bitmap to gl support
-            /*String imgPath = data.getData().getPath();
+            Uri imgPath = data.getData();
+            /*
             File img = new File(imgPath);
             BitmapFactory.Options bmpOptions = new BitmapFactory.Options();
             Bitmap bitmap = BitmapFactory.decodeFile(img.getAbsolutePath(),bmpOptions);
 
             bitmap = Bitmap.createBitmap(bitmap);*/
-            /*imgView.setImageURI(imgPath);
+            imgView.setImageURI(imgPath);
 
             abmp = (BitmapDrawable)imgView.getDrawable();
-            bmp = abmp.getBitmap();*/
+            bmp = abmp.getBitmap();
 
-            //fsv.LoadBitmap(bitmapTest);
+            fsv.LoadBitmap(bmp);
         }
             super.onActivityResult(requestCode, resultCode, data);
     }
