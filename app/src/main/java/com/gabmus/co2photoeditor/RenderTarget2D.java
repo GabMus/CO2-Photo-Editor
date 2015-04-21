@@ -23,7 +23,7 @@ public class RenderTarget2D
     public int GetTex() {return renderTex[0];}
     public boolean Set()
     {
-        //GLES20.glViewport(0, 0, Width, Height);
+        GLES20.glViewport(0, 0, Width, Height);
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, fb[0]);
         GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0, GLES20.GL_TEXTURE_2D, renderTex[0], 0);
         GLES20.glFramebufferRenderbuffer(GLES20.GL_FRAMEBUFFER, GLES20.GL_DEPTH_ATTACHMENT, GLES20.GL_RENDERBUFFER, depthRb[0]);
@@ -44,11 +44,12 @@ public class RenderTarget2D
             GLES20.glDeleteFramebuffers(1, fb, 0);
             GLES20.glFlush();
         }
-        catch(Exception e){}
+        catch(Exception e){ }
     }
 
-    public static void SetDefault()
+    public static void SetDefault(int w, int h)
     {
+        GLES20.glViewport(0, 0, w, h);
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
 
         GLES20.glClearColor(.0f, .0f, .0f, 1.0f);
@@ -90,6 +91,3 @@ public class RenderTarget2D
         GLES20.glFramebufferRenderbuffer(GLES20.GL_FRAMEBUFFER, GLES20.GL_DEPTH_ATTACHMENT, GLES20.GL_RENDERBUFFER, depthRb[0]);
     }
 }
-
-
-
