@@ -15,7 +15,8 @@ public class FXHandler {
             new FXData("Sepia", R.drawable.demo_icon, 0, new int[0], new String[0]),
             new FXData("Negative", R.drawable.demo_icon, 0, new int[0], new String[0]),
             new FXData("Color Correction", R.drawable.demo_icon, 3, new int [] {0,0,0}, new String[] {"Brightness", "Contrast", "Saturation"}),
-            new FXData("Vignette", R.drawable.demo_icon, 1, new int [] {0}, new String[] {"FX Strength"})
+            new FXData("Tone Mapping 1", R.drawable.demo_icon, 1, new int [] {0}, new String[] {"Exposure", "Vignetting"})
+
     };
 
     public FXHandler() {
@@ -85,7 +86,8 @@ public class FXHandler {
                 break;
             //case 2: //color correction
                 //mFsv.renderer
-
+            case 4: // Tone mapping 1
+                mFsv.renderer.PARAMS_EnableToneMapping = active;
             default:
                 Log.e("CO2 Photo Editor", "enableFX: index out of range");
                 break;
@@ -93,6 +95,7 @@ public class FXHandler {
     }
 
     public void tuneFX(int FXIndex, int valIndex, int tuningValue, FilterSurfaceView mFsv) {
+        float finalValue=0.0f;
         switch (FXIndex) {
             case 3: //color correction
                 switch (valIndex) {
@@ -110,6 +113,19 @@ public class FXHandler {
                         break;
                 }
                 break;
+            case 4: //tone mapping
+                switch (valIndex) {
+                    case 1:
+                        //edit exposure
+                        finalValue = (tuningValue/100f)*2f;
+                        mFsv.renderer.PARAMS_ToneMapping_Exposure = finalValue;
+                        break;
+                    case 2:
+                        //edit vignetting
+                        finalValue = (tuningValue/100f)*3f;
+                        mFsv.renderer.PARAMS_ToneMapping_Exposure = finalValue;
+                        break;
+                }
             //other cases
 
             default:

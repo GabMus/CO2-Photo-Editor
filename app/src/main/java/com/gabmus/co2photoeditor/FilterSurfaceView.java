@@ -47,7 +47,6 @@ class FilterSurfaceView extends GLSurfaceView
     {
         if (!startup && default_b) default_b = false;
         startup = false;
-        if (default_b)
         toLoad = bmp;
         renderer.BOOL_LoadTexture = true;
     }
