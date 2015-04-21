@@ -43,10 +43,10 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                 {
                         -1f,  1f, 0.0f,
                         -1f, -1f, 0.0f,
-                        1f, -1f, 0.0f,
-                        1f,  1f, 0.0f,
+                         1f, -1f, 0.0f,
+                         1f,  1f, 0.0f,
                         -1f,  1f, 0.0f,
-                        1f, -1f, 0.0f
+                         1f, -1f, 0.0f
                 };
         short[] indices = new short[]
                 {
@@ -69,8 +69,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
         VB = bVB.asFloatBuffer();
         IB = bIB.asShortBuffer();
         TC = bTC.asFloatBuffer();
-        VB.put(vertices);
-        VB.position(0);
+        VB.put(vertices); VB.position(0);
         IB.put(indices); IB.position(0);
         TC.put(texCoords); TC.position(0);
         loadShaders();
@@ -104,22 +103,22 @@ public class FilterRenderer implements GLSurfaceView.Renderer
         //BASE SHADER
         String baseshader_FS =
                 "precision mediump float;" +
-                        "varying vec2 UV;" +
-                        "void main() {" +
-                        "  gl_FragColor = vec4(UV.x, UV.y, 0, 1);" +
-                        "}";
+                "varying vec2 UV;" +
+                "void main() {" +
+                "  gl_FragColor = vec4(UV.x, UV.y, 0, 1);" +
+                "}";
         hShaderProgramBase = createprogram(baseshader_FS);
 
         //Black & White
         String bandw_FS =
                 "precision mediump float;" +
-                        "uniform sampler2D filteredPhoto;" +
-                        "varying vec2 UV;" +
-                        "void main() {" +
-                        "  vec4 col = texture2D(filteredPhoto, UV);" +
-                        "  float gravg = (col.r + col.g + col.b) / 3.0f;" +
-                        "  gl_FragColor = vec4(gravg, gravg, gravg, 1);" +
-                        "}";
+                "uniform sampler2D filteredPhoto;" +
+                "varying vec2 UV;" +
+                "void main() {" +
+                "  vec4 col = texture2D(filteredPhoto, UV);" +
+                "  float gravg = (col.r + col.g + col.b) / 3.0f;" +
+                "  gl_FragColor = vec4(gravg, gravg, gravg, 1);" +
+                "}";
         hShaderProgramBlackAndWhite = createprogram(generalreverseVS, bandw_FS);
 
 
@@ -130,9 +129,9 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "varying vec2 UV;" +
                         "void main() {" +
                         "  vec4 color = texture2D(filteredPhoto, UV);" +
-                        "  gl_FragColor.r = (color.r * 0.393f) + (color.g * 0.769f) + (color.b * 0.189f);" +
-                        "  gl_FragColor.g = (color.r * 0.349f) + (color.g * 0.686f) + (color.b * 0.168f);" +
-                        "  gl_FragColor.b = (color.r * 0.272f) + (color.g * 0.534f) + (color.b * 0.131f);" +
+                        "  gl_FragColor.r = dot(color, vec3(.393, .769, .189));" +
+                        "  gl_FragColor.g = dot(color, vec3(.349, .686, .168));" +
+                        "  gl_FragColor.b = dot(color, vec3(.272, .534, .131));" +
                         "  gl_FragColor.a = 1;" +
                         "}";
         //hShaderProgramSepia = createprogram(generalreverseVS, sepia_FS);
@@ -166,7 +165,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
         GLES20.glCompileShader(shader);
         ERROR = GLES20.glGetShaderInfoLog(shader);
         if (ERROR.length() > 0)
-            throw(new RuntimeException(ERROR));
+        throw(new RuntimeException(ERROR));
         return shader;
     }
 
@@ -175,7 +174,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
         if (BOOL_LoadTexture) {
 
             if (fsv.toLoad != null)
-                fsv.LoadTexture(fsv.toLoad);
+        fsv.LoadTexture(fsv.toLoad);
             BOOL_LoadTexture =false;
         }
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
@@ -197,8 +196,9 @@ public class FilterRenderer implements GLSurfaceView.Renderer
             drawquad();
         }
 
-        if (didshit) firstshit= false;
-        RenderTarget2D.SetDefault();
+        if (didshit)
+        firstshit= false;
+        RenderTarget2D.SetDefault(fsv.getWidth(), fsv.getHeight());
         GLES20.glUseProgram(hShaderProgramFinalPass);
         setVSParams(hShaderProgramFinalPass);
         int tx = GetCurTexture();
@@ -261,7 +261,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                 8, TC);
     }
 
-    public void onSurfaceChanged(GL10 unused, int width, int height)
+        public void onSurfaceChanged(GL10 unused, int width, int height)
     {
         GLES20.glViewport(0, 0, width, height);
     }
