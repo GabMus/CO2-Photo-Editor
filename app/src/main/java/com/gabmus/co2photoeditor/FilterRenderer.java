@@ -21,12 +21,15 @@ public class FilterRenderer implements GLSurfaceView.Renderer
     private int hShaderProgramSepia;
 
     public boolean PARAMS_EnableBlackAndWhite = false;
-    public boolean PARAMS_EnableSepia = false;
+    public boolean PARAMS_EnableSepia = true;
 
 
     public boolean BOOL_LoadTexture = false;
     public RenderTarget2D target1, target2;
     private FilterSurfaceView fsv;
+
+    public int ImageWidth = 0;
+    public int ImageHeigth = 0;
 
     private FloatBuffer VB;
     private ShortBuffer IB;
@@ -73,7 +76,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
         IB.put(indices); IB.position(0);
         TC.put(texCoords); TC.position(0);
         loadShaders();
-        fsv.LoadTexture(fsv.generateTestBitmap());
+        fsv.LoadBitmap(fsv.generateTestBitmap());
     }
 
 
@@ -129,12 +132,12 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "varying vec2 UV;" +
                         "void main() {" +
                         "  vec4 color = texture2D(filteredPhoto, UV);" +
-                        "  gl_FragColor.r = dot(color, vec3(.393, .769, .189));" +
-                        "  gl_FragColor.g = dot(color, vec3(.349, .686, .168));" +
-                        "  gl_FragColor.b = dot(color, vec3(.272, .534, .131));" +
-                        "  gl_FragColor.a = 1;" +
+                        "  gl_FragColor = vec4(1, 1, 1, 1);" +
+                        "  gl_FragColor.r = color.r * 0.393f + color.g * 0.769f + color.b * 0.189f;" +
+                        "  gl_FragColor.g = color.r * 0.349f + color.g * 0.686f + color.b * 0.168f;" +
+                        "  gl_FragColor.b = color.r * 0.272f + color.g * 0.534f + color.b * 0.131f;" +
                         "}";
-        //hShaderProgramSepia = createprogram(generalreverseVS, sepia_FS);
+        hShaderProgramSepia = createprogram(generalreverseVS, sepia_FS);
 
         //FINALPASS
         String finalPass_FS =
@@ -170,11 +173,41 @@ public class FilterRenderer implements GLSurfaceView.Renderer
     }
 
     private int hPos, hTex;
+    private int cmp_W, cmp_H, cmp_X, cmp_Y;
     public void onDrawFrame(GL10 unused) {
         if (BOOL_LoadTexture) {
 
             if (fsv.toLoad != null)
-        fsv.LoadTexture(fsv.toLoad);
+            {
+                fsv.LoadTexture(fsv.toLoad);
+                int scrW = fsv.getWidth();
+                int scrH = fsv.getHeight();
+                float wRat = (float)ImageWidth/(float)scrW;
+                float hRat = (float)ImageHeigth/(float)scrH;
+                boolean majW = wRat > hRat ? true : false;
+                //boolean stretchW = wRat > 1;
+                //boolean stretchH = hRat > 1;
+                //if (true)
+                //    throw(new RuntimeException("IW: " + ImageWidth + "\nIH: " + ImageHeigth + "\nwRat = " + wRat + "\nhRat = " + hRat));
+                if (majW)
+                {
+                    cmp_W = scrW; cmp_X = 0;
+                    cmp_H = (int)((float)scrH / (float)wRat);
+                    cmp_Y = (int)(((float)scrH-(float)cmp_H) / 2f);
+                    //if (true)
+                    //    throw(new RuntimeException("IW: " + ImageWidth + "\nIH: " + ImageHeigth + "\nwRat = " + wRat + "\nhRat = " + hRat + "\nX: " + cmp_X + "\nY: " + cmp_Y + "\nW: " + cmp_W + "\nH: " + cmp_H));
+                }
+                else
+                {
+                    cmp_H = scrH; cmp_Y = 0;
+                    cmp_W = (int)((float)scrW / (float)hRat);
+                    cmp_X = (int)(((float)scrW -(float)cmp_W) / 2f);
+                    //if (true)
+                    //    throw(new RuntimeException("IW: " + ImageWidth + "\nIH: " + ImageHeigth + "\nwRat = " + wRat + "\nhRat = " + hRat + "\nX: " + cmp_X + "\nY: " + cmp_Y + "\nW: " + cmp_W + "\nH: " + cmp_H));
+                }
+
+
+            }
             BOOL_LoadTexture =false;
         }
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
@@ -198,7 +231,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
 
         if (didshit)
         firstshit= false;
-        RenderTarget2D.SetDefault(fsv.getWidth(), fsv.getHeight());
+        RenderTarget2D.SetDefault(cmp_X, cmp_Y, cmp_W, cmp_H);
         GLES20.glUseProgram(hShaderProgramFinalPass);
         setVSParams(hShaderProgramFinalPass);
         int tx = GetCurTexture();
@@ -266,5 +299,4 @@ public class FilterRenderer implements GLSurfaceView.Renderer
         GLES20.glViewport(0, 0, width, height);
     }
 }
-
 
