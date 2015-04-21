@@ -133,6 +133,7 @@ public class MainActivity extends Activity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 FX.FXList[FXselected].parValues[0]=cVal;
+                FX.tuneFX(FXselected, 1, cVal, fsv);
             }
         });
 
@@ -149,6 +150,7 @@ public class MainActivity extends Activity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 FX.FXList[FXselected].parValues[1]=cVal;
+                FX.tuneFX(FXselected, 2, cVal, fsv);
             }
         });
 
@@ -165,6 +167,7 @@ public class MainActivity extends Activity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 FX.FXList[FXselected].parValues[2]=cVal;
+                FX.tuneFX(FXselected, 3, cVal, fsv);
             }
         });
 
@@ -181,6 +184,7 @@ public class MainActivity extends Activity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 FX.FXList[FXselected].parValues[3]=cVal;
+                FX.tuneFX(FXselected, 4, cVal, fsv);
             }
         });
 
@@ -197,6 +201,7 @@ public class MainActivity extends Activity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 FX.FXList[FXselected].parValues[4]=cVal;
+                FX.tuneFX(FXselected, 5, cVal, fsv);
             }
         });
 
@@ -208,11 +213,11 @@ public class MainActivity extends Activity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
                     FX.FXList[FXselected].fxActive = true;
-                    fsv.renderer.PARAMS_EnableBlackAndWhite = true;
+                    FX.enableFX(FXselected, fsv, true);
                 }
                 else {
                     FX.FXList[FXselected].fxActive = false;
-                    fsv.renderer.PARAMS_EnableBlackAndWhite = false;
+                    FX.enableFX(FXselected, fsv, false);
                 }
             }
 

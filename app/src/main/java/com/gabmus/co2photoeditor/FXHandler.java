@@ -1,6 +1,9 @@
 package com.gabmus.co2photoeditor;
 
+import android.util.Log;
 import android.view.View;
+
+import java.util.logging.Filter;
 
 /**
  * Created by gabmus on 19/04/15.
@@ -9,6 +12,7 @@ public class FXHandler {
 
     public FXData[] FXList = {
             new FXData("B&W", R.drawable.demo_icon, 0, new int[0], new String[0]),
+            new FXData("Sepia", R.drawable.demo_icon, 0, new int[0], new String[0]),
             new FXData("Negative", R.drawable.demo_icon, 0, new int[0], new String[0]),
             new FXData("Color Correction", R.drawable.demo_icon, 3, new int [] {0,0,0}, new String[] {"Brightness", "Contrast", "Saturation"}),
             new FXData("Vignette", R.drawable.demo_icon, 1, new int [] {0}, new String[] {"FX Strength"})
@@ -69,6 +73,49 @@ public class FXHandler {
             toRet[i]=FXList[i].icon;
         }
         return toRet;
+    }
+
+    public void enableFX(int index, FilterSurfaceView mFsv, boolean active) {
+        switch (index) {
+            case 0: //B&W
+                mFsv.renderer.PARAMS_EnableBlackAndWhite = active;
+                break;
+            case 1: // Sepia
+                mFsv.renderer.PARAMS_EnableSepia = active;
+                break;
+            //case 2: //color correction
+                //mFsv.renderer
+
+            default:
+                Log.e("CO2 Photo Editor", "enableFX: index out of range");
+                break;
+        }
+    }
+
+    public void tuneFX(int FXIndex, int valIndex, int tuningValue, FilterSurfaceView mFsv) {
+        switch (FXIndex) {
+            case 3: //color correction
+                switch (valIndex) {
+                    case 1:
+                        //edit brightness
+                        break;
+                    case 2:
+                        //edit contrast
+                        break;
+                    case 3:
+                        //edit saturation
+                        break;
+                    default:
+                        Log.e("CO2 Photo Editor", "tuneFX: colorCorrection: index out of range (>3)");
+                        break;
+                }
+                break;
+            //other cases
+
+            default:
+                Log.e("CO2 Photo Editor", "tuneFX: index out of range");
+                break;
+        }
     }
 
 }
