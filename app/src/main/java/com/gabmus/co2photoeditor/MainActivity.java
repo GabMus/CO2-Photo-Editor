@@ -147,10 +147,12 @@ public class MainActivity extends Activity {
         //DONE: setup seekbar methods
 
         sk1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            private int cVal=0; //current value
             @Override                                   //i=value, b=by user?
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if (b) cVal=i;
+                if (b) {
+                    FX.FXList[FXselected].parValues[0]=i;
+                    FX.tuneFX(FXselected, 1, i, fsv);
+                }
             }
 
             @Override
@@ -158,16 +160,17 @@ public class MainActivity extends Activity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                FX.FXList[FXselected].parValues[0]=cVal;
-                FX.tuneFX(FXselected, 1, cVal, fsv);
+
             }
         });
 
         sk2.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            private int cVal=0; //current value
             @Override                                   //i=value, b=by user?
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if (b) cVal=i;
+                if (b) {
+                    FX.FXList[FXselected].parValues[1]=i;
+                    FX.tuneFX(FXselected, 2, i, fsv);
+                }
             }
 
             @Override
@@ -175,16 +178,16 @@ public class MainActivity extends Activity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                FX.FXList[FXselected].parValues[1]=cVal;
-                FX.tuneFX(FXselected, 2, cVal, fsv);
             }
         });
 
         sk3.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            private int cVal=0; //current value
             @Override                                   //i=value, b=by user?
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if (b) cVal=i;
+                if (b) {
+                    FX.FXList[FXselected].parValues[2]=i;
+                    FX.tuneFX(FXselected, 3, i, fsv);
+                }
             }
 
             @Override
@@ -192,16 +195,16 @@ public class MainActivity extends Activity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                FX.FXList[FXselected].parValues[2]=cVal;
-                FX.tuneFX(FXselected, 3, cVal, fsv);
             }
         });
 
         sk4.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            private int cVal=0; //current value
             @Override                                   //i=value, b=by user?
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if (b) cVal=i;
+                if (b) {
+                    FX.FXList[FXselected].parValues[3]=i;
+                    FX.tuneFX(FXselected, 4, i, fsv);
+                }
             }
 
             @Override
@@ -209,16 +212,17 @@ public class MainActivity extends Activity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                FX.FXList[FXselected].parValues[3]=cVal;
-                FX.tuneFX(FXselected, 4, cVal, fsv);
             }
         });
 
         sk5.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            private int cVal=0; //current value
             @Override                                   //i=value, b=by user?
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if (b) cVal=i;
+                if (b) {
+
+                    FX.FXList[FXselected].parValues[4]=i;
+                    FX.tuneFX(FXselected, 5, i, fsv);
+                }
             }
 
             @Override
@@ -226,8 +230,6 @@ public class MainActivity extends Activity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                FX.FXList[FXselected].parValues[4]=cVal;
-                FX.tuneFX(FXselected, 5, cVal, fsv);
             }
         });
 

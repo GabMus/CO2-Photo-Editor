@@ -330,6 +330,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
 
         if (didshit)
         firstshit= false;
+        first=!first;
         RenderTarget2D.SetDefault(cmp_X, cmp_Y, cmp_W, cmp_H);
         GLES20.glUseProgram(hShaderProgramFinalPass);
         setVSParams(hShaderProgramFinalPass);
@@ -370,8 +371,8 @@ public class FilterRenderer implements GLSurfaceView.Renderer
     private int GetCurTexture()
     {
         if (firstshit) return hToFilterTexture[0];
-        if (first) return target2.GetTex();
-        else return target1.GetTex();
+        if (first) return target1.GetTex();
+        else return target2.GetTex();
     }
 
     private void drawquad(){        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);

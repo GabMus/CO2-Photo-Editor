@@ -15,7 +15,8 @@ public class FXHandler {
             new FXData("Sepia", R.drawable.demo_icon, 0, new int[0], new String[0]),
             new FXData("Negative", R.drawable.demo_icon, 0, new int[0], new String[0]),
             new FXData("Color Correction", R.drawable.demo_icon, 3, new int [] {0,0,0}, new String[] {"Brightness", "Contrast", "Saturation"}),
-            new FXData("Tone Mapping 1", R.drawable.demo_icon, 1, new int [] {0}, new String[] {"Exposure", "Vignetting"})
+            new FXData("Tone Mapping 1", R.drawable.demo_icon, 2, new int [] {0,0}, new String[] {"Exposure", "Vignetting"}),
+            new FXData("CRT", R.drawable.demo_icon, 1, new int [] {0}, new String[] {"Line Width"})
 
     };
 
@@ -87,8 +88,11 @@ public class FXHandler {
             //case 2: //color correction
                 //mFsv.renderer
             case 4: // Tone mapping 1
-                //todo: there's three of these lines commented, uncomment when you get the methods implemented
-                //mFsv.renderer.PARAMS_EnableToneMapping = active;
+
+                mFsv.renderer.PARAMS_EnableToneMapping = active;
+                break;
+            case 5: //CRT
+                mFsv.renderer.PARAMS_EnableCathodeRayTube = active;
             default:
                 Log.e("CO2 Photo Editor", "enableFX: index out of range");
                 break;
@@ -119,13 +123,21 @@ public class FXHandler {
                     case 1:
                         //edit exposure
                         finalValue = (tuningValue/100f)*2f;
-                        //mFsv.renderer.PARAMS_ToneMapping_Exposure = finalValue;
+                        mFsv.renderer.PARAMS_ToneMappingExposure = finalValue;
                         break;
                     case 2:
                         //edit vignetting
                         finalValue = (tuningValue/100f)*3f;
-                        //mFsv.renderer.PARAMS_ToneMapping_Exposure = finalValue;
+                        mFsv.renderer.PARAMS_ToneMappingVignetting = finalValue;
                         break;
+                }
+
+            case 5: //crt
+                switch (valIndex) {
+                    case 1: //edit line width
+                        finalValue = (tuningValue/100f)*4;
+                        int tmpValue=(int)finalValue;
+                        mFsv.renderer.PARAMS_CathodeRayTubeLineWidth = tmpValue;
                 }
             //other cases
 
