@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -37,12 +38,13 @@ import java.util.Calendar;
 
 public class MainActivity extends Activity {
 
+    public static boolean userWelcomed = false;
     private Bitmap bmp;
     private ImageView imgView;
     private BitmapDrawable abmp;
     private Intent mShareIntent;
     private ShareActionProvider mShareActionProvider;
-    private DrawerLayout fxDrawer;
+    public static DrawerLayout fxDrawer;
 
     public static int FXselected=-1;
     public LinearLayout customViewLayout;
@@ -75,6 +77,8 @@ public class MainActivity extends Activity {
     ListView effectsList;
     Context context;
 
+    ActionBarDrawerToggle drawerToggle;
+
     public static void makeAllSlidersDisappear() {
         sst1.setVisibility(View.GONE);
         sst2.setVisibility(View.GONE);
@@ -89,6 +93,28 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //TODO: launch welcome activity, in that activity set userWelcomed to false
+
+
+        //DONE: insert drawer button
+        fxDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        drawerToggle = new ActionBarDrawerToggle( this, fxDrawer, R.string.drawer_open, R.string.drawer_close) {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+
+                invalidateOptionsMenu();
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+
+                invalidateOptionsMenu();
+            }
+        };
+        fxDrawer.setDrawerListener(drawerToggle);
 
         customViewLayout= (LinearLayout) findViewById(R.id.customViewLayout);
 
@@ -238,7 +264,6 @@ public class MainActivity extends Activity {
 
         imgView = (ImageView) findViewById(R.id.imageView);
 
-        fxDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
     }
 
@@ -276,7 +301,7 @@ public class MainActivity extends Activity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode==RESULT_OK) {
 
-            //todo: implement working bitmap to gl support
+            //todo: implement PROPER bitmap to gl support (without using the imgview...)
             Uri imgPath = data.getData();
             /*
             File img = new File(imgPath);
@@ -347,19 +372,19 @@ public class MainActivity extends Activity {
             return true;
         }
 
-
-        // values get restored, but sliders dont
-        /*if (id == R.id.action_restore_originals) {
-
-            FX.FXList[FXselected].parValues = FX.FXList[FXselected].parValuesDefault;
-        }*/
-
-        //for some reason it doesnt work
-        /*if (id == R.id.action_show_fx) {
-            fxDrawer.openDrawer(GravityCompat.END);
+        if (drawerToggle.onOptionsItemSelected(item)) {
             return true;
-        }*/
+        }
+
+
+
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
     }
 }

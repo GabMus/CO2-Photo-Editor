@@ -87,7 +87,8 @@ public class FXHandler {
             //case 2: //color correction
                 //mFsv.renderer
             case 4: // Tone mapping 1
-                mFsv.renderer.PARAMS_EnableToneMapping = active;
+                //todo: there's three of these lines commented, uncomment when you get the methods implemented
+                //mFsv.renderer.PARAMS_EnableToneMapping = active;
             default:
                 Log.e("CO2 Photo Editor", "enableFX: index out of range");
                 break;
@@ -118,12 +119,12 @@ public class FXHandler {
                     case 1:
                         //edit exposure
                         finalValue = (tuningValue/100f)*2f;
-                        mFsv.renderer.PARAMS_ToneMapping_Exposure = finalValue;
+                        //mFsv.renderer.PARAMS_ToneMapping_Exposure = finalValue;
                         break;
                     case 2:
                         //edit vignetting
                         finalValue = (tuningValue/100f)*3f;
-                        mFsv.renderer.PARAMS_ToneMapping_Exposure = finalValue;
+                        //mFsv.renderer.PARAMS_ToneMapping_Exposure = finalValue;
                         break;
                 }
             //other cases

@@ -68,7 +68,7 @@ public class CustomAdapter extends BaseAdapter{
 
                 MainActivity.FXselected=position;
                 MainActivity.FX.SelectFX(position);
-
+                MainActivity.fxDrawer.closeDrawers();
 
                 titleTv.setText(result[position]);
             }
