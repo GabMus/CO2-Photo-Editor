@@ -19,10 +19,19 @@ public class FilterRenderer implements GLSurfaceView.Renderer
     private int hShaderProgramFinalPass;
     private int hShaderProgramBlackAndWhite;
     private int hShaderProgramSepia;
+    private int hShaderProgramToneMapping;
+    private int hShaderProgramCathodeRayTube;
 
     public boolean PARAMS_EnableBlackAndWhite = false;
-    public boolean PARAMS_EnableSepia = true;
+    public boolean PARAMS_EnableSepia = false;
 
+    public boolean PARAMS_EnableToneMapping = false;
+    public float PARAMS_ToneMappingExposure = 2.0f;
+    public float PARAMS_ToneMappingVignetting = 1.0f;
+
+    public boolean PARAMS_EnableCathodeRayTube = true;
+    public int PARAMS_CathodeRayTubeLineWidth = 1;
+    public boolean PARAMS_CathodeRayTubeIsHorizontal = false;
 
     public boolean BOOL_LoadTexture = false;
     public RenderTarget2D target1, target2;
@@ -112,6 +121,46 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                 "}";
         hShaderProgramBase = createprogram(baseshader_FS);
 
+        //CRT
+        String crt_FS =
+                "precision mediump float;" +
+                        "uniform sampler2D filteredPhoto;" +
+                        "uniform int horizontal;\n" +
+                        "uniform int linewidth;\n" +
+                        "uniform float pixheigth;\n" +
+                        "uniform float pixwidth;\n" +
+                        "varying vec2 UV;" +
+                        "" +
+                        "" +
+                        "void main() {\n" +
+                        "vec4 c;\n" +
+                        "    float fv;\n" +
+                "    float val;\n" +
+                "    c = texture2D( filteredPhoto, UV);\n" +
+                "    if ( (UV.x  > 0.000000) ){\n" +
+                "        fv = (UV.x  / pixwidth);\n" +
+                "        if ( horizontal == 1 ){\n" +
+                "            fv = (UV.y  / pixheigth);\n" +
+                "        }\n" +
+                "        val = mod(float(fv), float(3 * linewidth));\n" +
+                        "val = val -0.008f;" +
+                "        if ( ((val >= 0.0) && (val < float(linewidth))) ){\n" +
+                "            c = vec4( c.x , 0.000000, 0.000000, 1.00000);\n" +
+                "        }\n" +
+                "        else{\n" +
+                "            if ( ((val >= float(linewidth)) && (val < float(linewidth * 2))) ){\n" +
+                "                c = vec4( 0.000000, c.y , 0.000000, 1.00000);\n" +
+                "            }\n" +
+                "            else{\n" +
+
+                "                c =  vec4(0.000000, 0.000000, c.z , 1.00000);\n" +
+                "            }\n" +
+                "        }\n" +
+                "    }\n" +
+                        "    gl_FragColor = c;\n" +
+                        "}";
+        hShaderProgramCathodeRayTube = createprogram(generalreverseVS, crt_FS);
+
         //Black & White
         String bandw_FS =
                 "precision mediump float;" +
@@ -138,6 +187,25 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "  gl_FragColor.b = color.r * 0.272f + color.g * 0.534f + color.b * 0.131f;" +
                         "}";
         hShaderProgramSepia = createprogram(generalreverseVS, sepia_FS);
+
+        //ToneMapping+
+        String tonemapping_FS =
+                "precision mediump float;" +
+                        "uniform sampler2D filteredPhoto;" +
+                        "uniform float exposure;" +
+                        "uniform float vign;" +
+                        "varying vec2 UV;" +
+                        "void main() {" +
+                        "vec4 color;\n" +
+                        "float vignette;\n" +
+                        "vec2 vtc = vec2( (UV - 0.500000));" +
+                        "color = texture2D( filteredPhoto, UV);\n" +
+                        "vignette = pow( (1.00000 - (dot( vtc, vtc) * vign)), 2.00000);\n" +
+                        "gl_FragColor = vec4(color.r * vignette, color.g * vignette, color.b * vignette, 1);" +
+                        "}";
+
+        hShaderProgramToneMapping = createprogram(generalreverseVS, tonemapping_FS);
+
 
         //FINALPASS
         String finalPass_FS =
@@ -212,6 +280,25 @@ public class FilterRenderer implements GLSurfaceView.Renderer
         }
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
+        if (PARAMS_EnableCathodeRayTube)
+        {
+            SetRenderTarget();
+            GLES20.glUseProgram(hShaderProgramCathodeRayTube);
+            setVSParams(hShaderProgramCathodeRayTube);
+            setShaderParamPhoto(hShaderProgramCathodeRayTube, GetCurTexture());
+            int pxw = GLES20.glGetUniformLocation(hShaderProgramCathodeRayTube, "pixwidth");
+            int pxh = GLES20.glGetUniformLocation(hShaderProgramCathodeRayTube, "pixheigth");
+            int hrz = GLES20.glGetUniformLocation(hShaderProgramCathodeRayTube, "horizontal");
+            int lnw = GLES20.glGetUniformLocation(hShaderProgramCathodeRayTube, "linewidth");
+            if (pxw < 0 || pxh < 0 || hrz < 0 || lnw < 0) throw(new RuntimeException("ff"));
+            //if (true) throw new RuntimeException("pxw = " + (float)(1f / (float)ImageWidth));
+            GLES20.glUniform1f(pxw, (float)(1f / (float)ImageWidth));
+            GLES20.glUniform1f(pxh, (float)(1f / (float)ImageHeigth));
+            GLES20.glUniform1i(lnw, PARAMS_CathodeRayTubeLineWidth);
+            GLES20.glUniform1i(hrz, PARAMS_CathodeRayTubeIsHorizontal ? 1 : 0);
+            drawquad();
+        }
+
         if (PARAMS_EnableBlackAndWhite)
         {
             SetRenderTarget();
@@ -226,6 +313,18 @@ public class FilterRenderer implements GLSurfaceView.Renderer
             GLES20.glUseProgram(hShaderProgramSepia);
             setVSParams(hShaderProgramSepia);
             setShaderParamPhoto(hShaderProgramSepia, GetCurTexture());
+            drawquad();
+        }
+        if (PARAMS_EnableToneMapping && (PARAMS_ToneMappingExposure != 0 || PARAMS_ToneMappingVignetting != 0))
+        {
+            SetRenderTarget();
+            GLES20.glUseProgram(hShaderProgramToneMapping);
+            setVSParams(hShaderProgramToneMapping);
+            setShaderParamPhoto(hShaderProgramToneMapping, GetCurTexture());
+            int exposure = GLES20.glGetUniformLocation(hShaderProgramToneMapping, "exposure");
+            int vign = GLES20.glGetUniformLocation(hShaderProgramToneMapping, "vign");
+            GLES20.glUniform1f(exposure, PARAMS_ToneMappingExposure);
+            GLES20.glUniform1f(vign, PARAMS_ToneMappingVignetting);
             drawquad();
         }
 
@@ -299,4 +398,3 @@ public class FilterRenderer implements GLSurfaceView.Renderer
         GLES20.glViewport(0, 0, width, height);
     }
 }
-
