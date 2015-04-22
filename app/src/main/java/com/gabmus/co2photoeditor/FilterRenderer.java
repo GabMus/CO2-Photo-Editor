@@ -15,6 +15,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 
 public class FilterRenderer implements GLSurfaceView.Renderer
 {
+
     private int hShaderProgramBase;
     private int hShaderProgramFinalPass;
     private int hShaderProgramBlackAndWhite;

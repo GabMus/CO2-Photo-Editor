@@ -27,6 +27,7 @@ class FilterSurfaceView extends GLSurfaceView
 
     public FilterSurfaceView(Context context, Activity act)
     {
+
         super(context);
         setEGLContextClientVersion(2);
         activity = act;
