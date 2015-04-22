@@ -274,7 +274,7 @@ public class MainActivity extends Activity {
 
     public String bmpToFile(Bitmap mBmp) {
         String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() +
-                "/PhysicsSketchpad";
+                "/Pictures/CO2-Photo-Editor";
         Calendar c = Calendar.getInstance();
         String savePath =  Integer.toString(c.get(Calendar.SECOND));
         File dir = new File(file_path);
@@ -338,7 +338,7 @@ public class MainActivity extends Activity {
 
     public void setShareIntent(Intent shareIntent) {
         if (mShareActionProvider != null) {
-            String pathImgToShare=bmpToFile(bmp);
+            String pathImgToShare=bmpToFile(fsv.GetImage());
             mShareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(pathImgToShare));
             mShareActionProvider.setShareIntent(shareIntent);
         }
@@ -357,7 +357,7 @@ public class MainActivity extends Activity {
         }
 
         if (id == R.id.action_save) {
-            bmpToFile(bmp);
+            bmpToFile(fsv.GetImage());
             return true;
         }
 
