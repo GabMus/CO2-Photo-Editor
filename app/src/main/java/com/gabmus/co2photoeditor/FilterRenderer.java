@@ -341,7 +341,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
         didshit = false;
         firstshit = true;
     }
-
+    public int rtid;
     private void setShaderParamPhoto(int program, int texID)
     {
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
@@ -371,8 +371,8 @@ public class FilterRenderer implements GLSurfaceView.Renderer
     private int GetCurTexture()
     {
         if (firstshit) return hToFilterTexture[0];
-        if (first) return target1.GetTex();
-        else return target2.GetTex();
+        if (first) {rtid = 1;return target1.GetTex();}
+        else { rtid = 2;return target2.GetTex();}
     }
 
     private void drawquad(){        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);

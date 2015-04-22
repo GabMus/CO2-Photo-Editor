@@ -35,6 +35,14 @@ public class RenderTarget2D
         return true;
     }
 
+    public void pfsave()
+    {
+        GLES20.glViewport(0, 0, Width, Height);
+        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, fb[0]);
+        GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0, GLES20.GL_TEXTURE_2D, renderTex[0], 0);
+        GLES20.glFramebufferRenderbuffer(GLES20.GL_FRAMEBUFFER, GLES20.GL_DEPTH_ATTACHMENT, GLES20.GL_RENDERBUFFER, depthRb[0]);
+    }
+
     public void Release()
     {
         try

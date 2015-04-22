@@ -83,8 +83,10 @@ class FilterSurfaceView extends GLSurfaceView
         return textureHandle;
     }
 
-    public Bitmap GrabScreenshot()
+    public Bitmap GetImage()
     {
+        if (renderer.rtid == 1) renderer.target1.pfsave();
+        else if (renderer.rtid == 2) renderer.target2.pfsave();
         int screenshotSize = getWidth() * getHeight();
         ByteBuffer bb = ByteBuffer.allocateDirect(screenshotSize * 4);
         bb.order(ByteOrder.nativeOrder());
