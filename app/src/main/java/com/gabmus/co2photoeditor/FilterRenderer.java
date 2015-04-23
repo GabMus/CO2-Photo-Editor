@@ -29,6 +29,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
     private int hShaderProgramNegative;
 
 
+    public boolean PARAMS_EnableNegative = false;
     public boolean PARAMS_EnableBlackAndWhite = false;
     public boolean PARAMS_EnableSepia = false;
 
@@ -442,7 +443,14 @@ public class FilterRenderer implements GLSurfaceView.Renderer
             GLES20.glUniform1i(hrz, PARAMS_CathodeRayTubeIsHorizontal ? 1 : 0);
             drawquad();
         }
-
+        if (PARAMS_EnableNegative)
+        {
+            SetRenderTarget();
+            GLES20.glUseProgram(hShaderProgramNegative);
+            setVSParams(hShaderProgramNegative);
+            setShaderParamPhoto(hShaderProgramNegative, GetCurTexture());
+            drawquad();
+        }
         if (PARAMS_EnableBlackAndWhite)
         {
             SetRenderTarget();
