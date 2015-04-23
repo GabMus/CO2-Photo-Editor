@@ -10,6 +10,7 @@ import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.security.Timestamp;
 import java.sql.Time;
+import java.util.Random;
 
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.egl.EGLConfig;
@@ -44,6 +45,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
     public float PARAMS_FilmGrainParticleSize = 2.6f;
     public float PARAMS_FilmGrainLuminance = 1f;
     public float PARAMS_FilmGrainColorAmount = 0.0f;
+    public float PARAMS_FilmGrainSeed = 0.0f;
 
     public boolean BOOL_LoadTexture = false;
     public RenderTarget2D target1, target2;
@@ -172,6 +174,17 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "    gl_FragColor = c;\n" +
                         "}";
         hShaderProgramCathodeRayTube = createprogram(generalreverseVS, crt_FS);
+
+        //NEGATIVE
+        String neg_FS =
+                "precision mediump float;" +
+                        "uniform sampler2D filteredPhoto;" +
+                        "varying vec2 UV;" +
+                        "void main() {" +
+                        "  vec4 col = texture2D(filteredPhoto, UV);" +
+                        "  gl_FragColor = vec4(1.0 - col.r, 1.0 - col.g, 1.0 - col.b, 1);" +
+                        "}";
+        hShaderProgramNegative = createprogram(generalreverseVS, neg_FS);
 
         //Black & White
         String bandw_FS =
@@ -479,7 +492,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
             GLES20.glUniform1f(gs, PARAMS_FilmGrainParticleSize);
             GLES20.glUniform1f(la, PARAMS_FilmGrainLuminance);
             GLES20.glUniform1f(ca,PARAMS_FilmGrainColorAmount );
-            GLES20.glUniform1f(t, 2);
+            GLES20.glUniform1f(t, PARAMS_FilmGrainSeed);
             drawquad();
         }
 
@@ -496,6 +509,16 @@ public class FilterRenderer implements GLSurfaceView.Renderer
         didshit = false;
         firstshit = true;
     }
+
+    public void setPARAMS_FilmGrainSeed(float v)
+    {
+        Random r = new Random();
+        v*= 10;
+        float a = (float)(r.nextInt(10) - 1);
+        v+=a;
+        PARAMS_FilmGrainSeed = v;
+    }
+
     public int rtid;
     private void setShaderParamPhoto(int program, int texID)
     {
