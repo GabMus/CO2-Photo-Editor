@@ -243,7 +243,6 @@ public class FilterRenderer implements GLSurfaceView.Renderer
 
     private int hPos, hTex;
     private int cmp_W, cmp_H, cmp_X, cmp_Y;
-    boolean cazzo = false;
     public void onDrawFrame(GL10 unused) {
         if (BOOL_LoadTexture) {
 
@@ -256,30 +255,19 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                 float hRat = (float)ImageHeigth/(float)scrH;
                 boolean majW = wRat > hRat ? true : false;
                 float aspect = (float)(majW ? (float)ImageWidth / (float)ImageHeigth : (float)ImageHeigth / (float)ImageWidth);
-                //boolean stretchW = wRat > 1;
-                //boolean stretchH = hRat > 1;
-                //if (cazzo)
-                //    throw(new RuntimeException("IW: " + ImageWidth + "\nIH: " + ImageHeigth + "\nwRat = " + wRat + "\nhRat = " + hRat + "\nX: " + cmp_X + "\nY: " + cmp_Y + "\nW: " + cmp_W + "\nH: " + cmp_H));
-
                 if (majW)
                 {
                     cmp_W = scrW; cmp_X = 0;
                     cmp_H = (int)((float)scrW / aspect);
                     cmp_Y = (int)(((float)scrH-(float)cmp_H) / 2f);
-                    if (cazzo)
-                        throw(new RuntimeException("IW: " + ImageWidth + "\nIH: " + ImageHeigth + "\nwRat = " + wRat + "\nhRat = " + hRat + "\nX: " + cmp_X + "\nY: " + cmp_Y + "\nW: " + cmp_W + "\nH: " + cmp_H + "\nscW: " + scrW + "\nscH: " + scrH));
+                        //throw(new RuntimeException("IW: " + ImageWidth + "\nIH: " + ImageHeigth + "\nwRat = " + wRat + "\nhRat = " + hRat + "\nX: " + cmp_X + "\nY: " + cmp_Y + "\nW: " + cmp_W + "\nH: " + cmp_H + "\nscW: " + scrW + "\nscH: " + scrH));
                 }
                 else
                 {
                     cmp_H = scrH; cmp_Y = 0;
                     cmp_W = (int)((float)scrH / (float)aspect);
                     cmp_X = (int)(((float)scrW -(float)cmp_W) / 2f);
-                    if (cazzo)
-                        throw(new RuntimeException("IW: " + ImageWidth + "\nIH: " + ImageHeigth + "\nwRat = " + wRat + "\nhRat = " + hRat + "\nX: " + cmp_X + "\nY: " + cmp_Y + "\nW: " + cmp_W + "\nH: " + cmp_H + "\nscW: " + scrW + "\nscH: " + scrH));
-
                 }
-                cazzo = true;
-
             }
             BOOL_LoadTexture =false;
         }
