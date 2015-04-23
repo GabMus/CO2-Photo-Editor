@@ -264,7 +264,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                 if (majW)
                 {
                     cmp_W = scrW; cmp_X = 0;
-                    cmp_H = (int)((float)scrH / (float)aspect);
+                    cmp_H = (int)((float)scrH / aspect);
                     cmp_Y = (int)(((float)scrH-(float)cmp_H) / 2f);
                     //if (cazzo)
                     //    throw(new RuntimeException("IW: " + ImageWidth + "\nIH: " + ImageHeigth + "\nwRat = " + wRat + "\nhRat = " + hRat + "\nX: " + cmp_X + "\nY: " + cmp_Y + "\nW: " + cmp_W + "\nH: " + cmp_H + "\nscW: " + scrW + "\nscH: " + scrH));
