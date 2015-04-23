@@ -31,10 +31,10 @@ public class FilterRenderer implements GLSurfaceView.Renderer
 
 
     public boolean PARAMS_EnableProperFilmGrain = true;
-    public float PARAMS_ProperFilmGrainStrength = 0.3f;
+    public float PARAMS_ProperFilmGrainStrength = 0.8f;
     public float PARAMS_ProperFilmGrainAccentuateDarkNoisePower = 4f;
     public float PARAMS_ProperFilmGrainRandomNoiseStrength = 1.2f;
-    public float PARAMS_ProperFilmGrainRandomValue = 12;
+    public float PARAMS_ProperFilmGrainRandomValue = 0.1f;
 
     public boolean PARAMS_EnableNegative = false;
     public boolean PARAMS_EnableBlackAndWhite = false;
@@ -402,11 +402,11 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "    return (color + (((color * noise) * accentuateDarkNoise) * filmGrainStrength));\n" +
                         "}\n" +
                         "void main() {\n" +
-                        "    vec4 col = texture2D(filteredPhoto, UV);\n" +
-                        "" +
-                        "    vec3 plush = FilmGrain( vec3(col.r, col.g, col.b), UV);\n" +
+                        "    vec3 xlat_retVal = vec3(texture2D(filteredPhoto, UV));\n" +
+                        "   " +
+                        "    xlat_retVal = FilmGrain( vec3(xlat_retVal), vec2(UV));\n" +
                         "\n" +
-                        "    gl_FragColor = vec4( plush.r, plush.g, plush.b, 1.0);\n" +
+                        "    gl_FragColor = vec4( xlat_retVal, 1.0);" +
                         "}\n";
         hShaderProgramProperFilmGrain = createprogram(generalreverseVS, properFilmGrain_FS);
 
