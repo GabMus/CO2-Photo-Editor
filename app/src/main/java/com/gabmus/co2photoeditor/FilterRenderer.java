@@ -37,11 +37,11 @@ public class FilterRenderer implements GLSurfaceView.Renderer
     public int PARAMS_CathodeRayTubeLineWidth = 1;
     public boolean PARAMS_CathodeRayTubeIsHorizontal = false;
 
-    public boolean PARAMS_EnableFilmGrain = true;
-    public float PARAMS_FilmGrainAmount = 0.05f;
+    public boolean PARAMS_EnableFilmGrain = false;
+    public float PARAMS_FilmGrainAmount = 0.35f;
     public float PARAMS_FilmGrainParticleSize = 2.6f;
     public float PARAMS_FilmGrainLuminance = 1f;
-    public float PARAMS_FilmGrainColorAmount = 0f;
+    public float PARAMS_FilmGrainColorAmount = 0.0f;
 
     public boolean BOOL_LoadTexture = false;
     public RenderTarget2D target1, target2;
@@ -224,6 +224,10 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "uniform float bgl_RenderedTextureWidth; //scene sampler width\n" +
                         "uniform float bgl_RenderedTextureHeight; //scene sampler height\n" +
                         "uniform float timer;\n" +
+                        "uniform float grainamount; //grain amount\n" +
+                        "uniform float coloramount;\n" +
+                        "uniform float grainsize;\n" +
+                        "uniform float lumamount;\n" +
                         "\n" +
                         "float permTexUnit = 1.0/ 1024.0;\t\t// Perm texture texel-size\n" +
                         "float permTexUnitHalf = 0.5/1024.0;\t// Half perm texture texel-size\n" +
@@ -231,11 +235,6 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "float width = bgl_RenderedTextureWidth;\n" +
                         "float height = bgl_RenderedTextureHeight;\n" +
                         "\n" +
-                        "uniform float grainamount; //grain amount\n" +
-                        "uniform bool colored = false; //colored noise?\n" +
-                        "uniform float coloramount;\n" +
-                        "uniform float grainsize;\n" +
-                        "uniform float lumamount;\n" +
                         "varying vec2 UV;" +
                         "    \n" +
                         "//a random texture generator, but you can also use a pre-computed perturbation texture\n" +
@@ -321,7 +320,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "\tvec2 rotCoordsR = coordRot(texCoord, timer + rotOffset.x);\n" +
                         "\tvec3 noise = vec3(pnoise3D(vec3(rotCoordsR*vec2(width/grainsize,height/grainsize),0.0)));\n" +
                         "  \n" +
-                        "\tif (coloramount > 0)\n" +
+                        "\tif (coloramount > 0.0)\n" +
                         "\t{\n" +
                         "\t\tvec2 rotCoordsG = coordRot(texCoord, timer + rotOffset.y);\n" +
                         "\t\tvec2 rotCoordsB = coordRot(texCoord, timer + rotOffset.z);\n" +
