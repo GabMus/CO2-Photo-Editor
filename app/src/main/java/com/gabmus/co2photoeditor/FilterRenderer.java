@@ -8,6 +8,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
+import java.security.Timestamp;
+import java.sql.Time;
 
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.egl.EGLConfig;
@@ -22,6 +24,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
     private int hShaderProgramSepia;
     private int hShaderProgramToneMapping;
     private int hShaderProgramCathodeRayTube;
+    private int hShaderProgramFilmGrain;
 
     public boolean PARAMS_EnableBlackAndWhite = false;
     public boolean PARAMS_EnableSepia = false;
@@ -33,6 +36,12 @@ public class FilterRenderer implements GLSurfaceView.Renderer
     public boolean PARAMS_EnableCathodeRayTube = false;
     public int PARAMS_CathodeRayTubeLineWidth = 1;
     public boolean PARAMS_CathodeRayTubeIsHorizontal = false;
+
+    public boolean PARAMS_EnableFilmGrain = true;
+    public float PARAMS_FilmGrainAmount = 0.05f;
+    public float PARAMS_FilmGrainParticleSize = 2.6f;
+    public float PARAMS_FilmGrainLuminance = 1f;
+    public float PARAMS_FilmGrainColorAmount = 0f;
 
     public boolean BOOL_LoadTexture = false;
     public RenderTarget2D target1, target2;
@@ -208,6 +217,134 @@ public class FilterRenderer implements GLSurfaceView.Renderer
         hShaderProgramToneMapping = createprogram(generalreverseVS, tonemapping_FS);
 
 
+        //Film Grain
+        String filmGrain_FS =
+                "precision mediump float;" +
+                        "uniform sampler2D filteredPhoto; //rendered scene sampler\n" +
+                        "uniform float bgl_RenderedTextureWidth; //scene sampler width\n" +
+                        "uniform float bgl_RenderedTextureHeight; //scene sampler height\n" +
+                        "uniform float timer;\n" +
+                        "\n" +
+                        "float permTexUnit = 1.0/ 1024.0;\t\t// Perm texture texel-size\n" +
+                        "float permTexUnitHalf = 0.5/1024.0;\t// Half perm texture texel-size\n" +
+                        "\n" +
+                        "float width = bgl_RenderedTextureWidth;\n" +
+                        "float height = bgl_RenderedTextureHeight;\n" +
+                        "\n" +
+                        "uniform float grainamount; //grain amount\n" +
+                        "uniform bool colored = false; //colored noise?\n" +
+                        "uniform float coloramount;\n" +
+                        "uniform float grainsize;\n" +
+                        "uniform float lumamount;\n" +
+                        "varying vec2 UV;" +
+                        "    \n" +
+                        "//a random texture generator, but you can also use a pre-computed perturbation texture\n" +
+                        "vec4 rnm(in vec2 tc) \n" +
+                        "{\n" +
+                        "    float noise =  sin(dot(tc + vec2(timer,timer),vec2(12.9898,78.233))) * 43758.5453;\n" +
+                        "\n" +
+                        "\tfloat noiseR =  fract(noise)*2.0-1.0;\n" +
+                        "\tfloat noiseG =  fract(noise*1.2154)*2.0-1.0; \n" +
+                        "\tfloat noiseB =  fract(noise*1.3453)*2.0-1.0;\n" +
+                        "\tfloat noiseA =  fract(noise*1.3647)*2.0-1.0;\n" +
+                        "\t\n" +
+                        "\treturn vec4(noiseR,noiseG,noiseB,noiseA);\n" +
+                        "}\n" +
+                        "\n" +
+                        "float fade(in float t) {\n" +
+                        "\treturn t*t*t*(t*(t*6.0-15.0)+10.0);\n" +
+                        "}\n" +
+                        "\n" +
+                        "float pnoise3D(in vec3 p)\n" +
+                        "{\n" +
+                        "\tvec3 pi = permTexUnit*floor(p)+permTexUnitHalf; // Integer part, scaled so +1 moves permTexUnit texel\n" +
+                        "\t// and offset 1/2 texel to sample texel centers\n" +
+                        "\tvec3 pf = fract(p);     // Fractional part for interpolation\n" +
+                        "\n" +
+                        "\t// Noise contributions from (x=0, y=0), z=0 and z=1\n" +
+                        "\tfloat perm00 = rnm(pi.xy).a ;\n" +
+                        "\tvec3  grad000 = rnm(vec2(perm00, pi.z)).rgb * 4.0 - 1.0;\n" +
+                        "\tfloat n000 = dot(grad000, pf);\n" +
+                        "\tvec3  grad001 = rnm(vec2(perm00, pi.z + permTexUnit)).rgb * 4.0 - 1.0;\n" +
+                        "\tfloat n001 = dot(grad001, pf - vec3(0.0, 0.0, 1.0));\n" +
+                        "\n" +
+                        "\t// Noise contributions from (x=0, y=1), z=0 and z=1\n" +
+                        "\tfloat perm01 = rnm(pi.xy + vec2(0.0, permTexUnit)).a ;\n" +
+                        "\tvec3  grad010 = rnm(vec2(perm01, pi.z)).rgb * 4.0 - 1.0;\n" +
+                        "\tfloat n010 = dot(grad010, pf - vec3(0.0, 1.0, 0.0));\n" +
+                        "\tvec3  grad011 = rnm(vec2(perm01, pi.z + permTexUnit)).rgb * 4.0 - 1.0;\n" +
+                        "\tfloat n011 = dot(grad011, pf - vec3(0.0, 1.0, 1.0));\n" +
+                        "\n" +
+                        "\t// Noise contributions from (x=1, y=0), z=0 and z=1\n" +
+                        "\tfloat perm10 = rnm(pi.xy + vec2(permTexUnit, 0.0)).a ;\n" +
+                        "\tvec3  grad100 = rnm(vec2(perm10, pi.z)).rgb * 4.0 - 1.0;\n" +
+                        "\tfloat n100 = dot(grad100, pf - vec3(1.0, 0.0, 0.0));\n" +
+                        "\tvec3  grad101 = rnm(vec2(perm10, pi.z + permTexUnit)).rgb * 4.0 - 1.0;\n" +
+                        "\tfloat n101 = dot(grad101, pf - vec3(1.0, 0.0, 1.0));\n" +
+                        "\n" +
+                        "\t// Noise contributions from (x=1, y=1), z=0 and z=1\n" +
+                        "\tfloat perm11 = rnm(pi.xy + vec2(permTexUnit, permTexUnit)).a ;\n" +
+                        "\tvec3  grad110 = rnm(vec2(perm11, pi.z)).rgb * 4.0 - 1.0;\n" +
+                        "\tfloat n110 = dot(grad110, pf - vec3(1.0, 1.0, 0.0));\n" +
+                        "\tvec3  grad111 = rnm(vec2(perm11, pi.z + permTexUnit)).rgb * 4.0 - 1.0;\n" +
+                        "\tfloat n111 = dot(grad111, pf - vec3(1.0, 1.0, 1.0));\n" +
+                        "\n" +
+                        "\t// Blend contributions along x\n" +
+                        "\tvec4 n_x = mix(vec4(n000, n001, n010, n011), vec4(n100, n101, n110, n111), fade(pf.x));\n" +
+                        "\n" +
+                        "\t// Blend contributions along y\n" +
+                        "\tvec2 n_xy = mix(n_x.xy, n_x.zw, fade(pf.y));\n" +
+                        "\n" +
+                        "\t// Blend contributions along z\n" +
+                        "\tfloat n_xyz = mix(n_xy.x, n_xy.y, fade(pf.z));\n" +
+                        "\n" +
+                        "\t// We're done, return the final noise value.\n" +
+                        "\treturn n_xyz;\n" +
+                        "}\n" +
+                        "\n" +
+                        "//2d coordinate orientation thing\n" +
+                        "vec2 coordRot(in vec2 tc, in float angle)\n" +
+                        "{\n" +
+                        "\tfloat aspect = width/height;\n" +
+                        "\tfloat rotX = ((tc.x*2.0-1.0)*aspect*cos(angle)) - ((tc.y*2.0-1.0)*sin(angle));\n" +
+                        "\tfloat rotY = ((tc.y*2.0-1.0)*cos(angle)) + ((tc.x*2.0-1.0)*aspect*sin(angle));\n" +
+                        "\trotX = ((rotX/aspect)*0.5+0.5);\n" +
+                        "\trotY = rotY*0.5+0.5;\n" +
+                        "\treturn vec2(rotX,rotY);\n" +
+                        "}\n" +
+                        "\n" +
+                        "void main() \n" +
+                        "{\n" +
+                        "\tvec2 texCoord = UV;\n" +
+                        "\t\n" +
+                        "\tvec3 rotOffset = vec3(1.425,3.892,5.835); //rotation offset values\t\n" +
+                        "\tvec2 rotCoordsR = coordRot(texCoord, timer + rotOffset.x);\n" +
+                        "\tvec3 noise = vec3(pnoise3D(vec3(rotCoordsR*vec2(width/grainsize,height/grainsize),0.0)));\n" +
+                        "  \n" +
+                        "\tif (coloramount > 0)\n" +
+                        "\t{\n" +
+                        "\t\tvec2 rotCoordsG = coordRot(texCoord, timer + rotOffset.y);\n" +
+                        "\t\tvec2 rotCoordsB = coordRot(texCoord, timer + rotOffset.z);\n" +
+                        "\t\tnoise.g = mix(noise.r,pnoise3D(vec3(rotCoordsG*vec2(width/grainsize,height/grainsize),1.0)),coloramount);\n" +
+                        "\t\tnoise.b = mix(noise.r,pnoise3D(vec3(rotCoordsB*vec2(width/grainsize,height/grainsize),2.0)),coloramount);\n" +
+                        "\t}\n" +
+                        "\n" +
+                        "\tvec3 col = texture2D(filteredPhoto, texCoord).rgb;\n" +
+                        "\n" +
+                        "\t//noisiness response curve based on scene luminance\n" +
+                        "\tvec3 lumcoeff = vec3(0.299,0.587,0.114);\n" +
+                        "\tfloat luminance = mix(0.0,dot(col, lumcoeff),lumamount);\n" +
+                        "\tfloat lum = smoothstep(0.2,0.0,luminance);\n" +
+                        "\tlum += luminance;\n" +
+                        "\t\n" +
+                        "\t\n" +
+                        "\tnoise = mix(noise,vec3(0.0),pow(lum,4.0));\n" +
+                        "\tcol = col+noise*grainamount;\n" +
+                        "   \n" +
+                        "\tgl_FragColor =  vec4(col,1.0);\n" +
+                        "}";
+        hShaderProgramFilmGrain = createprogram(generalreverseVS, filmGrain_FS);
+
         //FINALPASS
         String finalPass_FS =
                 "precision mediump float;" +
@@ -318,6 +455,30 @@ public class FilterRenderer implements GLSurfaceView.Renderer
             int vign = GLES20.glGetUniformLocation(hShaderProgramToneMapping, "vign");
             GLES20.glUniform1f(exposure, PARAMS_ToneMappingExposure);
             GLES20.glUniform1f(vign, PARAMS_ToneMappingVignetting);
+            drawquad();
+        }
+        if (PARAMS_EnableFilmGrain)
+        {
+            SetRenderTarget();
+            GLES20.glUseProgram(hShaderProgramFilmGrain);
+            setVSParams(hShaderProgramFilmGrain);
+            setShaderParamPhoto(hShaderProgramFilmGrain, GetCurTexture());
+            int w = GLES20.glGetUniformLocation(hShaderProgramFilmGrain, "bgl_RenderedTextureWidth");
+            int h = GLES20.glGetUniformLocation(hShaderProgramFilmGrain, "bgl_RenderedTextureHeight");
+            int t = GLES20.glGetUniformLocation(hShaderProgramFilmGrain, "timer");
+
+            int ga = GLES20.glGetUniformLocation(hShaderProgramFilmGrain, "grainamount");
+            int ca = GLES20.glGetUniformLocation(hShaderProgramFilmGrain, "coloramount");
+            int gs = GLES20.glGetUniformLocation(hShaderProgramFilmGrain, "grainsize");
+            int la = GLES20.glGetUniformLocation(hShaderProgramFilmGrain, "lumamount");
+
+            GLES20.glUniform1f(w, ImageWidth);
+            GLES20.glUniform1f(h, ImageHeigth);
+            GLES20.glUniform1f(ga, PARAMS_FilmGrainAmount);
+            GLES20.glUniform1f(gs, PARAMS_FilmGrainParticleSize);
+            GLES20.glUniform1f(la, PARAMS_FilmGrainLuminance);
+            GLES20.glUniform1f(ca,PARAMS_FilmGrainColorAmount );
+            GLES20.glUniform1f(t, 2);
             drawquad();
         }
 
