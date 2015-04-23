@@ -323,7 +323,8 @@ public class MainActivity extends Activity {
 
             abmp = (BitmapDrawable)imgView.getDrawable();
             bmp = abmp.getBitmap();
-
+            //bmp = BitmapFactory.decodeFile(imgPath.toString(), new BitmapFactory.Options());
+            //if (true) throw new RuntimeException("W" + bmp.getWidth() + "\nH" + bmp.getHeight());
             fsv.LoadBitmap(bmp);
         }
             super.onActivityResult(requestCode, resultCode, data);
