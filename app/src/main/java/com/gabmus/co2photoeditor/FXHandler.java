@@ -17,8 +17,9 @@ public class FXHandler {
             new FXData("Color Correction", R.drawable.demo_icon, 3, new int [] {0,0,0}, new String[] {"Brightness", "Contrast", "Saturation"}),
             new FXData("Tone Mapping 1", R.drawable.demo_icon, 2, new int [] {0,0}, new String[] {"Exposure", "Vignetting"}),
             new FXData("CRT", R.drawable.demo_icon, 1, new int [] {0}, new String[] {"Line Width"}),
-            new FXData("VHS Noise", R.drawable.demo_icon, 5, new int [] {0,0,0,0,0}, new String [] {"Grain Amount", "Grain Size", "Luminance Amount", "Color Amount", "Randomizer Seed"})
-            };
+            new FXData("VHS Noise", R.drawable.demo_icon, 5, new int [] {0,0,0,0,0}, new String [] {"Amount", "Size", "Luminance", "Color", "Randomizer Seed"}),
+            new FXData("Film Grain", R.drawable.demo_icon, 4, new int [] {0,0,0,0}, new String [] {"Strength", "Dark Noise Power", "Random Noise Strength", "Randomizer Seed"})
+    };
 
     public FXHandler() {
     }
@@ -97,8 +98,12 @@ public class FXHandler {
             case 5: //CRT
                 mFsv.renderer.PARAMS_EnableCathodeRayTube = active;
                 break;
-            case 6: //Film Grain
+            case 6: //VHS Noise, ex Film Grain
                 mFsv.renderer.PARAMS_EnableFilmGrain = active;
+                break;
+            case 7: //Proper Film Grain
+                mFsv.renderer.PARAMS_EnableProperFilmGrain = active;
+                break;
             default:
                 Log.e("CO2 Photo Editor", "enableFX: index out of range");
                 break;
@@ -149,7 +154,7 @@ public class FXHandler {
                 }
                 break;
 //"Grain Amount", "Grain Size", "Luminance Amount", "Color Amount"
-            case 6: //Film Grain
+            case 6: //VHS Noise, ex Film Grain
                 switch (valIndex) {
                     case 1: //Grain amount
                         finalValue = (tuningValue/100f)*1f;
@@ -173,6 +178,27 @@ public class FXHandler {
                         break;
                 }
                 break;
+
+            case 7:
+                switch (valIndex) {
+                    case 1: //Strength
+                        finalValue = (tuningValue / 100f) * 1f;
+                        mFsv.renderer.PARAMS_ProperFilmGrainStrength = finalValue;
+                        break;
+                    case 2: //Dark Noise Power
+                        finalValue = ((tuningValue / 100f) * 3f) + 1;
+                        mFsv.renderer.PARAMS_ProperFilmGrainAccentuateDarkNoisePower = finalValue;
+                        break;
+                    case 3: //Random noise strength
+                        finalValue = ((tuningValue / 100f) * 3f);
+                        mFsv.renderer.PARAMS_ProperFilmGrainRandomNoiseStrength = finalValue;
+                        break;
+                    case 4: //randomizer seed
+                        mFsv.renderer.PARAMS_ProperFilmGrainRandomValue=tuningValue;
+                        break;
+                }
+                break;
+
             //other cases
 
             default:
