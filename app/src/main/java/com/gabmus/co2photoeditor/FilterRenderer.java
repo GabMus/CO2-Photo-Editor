@@ -30,7 +30,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
     public float PARAMS_ToneMappingExposure = 2.0f;
     public float PARAMS_ToneMappingVignetting = 1.0f;
 
-    public boolean PARAMS_EnableCathodeRayTube = true;
+    public boolean PARAMS_EnableCathodeRayTube = false;
     public int PARAMS_CathodeRayTubeLineWidth = 1;
     public boolean PARAMS_CathodeRayTubeIsHorizontal = false;
 
