@@ -264,18 +264,18 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                 if (majW)
                 {
                     cmp_W = scrW; cmp_X = 0;
-                    cmp_H = (int)((float)scrH / aspect);
+                    cmp_H = (int)((float)scrW / aspect);
                     cmp_Y = (int)(((float)scrH-(float)cmp_H) / 2f);
-                    //if (cazzo)
-                    //    throw(new RuntimeException("IW: " + ImageWidth + "\nIH: " + ImageHeigth + "\nwRat = " + wRat + "\nhRat = " + hRat + "\nX: " + cmp_X + "\nY: " + cmp_Y + "\nW: " + cmp_W + "\nH: " + cmp_H + "\nscW: " + scrW + "\nscH: " + scrH));
+                    if (cazzo)
+                        throw(new RuntimeException("IW: " + ImageWidth + "\nIH: " + ImageHeigth + "\nwRat = " + wRat + "\nhRat = " + hRat + "\nX: " + cmp_X + "\nY: " + cmp_Y + "\nW: " + cmp_W + "\nH: " + cmp_H + "\nscW: " + scrW + "\nscH: " + scrH));
                 }
                 else
                 {
                     cmp_H = scrH; cmp_Y = 0;
-                    cmp_W = (int)((float)scrW / (float)aspect);
+                    cmp_W = (int)((float)scrH / (float)aspect);
                     cmp_X = (int)(((float)scrW -(float)cmp_W) / 2f);
-                    //if (cazzo)
-                    //    throw(new RuntimeException("IW: " + ImageWidth + "\nIH: " + ImageHeigth + "\nwRat = " + wRat + "\nhRat = " + hRat + "\nX: " + cmp_X + "\nY: " + cmp_Y + "\nW: " + cmp_W + "\nH: " + cmp_H + "\nscW: " + scrW + "\nscH: " + scrH));
+                    if (cazzo)
+                        throw(new RuntimeException("IW: " + ImageWidth + "\nIH: " + ImageHeigth + "\nwRat = " + wRat + "\nhRat = " + hRat + "\nX: " + cmp_X + "\nY: " + cmp_Y + "\nW: " + cmp_W + "\nH: " + cmp_H + "\nscW: " + scrW + "\nscH: " + scrH));
 
                 }
                 cazzo = true;
