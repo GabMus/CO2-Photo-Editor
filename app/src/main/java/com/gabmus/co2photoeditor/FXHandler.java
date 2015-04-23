@@ -16,9 +16,9 @@ public class FXHandler {
             new FXData("Negative", R.drawable.demo_icon, 0, new int[0], new String[0]),
             new FXData("Color Correction", R.drawable.demo_icon, 3, new int [] {0,0,0}, new String[] {"Brightness", "Contrast", "Saturation"}),
             new FXData("Tone Mapping 1", R.drawable.demo_icon, 2, new int [] {0,0}, new String[] {"Exposure", "Vignetting"}),
-            new FXData("CRT", R.drawable.demo_icon, 1, new int [] {0}, new String[] {"Line Width"})
-
-    };
+            new FXData("CRT", R.drawable.demo_icon, 1, new int [] {0}, new String[] {"Line Width"}),
+            new FXData("Film Grain", R.drawable.demo_icon, 4, new int [] {0,0,0,0}, new String [] {"Grain Amount", "Grain Size", "Luminance Amount", "Color Amount"})
+            };
 
     public FXHandler() {
     }
@@ -93,6 +93,9 @@ public class FXHandler {
                 break;
             case 5: //CRT
                 mFsv.renderer.PARAMS_EnableCathodeRayTube = active;
+                break;
+            case 6: //Film Grain
+                mFsv.renderer.PARAMS_EnableFilmGrain = active;
             default:
                 Log.e("CO2 Photo Editor", "enableFX: index out of range");
                 break;
@@ -131,6 +134,7 @@ public class FXHandler {
                         mFsv.renderer.PARAMS_ToneMappingVignetting = finalValue;
                         break;
                 }
+                break;
 
             case 5: //crt
                 switch (valIndex) {
@@ -138,7 +142,30 @@ public class FXHandler {
                         finalValue = (tuningValue/100f)*4;
                         int tmpValue=(int)finalValue;
                         mFsv.renderer.PARAMS_CathodeRayTubeLineWidth = tmpValue;
+                        break;
                 }
+                break;
+//"Grain Amount", "Grain Size", "Luminance Amount", "Color Amount"
+            case 6: //Film Grain
+                switch (valIndex) {
+                    case 1: //Grain amount
+                        finalValue = (tuningValue/100f)*1f;
+                        mFsv.renderer.PARAMS_FilmGrainAmount = finalValue;
+                        break;
+                    case 2: //grain size
+                        finalValue = ((tuningValue/100f)*3f)+1;
+                        mFsv.renderer.PARAMS_FilmGrainParticleSize = finalValue;
+                        break;
+                    case 3: //luminance amount
+                        finalValue = ((tuningValue/100f)*3f);
+                        mFsv.renderer.PARAMS_FilmGrainLuminance = finalValue;
+                        break;
+                    case 4: //color amount
+                        finalValue = (tuningValue/100f)*10f;
+                        mFsv.renderer.PARAMS_FilmGrainColorAmount = finalValue;
+                        break;
+                }
+                break;
             //other cases
 
             default:
