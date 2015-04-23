@@ -300,6 +300,8 @@
             android:choiceMode="singleChoice"
             android:id="@+id/listView"
             android:background="#111"
+            android:dividerHeight="1dp"
+            android:divider="#11ffffff"
             />
 
 </android.support.v4.widget.DrawerLayout>

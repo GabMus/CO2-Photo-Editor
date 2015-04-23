@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -89,11 +91,11 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //TODO: launch welcome activity, in that activity set userWelcomed to false
+        //DONE: launch welcome activity
+        //welcomeUser(); //TODO: fix welcome activity
 
 
         //DONE: insert drawer button
@@ -269,18 +271,24 @@ public class MainActivity extends Activity {
 
     }
 
-
+    private void welcomeUser() {
+        if (!Boolean.parseBoolean(PreferenceManager.getDefaultSharedPreferences(this).getString("pref_user_welcomed", "false"))) {
+            Intent i = new Intent(this, WelcomeActivity.class);
+            startActivity(i);
+        }
+    }
 
 
     public String bmpToFile(Bitmap mBmp) {
         String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() +
-                "/Pictures/CO2-Photo-Editor";
+                "/"+PreferenceManager.getDefaultSharedPreferences(this).getString("pref_save_path_key", getString(R.string.pref_save_path_default));
+        String preferredFormat = "jpg";
         Calendar c = Calendar.getInstance();
         String savePath =  Integer.toString(c.get(Calendar.SECOND));
         File dir = new File(file_path);
         if(!dir.exists())
             dir.mkdirs();
-        File file = new File(dir,savePath+".png");
+        File file = new File(dir,savePath+"."+preferredFormat);
         FileOutputStream fOut = null;
         try {
             fOut = new FileOutputStream(file);
@@ -353,6 +361,8 @@ public class MainActivity extends Activity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent i = new Intent(this, SettingsActivity.class);
+            startActivity(i);
             return true;
         }
 
@@ -377,6 +387,7 @@ public class MainActivity extends Activity {
         if (drawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
+
 
 
 

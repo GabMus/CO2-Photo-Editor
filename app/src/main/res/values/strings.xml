@@ -12,4 +12,30 @@
     <string name="drawer_open">Drawer open</string>
     <string name="drawer_close">Drawer close</string>
 
+    <string name="pref_save_path">Saved pictures folder</string>
+    <string name="pref_save_path_description">Choose where CO₂ should save your edited photos</string>
+    <string name="pref_save_path_default">Pictures/CO2-Photo-Editor</string>
+
+    <string name="button_next">Next</string>
+    <string name="button_back">Back</string>
+    
+    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_welcome">Welcome</string>
+
+    <string name="hello_world">Hello world!</string>
+
+
+<!--
+    <string name="pref_save_format">Picture format</string>
+    <string name="pref_save_format_default">1</string>
+    <string-array name="img_formats">
+        <item name="jpg">jpg</item>
+        <item name="png">png</item>
+    </string-array>
+
+    <string-array name="img_formats_values">
+        <item name="jpg">1</item>
+        <item name="png">2</item>
+    </string-array>
+    -->
 </resources>
