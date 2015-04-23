@@ -17,7 +17,7 @@ public class FXHandler {
             new FXData("Color Correction", R.drawable.demo_icon, 3, new int [] {0,0,0}, new String[] {"Brightness", "Contrast", "Saturation"}),
             new FXData("Tone Mapping 1", R.drawable.demo_icon, 2, new int [] {0,0}, new String[] {"Exposure", "Vignetting"}),
             new FXData("CRT", R.drawable.demo_icon, 1, new int [] {0}, new String[] {"Line Width"}),
-            new FXData("Film Grain", R.drawable.demo_icon, 5, new int [] {0,0,0,0,0}, new String [] {"Grain Amount", "Grain Size", "Luminance Amount", "Color Amount", "Randomizer Seed"})
+            new FXData("VHS Noise", R.drawable.demo_icon, 5, new int [] {0,0,0,0,0}, new String [] {"Grain Amount", "Grain Size", "Luminance Amount", "Color Amount", "Randomizer Seed"})
             };
 
     public FXHandler() {
