@@ -25,6 +25,8 @@ public class FilterRenderer implements GLSurfaceView.Renderer
     private int hShaderProgramToneMapping;
     private int hShaderProgramCathodeRayTube;
     private int hShaderProgramFilmGrain;
+    private int hShaderProgramNegative;
+
 
     public boolean PARAMS_EnableBlackAndWhite = false;
     public boolean PARAMS_EnableSepia = false;
