@@ -26,8 +26,15 @@ public class FilterRenderer implements GLSurfaceView.Renderer
     private int hShaderProgramToneMapping;
     private int hShaderProgramCathodeRayTube;
     private int hShaderProgramFilmGrain;
+    private int hShaderProgramProperFilmGrain;
     private int hShaderProgramNegative;
 
+
+    public boolean PARAMS_EnableProperFilmGrain = true;
+    public float PARAMS_ProperFilmGrainStrength = 0.3f;
+    public float PARAMS_ProperFilmGrainAccentuateDarkNoisePower = 4f;
+    public float PARAMS_ProperFilmGrainRandomNoiseStrength = 1.2f;
+    public float PARAMS_ProperFilmGrainRandomValue = 12;
 
     public boolean PARAMS_EnableNegative = false;
     public boolean PARAMS_EnableBlackAndWhite = false;
@@ -360,6 +367,49 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "}";
         hShaderProgramFilmGrain = createprogram(generalreverseVS, filmGrain_FS);
 
+        //Proper Film Grain
+        String properFilmGrain_FS =
+                "precision mediump float;" +
+                        "uniform sampler2D filteredPhoto;" +
+                        "uniform float accentuateDarkNoisePower;\n" +
+                        "uniform float filmGrainStrength;\n" +
+                        "uniform float randomNoiseStrength;\n" +
+                        "uniform float randomValue;\n" +
+                        "varying vec2 UV;" +
+                        "float xlat_lib_saturate( float x) {\n" +
+                        "  return clamp( x, 0.0, 1.0);\n" +
+                        "}\n" +
+                        "vec3 FilmGrain( vec3 color, vec2 uv );\n" +
+                        "\n" +
+                        "\n" +
+                        "vec3 FilmGrain( vec3 color, vec2 uv ) {\n" +
+                        "    float x;\n" +
+                        "    float dx;\n" +
+                        "    float y;\n" +
+                        "    float dy;\n" +
+                        "    float noise;\n" +
+                        "    float accentuateDarkNoise;\n" +
+                        "\n" +
+                        "    x = ((uv.x  * uv.y ) * 50000.0);\n" +
+                        "    x = mod( x, 13.0000);\n" +
+                        "    x = (x * x);\n" +
+                        "    dx = mod( x, 0.0100000);\n" +
+                        "    y = ((x * randomValue) + randomValue);\n" +
+                        "    dy = mod( y, 0.0100000);\n" +
+                        "    noise = (xlat_lib_saturate( (0.100000 + (dx * 100.000)) ) + (xlat_lib_saturate( (0.100000 + (dy * 100.000)) ) * randomNoiseStrength));\n" +
+                        "    noise = ((noise * 2.00000) - 1.00000);\n" +
+                        "    accentuateDarkNoise = pow( (1.00000 - ((color.x  + color.y  + color.z ) / 3.00000)), accentuateDarkNoisePower);\n" +
+                        "    return (color + (((color * noise) * accentuateDarkNoise) * filmGrainStrength));\n" +
+                        "}\n" +
+                        "void main() {\n" +
+                        "    vec4 col = texture2D(filteredPhoto, UV);\n" +
+                        "" +
+                        "    vec3 plush = FilmGrain( vec3(col.r, col.g, col.b), UV);\n" +
+                        "\n" +
+                        "    gl_FragColor = vec4( plush.r, plush.g, plush.b, 1.0);\n" +
+                        "}\n";
+        hShaderProgramProperFilmGrain = createprogram(generalreverseVS, properFilmGrain_FS);
+
         //FINALPASS
         String finalPass_FS =
                 "precision mediump float;" +
@@ -501,6 +551,30 @@ public class FilterRenderer implements GLSurfaceView.Renderer
             GLES20.glUniform1f(la, PARAMS_FilmGrainLuminance);
             GLES20.glUniform1f(ca,PARAMS_FilmGrainColorAmount );
             GLES20.glUniform1f(t, PARAMS_FilmGrainSeed);
+            drawquad();
+        }
+        if (PARAMS_EnableProperFilmGrain)
+        {
+            SetRenderTarget();
+            GLES20.glUseProgram(hShaderProgramProperFilmGrain);
+            setVSParams(hShaderProgramProperFilmGrain);
+            setShaderParamPhoto(hShaderProgramProperFilmGrain, GetCurTexture());
+
+            int adnp = GLES20.glGetUniformLocation(hShaderProgramProperFilmGrain, "accentuateDarkNoisePower");
+            int fgs = GLES20.glGetUniformLocation(hShaderProgramProperFilmGrain, "filmGrainStrength");
+            int rns = GLES20.glGetUniformLocation(hShaderProgramProperFilmGrain, "randomNoiseStrength");
+            int rv = GLES20.glGetUniformLocation(hShaderProgramProperFilmGrain, "randomValue");
+
+
+            //int v = 1;
+            //if (adnp < v || fgs < v || rns < v || rv < v)
+            //    throw new RuntimeException("" + adnp + " " + fgs + " " + rns + " " + rv );
+
+            GLES20.glUniform1f(adnp, PARAMS_ProperFilmGrainAccentuateDarkNoisePower);
+            GLES20.glUniform1f(fgs, PARAMS_ProperFilmGrainStrength);
+            GLES20.glUniform1f(rns, PARAMS_ProperFilmGrainRandomNoiseStrength);
+            GLES20.glUniform1f(rv,PARAMS_ProperFilmGrainRandomValue );
+
             drawquad();
         }
 
