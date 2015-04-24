@@ -1,15 +1,24 @@
 package com.gabmus.co2photoeditor;
 
 import android.app.AlertDialog;
+import android.graphics.Bitmap;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+import android.os.Environment;
+import android.preference.PreferenceManager;
+import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.security.Timestamp;
 import java.sql.Time;
+import java.util.Calendar;
 import java.util.Random;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -30,7 +39,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
     private int hShaderProgramNegative;
 
 
-    public boolean PARAMS_EnableProperFilmGrain = true;
+    public boolean PARAMS_EnableProperFilmGrain = false;
     public float PARAMS_ProperFilmGrainStrength = 0.8f;
     public float PARAMS_ProperFilmGrainAccentuateDarkNoisePower = 4f;
     public float PARAMS_ProperFilmGrainRandomNoiseStrength = 1.2f;
@@ -56,11 +65,14 @@ public class FilterRenderer implements GLSurfaceView.Renderer
     public float PARAMS_FilmGrainSeed = 0.0f;
 
     public boolean BOOL_LoadTexture = false;
-    public RenderTarget2D target1, target2;
+    public RenderTarget2D target1, target2, saveTarget;
     private FilterSurfaceView fsv;
 
     public int ImageWidth = 0;
     public int ImageHeigth = 0;
+
+    public boolean SaveImage = false;
+    public String SavePath = "";
 
     private FloatBuffer VB;
     private ShortBuffer IB;
@@ -448,35 +460,32 @@ public class FilterRenderer implements GLSurfaceView.Renderer
     public void onDrawFrame(GL10 unused) {
         if (BOOL_LoadTexture) {
 
-            if (fsv.toLoad != null)
-            {
+            if (fsv.toLoad != null) {
                 fsv.LoadTexture(fsv.toLoad);
                 int scrW = fsv.getWidth();
                 int scrH = fsv.getHeight();
-                float wRat = (float)ImageWidth/(float)scrW;
-                float hRat = (float)ImageHeigth/(float)scrH;
+                float wRat = (float) ImageWidth / (float) scrW;
+                float hRat = (float) ImageHeigth / (float) scrH;
                 boolean majW = wRat > hRat ? true : false;
-                float aspect = (float)(majW ? (float)ImageWidth / (float)ImageHeigth : (float)ImageHeigth / (float)ImageWidth);
-                if (majW)
-                {
-                    cmp_W = scrW; cmp_X = 0;
-                    cmp_H = (int)((float)scrW / aspect);
-                    cmp_Y = (int)(((float)scrH-(float)cmp_H) / 2f);
-                        //throw(new RuntimeException("IW: " + ImageWidth + "\nIH: " + ImageHeigth + "\nwRat = " + wRat + "\nhRat = " + hRat + "\nX: " + cmp_X + "\nY: " + cmp_Y + "\nW: " + cmp_W + "\nH: " + cmp_H + "\nscW: " + scrW + "\nscH: " + scrH));
-                }
-                else
-                {
-                    cmp_H = scrH; cmp_Y = 0;
-                    cmp_W = (int)((float)scrH / (float)aspect);
-                    cmp_X = (int)(((float)scrW -(float)cmp_W) / 2f);
+                float aspect = (float) (majW ? (float) ImageWidth / (float) ImageHeigth : (float) ImageHeigth / (float) ImageWidth);
+                if (majW) {
+                    cmp_W = scrW;
+                    cmp_X = 0;
+                    cmp_H = (int) ((float) scrW / aspect);
+                    cmp_Y = (int) (((float) scrH - (float) cmp_H) / 2f);
+                    //throw(new RuntimeException("IW: " + ImageWidth + "\nIH: " + ImageHeigth + "\nwRat = " + wRat + "\nhRat = " + hRat + "\nX: " + cmp_X + "\nY: " + cmp_Y + "\nW: " + cmp_W + "\nH: " + cmp_H + "\nscW: " + scrW + "\nscH: " + scrH));
+                } else {
+                    cmp_H = scrH;
+                    cmp_Y = 0;
+                    cmp_W = (int) ((float) scrH / (float) aspect);
+                    cmp_X = (int) (((float) scrW - (float) cmp_W) / 2f);
                 }
             }
-            BOOL_LoadTexture =false;
+            BOOL_LoadTexture = false;
         }
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
-        if (PARAMS_EnableCathodeRayTube)
-        {
+        if (PARAMS_EnableCathodeRayTube) {
             SetRenderTarget();
             GLES20.glUseProgram(hShaderProgramCathodeRayTube);
             setVSParams(hShaderProgramCathodeRayTube);
@@ -485,40 +494,36 @@ public class FilterRenderer implements GLSurfaceView.Renderer
             int pxh = GLES20.glGetUniformLocation(hShaderProgramCathodeRayTube, "pixheigth");
             int hrz = GLES20.glGetUniformLocation(hShaderProgramCathodeRayTube, "horizontal");
             int lnw = GLES20.glGetUniformLocation(hShaderProgramCathodeRayTube, "linewidth");
-            if (pxw < 0 || pxh < 0 || hrz < 0 || lnw < 0) throw(new RuntimeException("ff"));
+            if (pxw < 0 || pxh < 0 || hrz < 0 || lnw < 0) throw (new RuntimeException("ff"));
             //if (true) throw new RuntimeException("pxw = " + (float)(1f / (float)ImageWidth));
-            GLES20.glUniform1f(pxw, (float)(1f / (float)ImageWidth));
-            GLES20.glUniform1f(pxh, (float)(1f / (float)ImageHeigth));
+            GLES20.glUniform1f(pxw, (float) (1f / (float) ImageWidth));
+            GLES20.glUniform1f(pxh, (float) (1f / (float) ImageHeigth));
             GLES20.glUniform1i(lnw, PARAMS_CathodeRayTubeLineWidth);
             GLES20.glUniform1i(hrz, PARAMS_CathodeRayTubeIsHorizontal ? 1 : 0);
             drawquad();
         }
-        if (PARAMS_EnableNegative)
-        {
+        if (PARAMS_EnableNegative) {
             SetRenderTarget();
             GLES20.glUseProgram(hShaderProgramNegative);
             setVSParams(hShaderProgramNegative);
             setShaderParamPhoto(hShaderProgramNegative, GetCurTexture());
             drawquad();
         }
-        if (PARAMS_EnableBlackAndWhite)
-        {
+        if (PARAMS_EnableBlackAndWhite) {
             SetRenderTarget();
             GLES20.glUseProgram(hShaderProgramBlackAndWhite);
             setVSParams(hShaderProgramBlackAndWhite);
             setShaderParamPhoto(hShaderProgramBlackAndWhite, GetCurTexture());
             drawquad();
         }
-        if (PARAMS_EnableSepia)
-        {
+        if (PARAMS_EnableSepia) {
             SetRenderTarget();
             GLES20.glUseProgram(hShaderProgramSepia);
             setVSParams(hShaderProgramSepia);
             setShaderParamPhoto(hShaderProgramSepia, GetCurTexture());
             drawquad();
         }
-        if (PARAMS_EnableToneMapping && (PARAMS_ToneMappingExposure != 0 || PARAMS_ToneMappingVignetting != 0))
-        {
+        if (PARAMS_EnableToneMapping && (PARAMS_ToneMappingExposure != 0 || PARAMS_ToneMappingVignetting != 0)) {
             SetRenderTarget();
             GLES20.glUseProgram(hShaderProgramToneMapping);
             setVSParams(hShaderProgramToneMapping);
@@ -529,8 +534,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
             GLES20.glUniform1f(vign, PARAMS_ToneMappingVignetting);
             drawquad();
         }
-        if (PARAMS_EnableFilmGrain)
-        {
+        if (PARAMS_EnableFilmGrain) {
             SetRenderTarget();
             GLES20.glUseProgram(hShaderProgramFilmGrain);
             setVSParams(hShaderProgramFilmGrain);
@@ -549,12 +553,11 @@ public class FilterRenderer implements GLSurfaceView.Renderer
             GLES20.glUniform1f(ga, PARAMS_FilmGrainAmount);
             GLES20.glUniform1f(gs, PARAMS_FilmGrainParticleSize);
             GLES20.glUniform1f(la, PARAMS_FilmGrainLuminance);
-            GLES20.glUniform1f(ca,PARAMS_FilmGrainColorAmount );
+            GLES20.glUniform1f(ca, PARAMS_FilmGrainColorAmount);
             GLES20.glUniform1f(t, PARAMS_FilmGrainSeed);
             drawquad();
         }
-        if (PARAMS_EnableProperFilmGrain)
-        {
+        if (PARAMS_EnableProperFilmGrain) {
             SetRenderTarget();
             GLES20.glUseProgram(hShaderProgramProperFilmGrain);
             setVSParams(hShaderProgramProperFilmGrain);
@@ -573,21 +576,76 @@ public class FilterRenderer implements GLSurfaceView.Renderer
             GLES20.glUniform1f(adnp, PARAMS_ProperFilmGrainAccentuateDarkNoisePower);
             GLES20.glUniform1f(fgs, PARAMS_ProperFilmGrainStrength);
             GLES20.glUniform1f(rns, PARAMS_ProperFilmGrainRandomNoiseStrength);
-            GLES20.glUniform1f(rv,PARAMS_ProperFilmGrainRandomValue );
+            GLES20.glUniform1f(rv, PARAMS_ProperFilmGrainRandomValue);
 
             drawquad();
         }
 
         if (didshit)
-        firstshit= false;
-        first=!first;
+            firstshit = false;
+        first = !first;
+
+        int tx = GetCurTexture();
+
+
+
+        if (SaveImage) {
+            SaveImage = false;
+
+            saveTarget.Set();
+            GLES20.glUseProgram(hShaderProgramFinalPass);
+            setVSParams(hShaderProgramFinalPass);
+            setShaderParamPhoto(hShaderProgramFinalPass, tx);
+            drawquad();
+
+            saveTarget.pfsave();
+            int wd = saveTarget.Width;
+            int hg = saveTarget.Height;
+
+            int screenshotSize = wd * hg;
+            ByteBuffer bb = ByteBuffer.allocateDirect(screenshotSize * 4);
+            bb.order(ByteOrder.nativeOrder());
+            GLES20.glReadPixels(0, 0, wd, hg, GL10.GL_RGBA, GL10.GL_UNSIGNED_BYTE, bb);
+            int pixelsBuffer[] = new int[screenshotSize];
+            bb.asIntBuffer().get(pixelsBuffer);
+            bb = null;
+            Bitmap bitmap = Bitmap.createBitmap(wd, hg, Bitmap.Config.RGB_565);
+            bitmap.setPixels(pixelsBuffer, screenshotSize - wd, -wd, 0, 0, wd, hg);
+            pixelsBuffer = null;
+
+            short sBuffer[] = new short[screenshotSize];
+            ShortBuffer sb = ShortBuffer.wrap(sBuffer);
+            bitmap.copyPixelsToBuffer(sb);
+
+            for (int i = 0; i < screenshotSize; ++i) {
+                short v = sBuffer[i];
+                sBuffer[i] = (short) (((v & 0x1f) << 11) | (v & 0x7e0) | ((v & 0xf800) >> 11));
+            }
+            sb.rewind();
+            bitmap.copyPixelsFromBuffer(sb);
+
+
+            File file = new File(SavePath);
+            FileOutputStream fOut = null;
+            try {
+                fOut = new FileOutputStream(file);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
+                try {
+                    fOut.flush();
+                    fOut.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+        }
         RenderTarget2D.SetDefault(cmp_X, cmp_Y, cmp_W, cmp_H);
         GLES20.glUseProgram(hShaderProgramFinalPass);
         setVSParams(hShaderProgramFinalPass);
-        int tx = GetCurTexture();
         setShaderParamPhoto(hShaderProgramFinalPass, tx);
         drawquad();
-
         didshit = false;
         firstshit = true;
     }

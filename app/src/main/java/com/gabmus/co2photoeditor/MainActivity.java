@@ -278,35 +278,6 @@ public class MainActivity extends Activity {
         }
     }
 
-
-    public String bmpToFile(Bitmap mBmp) {
-        String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() +
-                "/"+PreferenceManager.getDefaultSharedPreferences(this).getString("pref_save_path_key", getString(R.string.pref_save_path_default));
-        String preferredFormat = "jpg";
-        Calendar c = Calendar.getInstance();
-        String savePath =  Integer.toString(c.get(Calendar.SECOND));
-        File dir = new File(file_path);
-        if(!dir.exists())
-            dir.mkdirs();
-        File file = new File(dir,savePath+"."+preferredFormat);
-        FileOutputStream fOut = null;
-        try {
-            fOut = new FileOutputStream(file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        mBmp.compress(Bitmap.CompressFormat.PNG, 85, fOut);
-
-        try {
-            fOut.flush();
-            fOut.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return file_path+"/"+savePath+".png";
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode==RESULT_OK) {
@@ -330,7 +301,6 @@ public class MainActivity extends Activity {
             super.onActivityResult(requestCode, resultCode, data);
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -345,10 +315,19 @@ public class MainActivity extends Activity {
         return true;
     }
 
+    public String prepareImagePath() {
+        String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() +
+                "/"+ PreferenceManager.getDefaultSharedPreferences(this).getString("pref_save_path_key", getString(R.string.pref_save_path_default));
+        String preferredFormat = "jpg";
+        String imageName =  Long.toString(System.currentTimeMillis()/1000L);
+        return file_path+"/"+imageName+"."+preferredFormat;
+    }
+
     public void setShareIntent(Intent shareIntent) {
         if (mShareActionProvider != null) {
-            String pathImgToShare=bmpToFile(fsv.GetImage());
-            mShareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(pathImgToShare));
+            String shareLocation=prepareImagePath();
+            fsv.SaveImage(shareLocation);
+            mShareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(shareLocation));
             mShareActionProvider.setShareIntent(shareIntent);
         }
     }
@@ -368,7 +347,9 @@ public class MainActivity extends Activity {
         }
 
         if (id == R.id.action_save) {
-            bmpToFile(fsv.GetImage());
+            String imgPath=prepareImagePath();
+            fsv.SaveImage(imgPath);
+            Toast.makeText(this, getString(R.string.toast_image_saved)+imgPath, Toast.LENGTH_LONG).show();
             return true;
         }
 

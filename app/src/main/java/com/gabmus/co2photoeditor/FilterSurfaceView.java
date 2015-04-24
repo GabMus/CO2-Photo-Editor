@@ -23,9 +23,9 @@ class FilterSurfaceView extends GLSurfaceView
 {
 
     public final FilterRenderer renderer;
-    public Activity activity;
+    public MainActivity activity;
 
-    public FilterSurfaceView(Context context, Activity act)
+    public FilterSurfaceView(Context context, MainActivity act)
     {
 
         super(context);
@@ -60,8 +60,11 @@ class FilterSurfaceView extends GLSurfaceView
         renderer.target1.Release();
         if (renderer.target2 != null)
         renderer.target2.Release();
+        if (renderer.saveTarget != null)
+            renderer.saveTarget.Release();
         renderer.target1 = new RenderTarget2D(bmp.getWidth(), bmp.getHeight());
         renderer.target2 = new RenderTarget2D(bmp.getWidth(), bmp.getHeight());
+        renderer.saveTarget = new RenderTarget2D(bmp.getWidth(), bmp.getHeight());
     }
 
     private int[] loadTexture(Bitmap bitmap)
@@ -84,32 +87,10 @@ class FilterSurfaceView extends GLSurfaceView
         return textureHandle;
     }
 
-    public Bitmap GetImage()
+    public void SaveImage(String location)
     {
-        if (renderer.rtid == 1) renderer.target1.pfsave();
-        else if (renderer.rtid == 2) renderer.target2.pfsave();
-        int screenshotSize = getWidth() * getHeight();
-        ByteBuffer bb = ByteBuffer.allocateDirect(screenshotSize * 4);
-        bb.order(ByteOrder.nativeOrder());
-        GLES20.glReadPixels(0, 0, getWidth(), getHeight(), GL10.GL_RGBA, GL10.GL_UNSIGNED_BYTE, bb);
-        int pixelsBuffer[] = new int[screenshotSize];
-        bb.asIntBuffer().get(pixelsBuffer);
-        bb = null;
-        Bitmap bitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.RGB_565);
-        bitmap.setPixels(pixelsBuffer, screenshotSize-getWidth(), -getWidth(), 0, 0, getWidth(), getHeight());
-        pixelsBuffer = null;
-
-        short sBuffer[] = new short[screenshotSize];
-        ShortBuffer sb = ShortBuffer.wrap(sBuffer);
-        bitmap.copyPixelsToBuffer(sb);
-
-        for (int i = 0; i < screenshotSize; ++i) {
-            short v = sBuffer[i];
-            sBuffer[i] = (short) (((v&0x1f) << 11) | (v&0x7e0) | ((v&0xf800) >> 11));
-        }
-        sb.rewind();
-        bitmap.copyPixelsFromBuffer(sb);
-        return bitmap;
+        renderer.SaveImage = true;
+        renderer.SavePath = location;
     }
 
 

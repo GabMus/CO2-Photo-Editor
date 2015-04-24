@@ -24,6 +24,8 @@
 
     <string name="hello_world">Hello world!</string>
 
+    <string name="toast_image_saved">Image saved in </string>
+
 
 <!--
     <string name="pref_save_format">Picture format</string>
