@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -41,14 +42,11 @@ import java.util.Calendar;
 public class MainActivity extends Activity {
 
     public static boolean userWelcomed = false;
-    private Bitmap bmp;
-    private ImageView imgView;
-    private BitmapDrawable abmp;
     private Intent mShareIntent;
     private ShareActionProvider mShareActionProvider;
     public static DrawerLayout fxDrawer;
 
-    public static int FXselected=-1;
+    public static int FXselected = -1;
     public LinearLayout customViewLayout;
 
     public static Switch fxToggle;
@@ -97,11 +95,10 @@ public class MainActivity extends Activity {
         //DONE: launch welcome activity
         //welcomeUser(); //TODO: fix welcome activity
 
-
         //DONE: insert drawer button
         fxDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        drawerToggle = new ActionBarDrawerToggle( this, fxDrawer, R.string.drawer_open, R.string.drawer_close) {
+        drawerToggle = new ActionBarDrawerToggle(this, fxDrawer, R.string.drawer_open, R.string.drawer_close) {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
@@ -118,9 +115,9 @@ public class MainActivity extends Activity {
         };
         fxDrawer.setDrawerListener(drawerToggle);
 
-        customViewLayout= (LinearLayout) findViewById(R.id.customViewLayout);
+        customViewLayout = (LinearLayout) findViewById(R.id.customViewLayout);
 
-        fsv = new FilterSurfaceView(getApplicationContext(),this);
+        fsv = new FilterSurfaceView(getApplicationContext(), this);
 
         fsv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         //setContentView(fsv);
@@ -128,23 +125,23 @@ public class MainActivity extends Activity {
 
         fxToggle = (Switch) findViewById(R.id.switch1);
 
-        sk1=(SeekBar) findViewById(R.id.seekBar1);
-        sk2=(SeekBar) findViewById(R.id.seekBar2);
-        sk3=(SeekBar) findViewById(R.id.seekBar3);
-        sk4=(SeekBar) findViewById(R.id.seekBar4);
-        sk5=(SeekBar) findViewById(R.id.seekBar5);
+        sk1 = (SeekBar) findViewById(R.id.seekBar1);
+        sk2 = (SeekBar) findViewById(R.id.seekBar2);
+        sk3 = (SeekBar) findViewById(R.id.seekBar3);
+        sk4 = (SeekBar) findViewById(R.id.seekBar4);
+        sk5 = (SeekBar) findViewById(R.id.seekBar5);
 
-        slb1=(TextView) findViewById(R.id.sliderLabel1);
-        slb2=(TextView) findViewById(R.id.sliderLabel2);
-        slb3=(TextView) findViewById(R.id.sliderLabel3);
-        slb4=(TextView) findViewById(R.id.sliderLabel4);
-        slb5=(TextView) findViewById(R.id.sliderLabel5);
+        slb1 = (TextView) findViewById(R.id.sliderLabel1);
+        slb2 = (TextView) findViewById(R.id.sliderLabel2);
+        slb3 = (TextView) findViewById(R.id.sliderLabel3);
+        slb4 = (TextView) findViewById(R.id.sliderLabel4);
+        slb5 = (TextView) findViewById(R.id.sliderLabel5);
 
-        sst1=(LinearLayout) findViewById(R.id.sSetting1);
-        sst2=(LinearLayout) findViewById(R.id.sSetting2);
-        sst3=(LinearLayout) findViewById(R.id.sSetting3);
-        sst4=(LinearLayout) findViewById(R.id.sSetting4);
-        sst5=(LinearLayout) findViewById(R.id.sSetting5);
+        sst1 = (LinearLayout) findViewById(R.id.sSetting1);
+        sst2 = (LinearLayout) findViewById(R.id.sSetting2);
+        sst3 = (LinearLayout) findViewById(R.id.sSetting3);
+        sst4 = (LinearLayout) findViewById(R.id.sSetting4);
+        sst5 = (LinearLayout) findViewById(R.id.sSetting5);
 
         //DONE: setup seekbar methods
 
@@ -152,13 +149,14 @@ public class MainActivity extends Activity {
             @Override                                   //i=value, b=by user?
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 if (b) {
-                    FX.FXList[FXselected].parValues[0]=i;
+                    FX.FXList[FXselected].parValues[0] = i;
                     FX.tuneFX(FXselected, 1, i, fsv);
                 }
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) { }
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
@@ -170,13 +168,14 @@ public class MainActivity extends Activity {
             @Override                                   //i=value, b=by user?
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 if (b) {
-                    FX.FXList[FXselected].parValues[1]=i;
+                    FX.FXList[FXselected].parValues[1] = i;
                     FX.tuneFX(FXselected, 2, i, fsv);
                 }
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) { }
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
@@ -187,13 +186,14 @@ public class MainActivity extends Activity {
             @Override                                   //i=value, b=by user?
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 if (b) {
-                    FX.FXList[FXselected].parValues[2]=i;
+                    FX.FXList[FXselected].parValues[2] = i;
                     FX.tuneFX(FXselected, 3, i, fsv);
                 }
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) { }
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
@@ -204,13 +204,14 @@ public class MainActivity extends Activity {
             @Override                                   //i=value, b=by user?
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 if (b) {
-                    FX.FXList[FXselected].parValues[3]=i;
+                    FX.FXList[FXselected].parValues[3] = i;
                     FX.tuneFX(FXselected, 4, i, fsv);
                 }
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) { }
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
@@ -222,13 +223,14 @@ public class MainActivity extends Activity {
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 if (b) {
 
-                    FX.FXList[FXselected].parValues[4]=i;
+                    FX.FXList[FXselected].parValues[4] = i;
                     FX.tuneFX(FXselected, 5, i, fsv);
                 }
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) { }
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
@@ -244,8 +246,7 @@ public class MainActivity extends Activity {
                 if (b) {
                     FX.FXList[FXselected].fxActive = true;
                     FX.enableFX(FXselected, fsv, true);
-                }
-                else {
+                } else {
                     FX.FXList[FXselected].fxActive = false;
                     FX.enableFX(FXselected, fsv, false);
                 }
@@ -257,16 +258,14 @@ public class MainActivity extends Activity {
         //disable all sliders by default
         makeAllSlidersDisappear();
 
-        context=this;
+        context = this;
 
-        effectsList=(ListView) findViewById(R.id.listView);
-        effectsList.setAdapter(new CustomAdapter(this, FX.getFXnames(),FX.getFXicons()));
+        effectsList = (ListView) findViewById(R.id.listView);
+        effectsList.setAdapter(new CustomAdapter(this, FX.getFXnames(), FX.getFXicons()));
 
         mShareIntent = new Intent();
         mShareIntent.setAction(Intent.ACTION_SEND);
         mShareIntent.setType("image/*");
-
-        imgView = (ImageView) findViewById(R.id.imageView);
 
 
     }
@@ -280,25 +279,18 @@ public class MainActivity extends Activity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode==RESULT_OK) {
+        if (resultCode == RESULT_OK) {
 
-            //todo: implement PROPER bitmap to gl support (without using the imgview...)
+            //done: implement PROPER bitmap to gl support (without using the imgview...)
             Uri imgPath = data.getData();
-            /*
-            File img = new File(imgPath);
-            BitmapFactory.Options bmpOptions = new BitmapFactory.Options();
-            Bitmap bitmap = BitmapFactory.decodeFile(img.getAbsolutePath(),bmpOptions);
 
-            bitmap = Bitmap.createBitmap(bitmap);*/
-            imgView.setImageURI(imgPath);
-
-            abmp = (BitmapDrawable)imgView.getDrawable();
-            bmp = abmp.getBitmap();
-            //bmp = BitmapFactory.decodeFile(imgPath.toString(), new BitmapFactory.Options());
-            //if (true) throw new RuntimeException("W" + bmp.getWidth() + "\nH" + bmp.getHeight());
-            fsv.LoadBitmap(bmp);
+            try {
+                fsv.LoadBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), imgPath));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-            super.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -307,7 +299,7 @@ public class MainActivity extends Activity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
         MenuItem menuItemShare = menu.findItem(R.id.menu_item_share);
-        mShareActionProvider=(ShareActionProvider) menuItemShare.getActionProvider();
+        mShareActionProvider = (ShareActionProvider) menuItemShare.getActionProvider();
         if (mShareActionProvider != null) {
             mShareActionProvider.setShareIntent(mShareIntent);
         }
@@ -317,15 +309,15 @@ public class MainActivity extends Activity {
 
     public String prepareImagePath() {
         String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() +
-                "/"+ PreferenceManager.getDefaultSharedPreferences(this).getString("pref_save_path_key", getString(R.string.pref_save_path_default));
+                "/" + PreferenceManager.getDefaultSharedPreferences(this).getString("pref_save_path_key", getString(R.string.pref_save_path_default));
         String preferredFormat = "jpg";
-        String imageName =  Long.toString(System.currentTimeMillis()/1000L);
-        return file_path+"/"+imageName+"."+preferredFormat;
+        String imageName = Long.toString(System.currentTimeMillis() / 1000L);
+        return file_path + "/" + imageName + "." + preferredFormat;
     }
 
     public void setShareIntent(Intent shareIntent) {
         if (mShareActionProvider != null) {
-            String shareLocation=prepareImagePath();
+            String shareLocation = prepareImagePath();
             fsv.SaveImage(shareLocation);
             mShareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(shareLocation));
             mShareActionProvider.setShareIntent(shareIntent);
@@ -347,9 +339,9 @@ public class MainActivity extends Activity {
         }
 
         if (id == R.id.action_save) {
-            String imgPath=prepareImagePath();
+            String imgPath = prepareImagePath();
             fsv.SaveImage(imgPath);
-            Toast.makeText(this, getString(R.string.toast_image_saved)+imgPath, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.toast_image_saved) + imgPath, Toast.LENGTH_LONG).show();
             return true;
         }
 
@@ -371,9 +363,6 @@ public class MainActivity extends Activity {
         }
 
 
-
-
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -381,5 +370,16 @@ public class MainActivity extends Activity {
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         drawerToggle.syncState();
+
+        //receive share implicit intent
+        Uri imageUriFromShare = this.getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
+        if (imageUriFromShare != null) {
+            try {
+                fsv.LoadBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUriFromShare));
+                Toast.makeText(this, imageUriFromShare.toString(), Toast.LENGTH_LONG).show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
