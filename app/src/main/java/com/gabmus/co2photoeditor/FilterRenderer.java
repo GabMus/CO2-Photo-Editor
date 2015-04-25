@@ -2,10 +2,13 @@ package com.gabmus.co2photoeditor;
 
 import android.app.AlertDialog;
 import android.graphics.Bitmap;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.io.File;
@@ -639,6 +642,20 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                 e.printStackTrace();
             }
             bitmap.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
+
+            //call media scanner to show the new picture in the gallery
+
+            MediaScannerConnection.scanFile(
+                    fsv.activity,
+                    new String[]{SavePath},
+                    null,
+                    new MediaScannerConnection.OnScanCompletedListener() {
+                        @Override
+                        public void onScanCompleted(String path, Uri uri) {
+                            Log.v("CO2 Photo Editor ",
+                                    "file " + path + " was scanned seccessfully: " + uri);
+                        }
+                    });
                 try {
                     fOut.flush();
                     fOut.close();
