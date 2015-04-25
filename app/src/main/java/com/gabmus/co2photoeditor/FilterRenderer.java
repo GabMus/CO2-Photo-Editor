@@ -123,6 +123,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
         TC.put(texCoords); TC.position(0);
         loadShaders();
         if (MainActivity.gotSharedPic) {
+            MainActivity.gotSharedPic = false;
             fsv.LoadBitmap(MainActivity.sharedPicBmp);
         }
         else {
