@@ -151,7 +151,7 @@ public class FXHandler {
             case 5: //crt
                 switch (valIndex) {
                     case 1: //edit line width
-                        finalValue = (tuningValue/100f)*4;
+                        finalValue = ((tuningValue/100f)*10)+1;
                         int tmpValue=(int)finalValue;
                         mFsv.renderer.PARAMS_CathodeRayTubeLineWidth = tmpValue;
                         break;

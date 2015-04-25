@@ -1,29 +1,21 @@
 package com.gabmus.co2photoeditor;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SeekBar;
@@ -31,12 +23,8 @@ import android.widget.ShareActionProvider;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Calendar;
 
 
 public class MainActivity extends Activity {
@@ -165,10 +153,8 @@ public class MainActivity extends Activity {
         sk1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override                                   //i=value, b=by user?
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if (b) {
                     FX.FXList[FXselected].parValues[0] = i;
                     FX.tuneFX(FXselected, 1, i, fsv);
-                }
             }
 
             @Override
@@ -184,10 +170,8 @@ public class MainActivity extends Activity {
         sk2.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override                                   //i=value, b=by user?
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if (b) {
                     FX.FXList[FXselected].parValues[1] = i;
                     FX.tuneFX(FXselected, 2, i, fsv);
-                }
             }
 
             @Override
@@ -202,10 +186,8 @@ public class MainActivity extends Activity {
         sk3.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override                                   //i=value, b=by user?
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if (b) {
                     FX.FXList[FXselected].parValues[2] = i;
                     FX.tuneFX(FXselected, 3, i, fsv);
-                }
             }
 
             @Override
@@ -220,10 +202,8 @@ public class MainActivity extends Activity {
         sk4.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override                                   //i=value, b=by user?
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if (b) {
                     FX.FXList[FXselected].parValues[3] = i;
                     FX.tuneFX(FXselected, 4, i, fsv);
-                }
             }
 
             @Override
@@ -238,11 +218,8 @@ public class MainActivity extends Activity {
         sk5.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override                                   //i=value, b=by user?
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if (b) {
-
                     FX.FXList[FXselected].parValues[4] = i;
                     FX.tuneFX(FXselected, 5, i, fsv);
-                }
             }
 
             @Override
