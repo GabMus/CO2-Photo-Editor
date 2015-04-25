@@ -631,6 +631,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
 
 
             File file = new File(SavePath);
+
             FileOutputStream fOut = null;
             try {
                 fOut = new FileOutputStream(file);

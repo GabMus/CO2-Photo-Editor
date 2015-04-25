@@ -326,6 +326,9 @@ public class MainActivity extends Activity {
     public String prepareImagePath() {
         String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() +
                 "/" + PreferenceManager.getDefaultSharedPreferences(this).getString("pref_save_path_key", getString(R.string.pref_save_path_default));
+        //tempfile is necessary because it creates the subdirectories if they don't exist
+        File tempfile = new File(file_path);
+        tempfile.mkdirs();
         String preferredFormat = "jpg";
         String imageName = Long.toString(System.currentTimeMillis() / 1000L);
         return file_path + "/" + imageName + "." + preferredFormat;
