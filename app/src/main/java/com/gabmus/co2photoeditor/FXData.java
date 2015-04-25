@@ -5,12 +5,12 @@ package com.gabmus.co2photoeditor;
  */
 public class FXData {
 
-    public String name;
-    public int icon;
-    public int parCount;
+    public final String name;
+    public final int icon;
+    public final int parCount;
     public int [] parValues;
     public final int [] parValuesDefault;
-    public String [] parNames;
+    public final String [] parNames;
     public boolean fxActive;
 
     public FXData (String name_, int icon_, int parCount_, int[] parValues_, String [] parNames_) {

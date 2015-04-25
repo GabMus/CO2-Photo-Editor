@@ -128,9 +128,6 @@ public class FXHandler {
                     case 3:
                         //edit saturation
                         break;
-                    default:
-                        Log.e("CO2 Photo Editor", "tuneFX: colorCorrection: index out of range (>3)");
-                        break;
                 }
                 break;
             case 4: //tone mapping

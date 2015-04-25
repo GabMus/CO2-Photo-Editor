@@ -12,15 +12,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class CustomAdapter extends BaseAdapter{
+public class CustomFXAdapter extends BaseAdapter{
     String [] result;
     Context context;
     int [] imageId;
-    TextView titleTv;
     private static LayoutInflater inflater=null;
-    public CustomAdapter(MainActivity mainActivity, String[] prgmNameList, int[] prgmImages) {
-        // TODO Auto-generated constructor stub
-        titleTv=(TextView) mainActivity.findViewById(R.id.textViewEffectTitle);
+    public CustomFXAdapter(MainActivity mainActivity, String[] prgmNameList, int[] prgmImages) {
         result=prgmNameList;
         context=mainActivity;
         imageId=prgmImages;
@@ -29,19 +26,16 @@ public class CustomAdapter extends BaseAdapter{
     }
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
         return result.length;
     }
 
     @Override
     public Object getItem(int position) {
-        // TODO Auto-generated method stub
         return position;
     }
 
     @Override
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
         return position;
     }
 
@@ -52,7 +46,6 @@ public class CustomAdapter extends BaseAdapter{
     }
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub
         Holder holder=new Holder();
         View rowView;
         rowView = inflater.inflate(R.layout.effect_list_item, null);
@@ -60,19 +53,6 @@ public class CustomAdapter extends BaseAdapter{
         holder.img=(ImageView) rowView.findViewById(R.id.imageViewListItem);
         holder.tv.setText(result[position]);
         holder.img.setImageResource(imageId[position]);
-
-
-        rowView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                MainActivity.FXselected=position;
-                MainActivity.FX.SelectFX(position);
-                MainActivity.fxDrawer.closeDrawers();
-
-                titleTv.setText(result[position]);
-            }
-        });
         return rowView;
     }
 

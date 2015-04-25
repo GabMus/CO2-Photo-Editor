@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -28,6 +29,8 @@ import java.io.IOException;
 
 
 public class MainActivity extends Activity {
+
+    private final int REQUEST_IMAGE_CHOOSE=1;
 
     public static boolean userWelcomed = false;
     public static boolean gotSharedPic = false;
@@ -60,7 +63,7 @@ public class MainActivity extends Activity {
     public static android.support.v7.widget.CardView sst4;
     public static android.support.v7.widget.CardView sst5;
 
-    public FilterSurfaceView fsv;
+    public static FilterSurfaceView fsv;
 
     public static FXHandler FX;
 
@@ -255,7 +258,17 @@ public class MainActivity extends Activity {
 
 
         effectsList = (ListView) findViewById(R.id.listView);
-        effectsList.setAdapter(new CustomAdapter(this, FX.getFXnames(), FX.getFXicons()));
+        effectsList.setAdapter(new CustomFXAdapter(this, FX.getFXnames(), FX.getFXicons()));
+        effectsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                FXselected=i;
+                FX.SelectFX(i);
+                fxDrawer.closeDrawers();
+
+                ((TextView) findViewById(R.id.textViewEffectTitle)).setText(FX.FXList[i].name);
+            }
+        });
 
         mShareIntent = new Intent();
         mShareIntent.setAction(Intent.ACTION_SEND);
@@ -275,7 +288,7 @@ public class MainActivity extends Activity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_IMAGE_CHOOSE && resultCode == RESULT_OK) {
 
             //done: implement PROPER bitmap to gl support (without using the imgview...)
             Uri imgPath = data.getData();
@@ -347,7 +360,12 @@ public class MainActivity extends Activity {
         if (id == R.id.action_selectpic) {
             Intent intentChooseUpdate = new Intent(Intent.ACTION_GET_CONTENT);
             intentChooseUpdate.setType("image/*");
-            startActivityForResult(Intent.createChooser(intentChooseUpdate, "Choose a picture"), 1);
+            startActivityForResult(Intent.createChooser(intentChooseUpdate, "Choose a picture"), REQUEST_IMAGE_CHOOSE);
+            return true;
+        }
+
+        if (id == R.id.action_about) {
+            startActivity(new Intent(this, AboutActivity.class));
             return true;
         }
 
