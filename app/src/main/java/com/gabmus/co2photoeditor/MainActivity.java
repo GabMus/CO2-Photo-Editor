@@ -66,11 +66,11 @@ public class MainActivity extends Activity {
     public static TextView slb4;
     public static TextView slb5;
 
-    public static LinearLayout sst1;
-    public static LinearLayout sst2;
-    public static LinearLayout sst3;
-    public static LinearLayout sst4;
-    public static LinearLayout sst5;
+    public static android.support.v7.widget.CardView sst1;
+    public static android.support.v7.widget.CardView sst2;
+    public static android.support.v7.widget.CardView sst3;
+    public static android.support.v7.widget.CardView sst4;
+    public static android.support.v7.widget.CardView sst5;
 
     public FilterSurfaceView fsv;
 
@@ -154,11 +154,11 @@ public class MainActivity extends Activity {
         slb4 = (TextView) findViewById(R.id.sliderLabel4);
         slb5 = (TextView) findViewById(R.id.sliderLabel5);
 
-        sst1 = (LinearLayout) findViewById(R.id.sSetting1);
-        sst2 = (LinearLayout) findViewById(R.id.sSetting2);
-        sst3 = (LinearLayout) findViewById(R.id.sSetting3);
-        sst4 = (LinearLayout) findViewById(R.id.sSetting4);
-        sst5 = (LinearLayout) findViewById(R.id.sSetting5);
+        sst1 = (android.support.v7.widget.CardView) findViewById(R.id.sSetting1);
+        sst2 = (android.support.v7.widget.CardView) findViewById(R.id.sSetting2);
+        sst3 = (android.support.v7.widget.CardView) findViewById(R.id.sSetting3);
+        sst4 = (android.support.v7.widget.CardView) findViewById(R.id.sSetting4);
+        sst5 = (android.support.v7.widget.CardView) findViewById(R.id.sSetting5);
 
         //DONE: setup seekbar methods
 
