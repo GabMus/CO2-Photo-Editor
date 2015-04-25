@@ -42,6 +42,8 @@ import java.util.Calendar;
 public class MainActivity extends Activity {
 
     public static boolean userWelcomed = false;
+    public static boolean gotSharedPic = false;
+    public static Bitmap sharedPicBmp;
     private Intent mShareIntent;
     private ShareActionProvider mShareActionProvider;
     public static DrawerLayout fxDrawer;
@@ -91,6 +93,18 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        //receive share implicit intent
+        Uri imageUriFromShare = this.getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
+        if (imageUriFromShare != null) {
+            try {
+                gotSharedPic = true;
+                sharedPicBmp=MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUriFromShare);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         //DONE: launch welcome activity
         //welcomeUser(); //TODO: fix welcome activity
@@ -268,6 +282,8 @@ public class MainActivity extends Activity {
         mShareIntent.setType("image/*");
 
 
+
+
     }
 
     private void welcomeUser() {
@@ -370,16 +386,5 @@ public class MainActivity extends Activity {
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         drawerToggle.syncState();
-
-        //receive share implicit intent
-        Uri imageUriFromShare = this.getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
-        if (imageUriFromShare != null) {
-            try {
-                fsv.LoadBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUriFromShare));
-                Toast.makeText(this, imageUriFromShare.toString(), Toast.LENGTH_LONG).show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }

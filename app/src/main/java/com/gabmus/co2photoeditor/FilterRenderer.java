@@ -119,7 +119,12 @@ public class FilterRenderer implements GLSurfaceView.Renderer
         IB.put(indices); IB.position(0);
         TC.put(texCoords); TC.position(0);
         loadShaders();
-        fsv.LoadBitmap(fsv.generateTestBitmap());
+        if (MainActivity.gotSharedPic) {
+            fsv.LoadBitmap(MainActivity.sharedPicBmp);
+        }
+        else {
+            fsv.LoadBitmap(fsv.generateTestBitmap());
+        }
     }
 
 
