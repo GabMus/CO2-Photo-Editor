@@ -27,6 +27,30 @@
     <string name="toast_image_saved">Image saved in </string>
 
 
+    <string name="blackAndWhite">Black and white</string>
+    <string name="sepia">Sepia</string>
+    <string name="negative">Negative</string>
+    <string name="toneMapping1">Tone Mapping 1</string>
+    <string name="crt">CRT Effect</string>
+    <string name="noise1">Noise</string>
+    <string name="filmGrain">Film Grain</string>
+
+    <string name="brightness">Brightness</string>
+    <string name="contrast">Contrast</string>
+    <string name="saturation">Saturation</string>
+    <string name="exposure">Exposure</string>
+    <string name="vignetting">Vignetting</string>
+    <string name="lineWidth">Line Width</string>
+    <string name="amount">Amount</string>
+    <string name="size">Size</string>
+    <string name="luminance">Luminance</string>
+    <string name="color">Color</string>
+    <string name="randomizerSeed">Randomizer Seed</string>
+    <string name="strength">Strength</string>
+    <string name="darkNoisePower">Dark Noise Power</string>
+    <string name="randomNoiseStrength">Random Noise Strength</string>
+
+
 <!--
     <string name="pref_save_format">Picture format</string>
     <string name="pref_save_format_default">1</string>

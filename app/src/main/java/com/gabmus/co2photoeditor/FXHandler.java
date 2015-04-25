@@ -1,5 +1,7 @@
 package com.gabmus.co2photoeditor;
 
+import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 import android.view.View;
 
@@ -10,18 +12,20 @@ import java.util.logging.Filter;
  */
 public class FXHandler {
 
-    public FXData[] FXList = {
-            new FXData("B&W", R.drawable.demo_icon, 0, new int[0], new String[0]),
-            new FXData("Sepia", R.drawable.demo_icon, 0, new int[0], new String[0]),
-            new FXData("Negative", R.drawable.demo_icon, 0, new int[0], new String[0]),
-            new FXData("Color Correction", R.drawable.demo_icon, 3, new int [] {0,0,0}, new String[] {"Brightness", "Contrast", "Saturation"}),
-            new FXData("Tone Mapping 1", R.drawable.demo_icon, 2, new int [] {0,0}, new String[] {"Exposure", "Vignetting"}),
-            new FXData("CRT", R.drawable.demo_icon, 1, new int [] {0}, new String[] {"Line Width"}),
-            new FXData("VHS Noise", R.drawable.demo_icon, 5, new int [] {0,0,0,0,0}, new String [] {"Amount", "Size", "Luminance", "Color", "Randomizer Seed"}),
-            new FXData("Film Grain", R.drawable.demo_icon, 4, new int [] {0,0,0,0}, new String [] {"Strength", "Dark Noise Power", "Random Noise Strength", "Randomizer Seed"})
-    };
+    public FXData[] FXList;
 
-    public FXHandler() {
+    public FXHandler(Context context) {
+        FXData[] tmpFXList = {
+                new FXData(context.getString(R.string.blackAndWhite), R.drawable.demo_icon, 0, new int[0], new String[0]),
+                new FXData(context.getString(R.string.sepia), R.drawable.demo_icon, 0, new int[0], new String[0]),
+                new FXData(context.getString(R.string.negative), R.drawable.demo_icon, 0, new int[0], new String[0]),
+                new FXData("Color Correction", R.drawable.demo_icon, 3, new int [] {0,0,0}, new String[] {context.getString(R.string.brightness), context.getString(R.string.contrast), context.getString(R.string.saturation)}),
+                new FXData(context.getString(R.string.toneMapping1), R.drawable.demo_icon, 2, new int [] {0,0}, new String[] {context.getString(R.string.exposure), context.getString(R.string.vignetting)}),
+                new FXData(context.getString(R.string.crt), R.drawable.demo_icon, 1, new int [] {0}, new String[] {context.getString(R.string.lineWidth)}),
+                new FXData(context.getString(R.string.noise1), R.drawable.demo_icon, 5, new int [] {0,0,0,0,0}, new String [] {context.getString(R.string.amount), context.getString(R.string.size), context.getString(R.string.luminance), context.getString(R.string.color), context.getString(R.string.randomizerSeed)}),
+                new FXData(context.getString(R.string.filmGrain), R.drawable.demo_icon, 4, new int [] {0,0,0,0}, new String [] {context.getString(R.string.strength), context.getString(R.string.darkNoisePower), context.getString(R.string.randomNoiseStrength), context.getString(R.string.randomizerSeed)})
+        };
+        FXList = tmpFXList;
     }
 
     public void SelectFX(int fxID) {

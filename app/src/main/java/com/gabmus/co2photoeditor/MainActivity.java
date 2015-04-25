@@ -74,7 +74,7 @@ public class MainActivity extends Activity {
 
     public FilterSurfaceView fsv;
 
-    public static FXHandler FX = new FXHandler();
+    public static FXHandler FX;
 
     ListView effectsList;
     Context context;
@@ -94,6 +94,9 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        context = this;
+
+        FX = new FXHandler(context);
 
         //receive share implicit intent
         Uri imageUriFromShare = this.getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
@@ -272,7 +275,7 @@ public class MainActivity extends Activity {
         //disable all sliders by default
         makeAllSlidersDisappear();
 
-        context = this;
+
 
         effectsList = (ListView) findViewById(R.id.listView);
         effectsList.setAdapter(new CustomAdapter(this, FX.getFXnames(), FX.getFXicons()));
@@ -390,4 +393,5 @@ public class MainActivity extends Activity {
         super.onPostCreate(savedInstanceState);
         drawerToggle.syncState();
     }
+
 }
