@@ -93,8 +93,8 @@ public class MainActivity extends Activity {
         Uri imageUriFromShare = this.getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
         if (imageUriFromShare != null) {
             try {
+                sharedPicBmp = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUriFromShare);
                 gotSharedPic = true;
-                sharedPicBmp=MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUriFromShare);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -372,6 +372,12 @@ public class MainActivity extends Activity {
         if (id == R.id.menu_item_share) {
 
             setShareIntent(mShareIntent);
+            return true;
+        }
+
+        //add temp menu for testing welcomeactivity
+        if (id == R.id.tmpWelcome) {
+            welcomeUser();
             return true;
         }
 

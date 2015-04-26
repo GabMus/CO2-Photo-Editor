@@ -12,6 +12,8 @@
         android:orderInCategory="90" android:icon="@drawable/ic_action_save" android:showAsAction="always" />
     <item android:id="@+id/action_selectpic" android:title="@string/action_selectpic"
         android:orderInCategory="80" android:icon="@drawable/ic_action_add_pic" android:showAsAction="always" />
+    <item android:id="@+id/tmpWelcome" android:title="Welcome Test"
+        android:orderInCategory="820" android:icon="@drawable/ic_action_add_pic" android:showAsAction="never" />
 
     <!-- <item android:id="@+id/action_restore_originals" android:title="@string/action_restore_originals"
         android:orderInCategory="93" android:icon="@android:drawable/ic_menu_revert" android:showAsAction="always" /> -->
