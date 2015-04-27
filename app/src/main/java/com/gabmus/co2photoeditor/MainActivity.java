@@ -3,6 +3,7 @@ package com.gabmus.co2photoeditor;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,13 +27,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
+import java.util.jar.Attributes;
 
 
 public class MainActivity extends Activity {
 
     private final int REQUEST_IMAGE_CHOOSE=1;
 
-    public static boolean userWelcomed = false;
+    public static boolean userWelcomed;
     public static boolean gotSharedPic = false;
     public static Bitmap sharedPicBmp;
     private Intent mShareIntent;
@@ -71,6 +73,7 @@ public class MainActivity extends Activity {
     Context context;
 
     ActionBarDrawerToggle drawerToggle;
+    SharedPreferences sharedpreferences;
 
     public static void makeAllSlidersDisappear() {
         sst1.setVisibility(View.GONE);
@@ -100,8 +103,32 @@ public class MainActivity extends Activity {
             }
         }
 
+
+
+
+        {
+            sharedpreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            if (!sharedpreferences.contains("userWelcomedKey")) {
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putBoolean("userWelcomedKey", false);
+                editor.commit();
+                userWelcomed=false;
+            }
+            if (sharedpreferences.contains("userWelcomedKey")) {
+                userWelcomed = sharedpreferences.getBoolean("userWelcomedKey", false);
+                if (!userWelcomed) {
+                    welcomeUser();
+                    userWelcomed=true;
+                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                    editor.putBoolean("userWelcomedKey", true);
+                    editor.commit();
+                }
+            }
+
+        }
+
         //DONE: launch welcome activity
-        //welcomeUser(); //TODO: fix welcome activity
+        //welcomeUser();
 
         //DONE: insert drawer button
         fxDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);

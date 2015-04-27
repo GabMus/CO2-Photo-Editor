@@ -1,5 +1,6 @@
 package com.gabmus.co2photoeditor;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
@@ -12,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 
@@ -27,6 +29,8 @@ public class WelcomeActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+
+        this.getActionBar().hide();
 
 
         mPager = (ViewPager) findViewById(R.id.welcome_pager);
@@ -114,6 +118,12 @@ public class WelcomeActivity extends FragmentActivity {
             if (slide==-1) {
                 imgVw.setVisibility(View.GONE);
                 ((ScrollView) rootView.findViewById(R.id.cont_tutorial_complete)).setVisibility(View.VISIBLE);
+                ((Button) rootView.findViewById(R.id.buttonGoToApp)).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        getActivity().finish();
+                    }
+                });
             }
             else {
                 imgVw.setImageDrawable(getResources().getDrawable(slide));
