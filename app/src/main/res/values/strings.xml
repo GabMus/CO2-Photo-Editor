@@ -9,6 +9,9 @@
     <string name="effect_title_textview">No effect selected</string>
     <string name="action_restore_originals">Restore original values</string>
     <string name="action_show_fx">Show effects</string>
+    <string name="action_resetFX_label">Reset this effect</string>
+    <string name="action_resetFXAll_label">Reset all effects</string>
+    <string name="no_fx_selected">No effect has been selected</string>
 
     <string name="label_tutorial_complete">Awesome! You have completed the tutorial, now you can start using CO₂ like a pro!</string>
     <string name="button_goToApp">Start using CO₂</string>

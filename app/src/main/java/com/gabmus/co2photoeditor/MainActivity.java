@@ -45,6 +45,8 @@ public class MainActivity extends Activity {
     public LinearLayout customViewLayout;
 
     public static Switch fxToggle;
+    public static TextView textViewFXTitle;
+    public static String strNoFXSelected;
 
     //declared up to 5 sliders (already present in the GUI but hidden by default) since various effects can have 0 to 5 parameters
     public static SeekBar sk1;
@@ -157,6 +159,10 @@ public class MainActivity extends Activity {
         fsv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         //setContentView(fsv);
         customViewLayout.addView(fsv);
+
+        textViewFXTitle = (TextView) findViewById(R.id.textViewEffectTitle);
+
+        strNoFXSelected = getString(R.string.effect_title_textview);
 
         fxToggle = (Switch) findViewById(R.id.switch1);
 
@@ -292,8 +298,6 @@ public class MainActivity extends Activity {
                 FXselected=i;
                 FX.SelectFX(i);
                 fxDrawer.closeDrawers();
-
-                ((TextView) findViewById(R.id.textViewEffectTitle)).setText(FX.FXList[i].name);
             }
         });
 
@@ -388,6 +392,17 @@ public class MainActivity extends Activity {
             Intent intentChooseUpdate = new Intent(Intent.ACTION_GET_CONTENT);
             intentChooseUpdate.setType("image/*");
             startActivityForResult(Intent.createChooser(intentChooseUpdate, "Choose a picture"), REQUEST_IMAGE_CHOOSE);
+            return true;
+        }
+
+        if (id == R.id.action_resetFX) {
+            boolean res = FX.resetFX(FXselected, fsv);
+            if (!res) Toast.makeText(this, getString(R.string.no_fx_selected), Toast.LENGTH_LONG).show();
+            return true;
+        }
+
+        if (id == R.id.action_resetFXAll) {
+            FX.resetAllFX(fsv);
             return true;
         }
 
