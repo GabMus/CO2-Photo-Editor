@@ -274,10 +274,8 @@ public class MainActivity extends Activity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
-                    FX.FXList[FXselected].fxActive = true;
                     FX.enableFX(FXselected, fsv, true);
                 } else {
-                    FX.FXList[FXselected].fxActive = false;
                     FX.enableFX(FXselected, fsv, false);
                 }
             }
