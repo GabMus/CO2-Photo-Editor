@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.logging.Filter;
 
@@ -28,10 +29,21 @@ public class FXHandler {
         FXList = tmpFXList;
     }
 
-    public void SelectFX(int fxID) {
+         //boolean type is just to kill the method with return
+    public boolean SelectFX(int fxID) {
         //Sliders not shown by default, so make them invisible
         MainActivity.makeAllSlidersDisappear();
         //Enable the toggle, since no fx is selected by default, thus it's disabled
+
+        //on fxID==-1 get to starting screen
+        if (fxID==-1) {
+            MainActivity.fxToggle.setEnabled(false);
+            MainActivity.fxToggle.setChecked(false);
+            MainActivity.textViewFXTitle.setText(MainActivity.strNoFXSelected);
+            MainActivity.FXselected=-1;
+            return true;
+        }
+        MainActivity.textViewFXTitle.setText(FXList[fxID].name);
         MainActivity.fxToggle.setEnabled(true);
         //FX is active? if yes, let the toggle show it
         if (FXList[fxID].fxActive) MainActivity.fxToggle.setChecked(true);
@@ -62,7 +74,7 @@ public class FXHandler {
                 }
             }
         }
-
+        return true;
 
     }
 
@@ -83,6 +95,7 @@ public class FXHandler {
     }
 
     public void enableFX(int index, FilterSurfaceView mFsv, boolean active) {
+        FXList[index].fxActive=active;
         switch (index) {
             case 0: //B&W
                 mFsv.renderer.PARAMS_EnableBlackAndWhite = active;
@@ -207,5 +220,32 @@ public class FXHandler {
                 break;
         }
     }
+
+
+
+    public boolean resetFX(int index, FilterSurfaceView mFsv) {
+        if (index==-1) return false;
+        SelectFX(-1); //go to default screen
+        for (int i = 0; i < FXList[index].parCount; i++) {
+            FXList[index].parValues[i]=FXList[index].parValuesDefault[i];
+        }
+        return true;
+    }
+
+    private void resetFXModular(int index, FilterSurfaceView mFsv) {
+        for (int i = 0; i < FXList[index].parCount; i++) {
+            FXList[index].parValues[i]=FXList[index].parValuesDefault[i];
+        }
+    }
+
+    public void resetAllFX(FilterSurfaceView mFsv) {
+        for (int i = 0; i < FXList.length; i++) {
+            resetFXModular(i, mFsv);
+            enableFX(i, mFsv, false);
+        }
+        SelectFX(-1); //go to default screen
+    }
+
+
 
 }
