@@ -107,7 +107,7 @@ public class FXHandler {
                 mFsv.renderer.PARAMS_EnableNegative = active;
                 break;
             case 3: //color correction
-                //mFsv.renderer.PARAMS_EnableColorCorrection = active;
+                mFsv.renderer.PARAMS_EnableContrastSaturationBrightness = active;
                 break;
             case 4: // Tone mapping 1
                 mFsv.renderer.PARAMS_EnableToneMapping = active;
@@ -134,12 +134,18 @@ public class FXHandler {
                 switch (valIndex) {
                     case 1:
                         //edit brightness
+                        finalValue = (tuningValue/100f)*10f;
+                        mFsv.renderer.PARAMS_Brightness = finalValue;
                         break;
                     case 2:
                         //edit contrast
+                        finalValue = (tuningValue/100f)*5f;
+                        mFsv.renderer.PARAMS_Contrast = finalValue;
                         break;
                     case 3:
                         //edit saturation
+                        finalValue = (tuningValue/100f)*30f;
+                        mFsv.renderer.PARAMS_Saturation = finalValue;
                         break;
                 }
                 break;
