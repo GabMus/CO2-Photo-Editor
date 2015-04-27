@@ -1,15 +1,12 @@
 package com.gabmus.co2photoeditor;
 
-import android.app.AlertDialog;
+
 import android.graphics.Bitmap;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
-import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,9 +16,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
-import java.security.Timestamp;
-import java.sql.Time;
-import java.util.Calendar;
 import java.util.Random;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -194,7 +188,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "uniform sampler2D filteredPhoto;" +
                         "uniform float Contrast;" +
                         "uniform float Brightness;" +
-                        "unifrom float Saturation;" +
+                        "uniform float Saturation;" +
                         "varying vec2 UV;" +
                         "" +
                         "void main()" +
@@ -222,7 +216,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "uniform sampler2D filteredPhoto;" +
                         "uniform float R;" +
                         "uniform float G;" +
-                        "unifrom float B;" +
+                        "uniform float B;" +
                         "varying vec2 UV;" +
                         "" +
                         "void main()" +

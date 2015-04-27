@@ -27,7 +27,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
-import java.util.jar.Attributes;
 
 
 public class MainActivity extends Activity {
@@ -394,7 +393,7 @@ public class MainActivity extends Activity {
         }
 
         if (id == R.id.action_resetFX) {
-            boolean res = FX.resetFX(FXselected, fsv);
+            boolean res = FX.resetFX(FXselected);
             if (!res) Toast.makeText(this, getString(R.string.no_fx_selected), Toast.LENGTH_LONG).show();
             return true;
         }

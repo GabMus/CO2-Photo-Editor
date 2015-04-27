@@ -17,7 +17,6 @@
     </style>
 
     <color name="primary">#ffd44933</color>
-    <color name="materialBg">#ff414141</color>
     <color name="accent">#ff547fce</color>
 
 </resources>

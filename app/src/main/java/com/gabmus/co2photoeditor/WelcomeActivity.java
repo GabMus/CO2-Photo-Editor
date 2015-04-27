@@ -1,6 +1,5 @@
 package com.gabmus.co2photoeditor;
 
-import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;

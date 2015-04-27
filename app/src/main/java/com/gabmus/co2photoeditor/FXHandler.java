@@ -1,12 +1,9 @@
 package com.gabmus.co2photoeditor;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
-import java.util.logging.Filter;
 
 /**
  * Created by gabmus on 19/04/15.
@@ -229,24 +226,20 @@ public class FXHandler {
 
 
 
-    public boolean resetFX(int index, FilterSurfaceView mFsv) {
+    public boolean resetFX(int index) {
         if (index==-1) return false;
         SelectFX(-1); //go to default screen
-        for (int i = 0; i < FXList[index].parCount; i++) {
-            FXList[index].parValues[i]=FXList[index].parValuesDefault[i];
-        }
+        FXList[index].parValues=FXList[index].parValuesDefault.clone();
         return true;
     }
 
-    private void resetFXModular(int index, FilterSurfaceView mFsv) {
-        for (int i = 0; i < FXList[index].parCount; i++) {
-            FXList[index].parValues[i]=FXList[index].parValuesDefault[i];
-        }
+    private void resetFXModular(int index) {
+        FXList[index].parValues=FXList[index].parValuesDefault.clone();
     }
 
     public void resetAllFX(FilterSurfaceView mFsv) {
         for (int i = 0; i < FXList.length; i++) {
-            resetFXModular(i, mFsv);
+            resetFXModular(i);
             enableFX(i, mFsv, false);
         }
         SelectFX(-1); //go to default screen

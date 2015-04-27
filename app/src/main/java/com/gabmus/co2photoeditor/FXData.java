@@ -14,18 +14,11 @@ public class FXData {
     public boolean fxActive;
 
     public FXData (String name_, int icon_, int parCount_, int[] parValues_, String [] parNames_) {
-        name=name_; icon=icon_; parCount=parCount_;
-        parNames=parNames_; fxActive = false;
-
-        parValues= new int[parCount];
-        for (int i = 0; i < parCount; i++) {
-            parValues[i]=parValues_ [i];
-        }
-        parValuesDefault= new int[parCount];
-        for (int i = 0; i < parCount; i++) {
-            parValuesDefault[i]=parValues_ [i];
-        }
-
-
+        name=name_; icon=icon_;
+        parCount=parCount_;
+        parNames=parNames_;
+        fxActive = false;
+        parValues=parValues_.clone();
+        parValuesDefault=parValues_.clone();
     }
 }
