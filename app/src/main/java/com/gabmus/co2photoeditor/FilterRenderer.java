@@ -40,6 +40,29 @@ public class FilterRenderer implements GLSurfaceView.Renderer
     private int hShaderProgramFilmGrain;
     private int hShaderProgramProperFilmGrain;
     private int hShaderProgramNegative;
+    private int hShaderProgramBloomExtract;
+    private int hShaderProgramBloomCompose;
+    private int hShaderProgramGaussianBlur;
+    private int hShaderProgramContrastSaturationBrightness;
+    private int hShaderProgramTonality;
+
+    public boolean PARAMS_EnableTonality = false;
+    public float PARAMS_TonalityR = 1f;
+    public float PARAMS_TonalityG = 1f;
+    public float PARAMS_TonalityB = 1f;
+
+    public boolean PARAMS_EnableContrastSaturationBrightness;
+    public float PARAMS_Contrast = 1f;
+    public float PARAMS_Brightness = 1f;
+    public float PARAMS_Saturation = 1f;
+
+    public boolean PARAMS_EnableBloom = false;
+    public float PARAMS_BloomThreshold = 0.3f;
+    public float PARAMS_BloomSaturation = 1.0f;
+    public float PARAMS_BloomBlur = 4.0f;
+    public float PARAMS_BloomIntensity = 1.25f;
+    public float PARAMS_BloomBaseIntensity = 1.0f;
+    public float PARAMS_BloomBaseSaturation = 1.0f;
 
 
     public boolean PARAMS_EnableProperFilmGrain = false;
@@ -56,6 +79,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
     public float PARAMS_ToneMappingExposure = 2.0f;
     public float PARAMS_ToneMappingVignetting = 1.0f;
 
+
     public boolean PARAMS_EnableCathodeRayTube = false;
     public int PARAMS_CathodeRayTubeLineWidth = 1;
     public boolean PARAMS_CathodeRayTubeIsHorizontal = false;
@@ -68,7 +92,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
     public float PARAMS_FilmGrainSeed = 0.0f;
 
     public boolean BOOL_LoadTexture = false;
-    public RenderTarget2D target1, target2, saveTarget;
+    public RenderTarget2D target1, target2, saveTarget, blur1, blur2;
     private FilterSurfaceView fsv;
 
     public int ImageWidth = 0;
@@ -163,6 +187,51 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                 "  gl_FragColor = vec4(UV.x, UV.y, 0, 1);" +
                 "}";
         hShaderProgramBase = createprogram(baseshader_FS);
+
+        //Contrast, brightness, saturation
+        String cbs_FS =
+                "precision mediump float;" +
+                        "uniform sampler2D filteredPhoto;" +
+                        "uniform float Contrast;" +
+                        "uniform float Brightness;" +
+                        "unifrom float Saturation;" +
+                        "varying vec2 UV;" +
+                        "" +
+                        "void main()" +
+                        "{" +
+                        "   vec4 c = texture2D(filteredPhoto, UV);" +
+                        "   //Brightness" +
+                        "   c = dot(c, vec4(Brightness,Brightness,Brightness,Brightness));" +
+                        "   //Contrast" +
+                        "   c.r = ((c.r-0.5) * Contrast) + 0.5;" +
+                        "   c.g = ((c.g-0.5) * Contrast) + 0.5;" +
+                        "   c.b = ((c.b-0.5) * Contrast) + 0.5;" +
+                        "   //Saturation" +
+                        "   float grey = dot(c, vec4(0.299, 0.587, 0.114, 1));" +
+                        "   c.r = mix(grey, c.r, Saturation);" +
+                        "   c.g = mix(grey, c.g, Saturation);" +
+                        "   c.b = mix(grey, c.b, Saturation);" +
+                        "" +
+                        "   gl_FragColor = c;" +
+                        "}";
+        hShaderProgramContrastSaturationBrightness = createprogram(generalreverseVS, cbs_FS);
+
+        //Tonality Adjustment
+        String tonality_FS =
+                "precision mediump float;" +
+                        "uniform sampler2D filteredPhoto;" +
+                        "uniform float R;" +
+                        "uniform float G;" +
+                        "unifrom float B;" +
+                        "varying vec2 UV;" +
+                        "" +
+                        "void main()" +
+                        "{" +
+                        "  vec4 c = texture2D(filteredPhoto, UV);" +
+                        "  gl_FragColor = vec4(c.r * R, c.g * G, c.b * B, 1.0);" +
+                        "}";
+
+        hShaderProgramTonality = createprogram(generalreverseVS, tonality_FS);
 
         //CRT
         String crt_FS =
@@ -388,6 +457,66 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "}";
         hShaderProgramFilmGrain = createprogram(generalreverseVS, filmGrain_FS);
 
+        //BLOOM EXTRACT
+        String bloomextract_FS =
+                "precision mediump float;" +
+                "uniform sampler2D filteredPhoto;" +
+                "uniform float BloomThreshold;" +
+                "varying vec2 UV;" +
+                        "void main()" +
+                        "{" +
+                        "   vec4 c = texture2D(filteredPhoto, UV);" +
+                        "   gl_FragColor = clamp((c - BloomThreshold) / (1.00000 - BloomThreshold), 0.0, 1.0);" +
+                        "}";
+        hShaderProgramBloomExtract = createprogram(generalreverseVS, bloomextract_FS);
+        //BLOOM COMPOSE
+        String bloomcompose_FS =
+                "uniform float BaseIntensity;" +
+                        "uniform sampler2D BaseSampler;" +
+                        "uniform float BaseSaturation;" +
+                        "uniform float BloomIntensity;" +
+                        "uniform sampler2D BloomSampler;" +
+                        "uniform float BloomSaturation;" +
+                        "varying vec2 UV;" +
+                        "vec4 AdjustSaturation(vec4 color, float saturation ) {" +
+                        "    float grey;" +
+                        "    grey = dot( color, vec4( vec3( 0.300000, 0.590000, 0.110000), 0.000000));\n" +
+                        "    color.r = mix(grey, color.r, saturation);" +
+                        "   color.g = mix(grey, color.g, saturation);" +
+                        "   color.b = mix(grey, color.b, saturation);" +
+                        "   color.a = 1.0;" +
+                        "    return color;" +
+                        "}"+
+                        "void main() {" +
+                        "    vec4 bloom;" +
+                        "    vec4 base;" +
+                        "    bloom = texture2D( BloomSampler, UV);" +
+                        "    base = texture2D( BaseSampler, UV);" +
+                        "    bloom = (AdjustSaturation( bloom, BloomSaturation) * BloomIntensity);" +
+                        "    base = (AdjustSaturation( base, BaseSaturation) * BaseIntensity);" +
+                        "    base *= (1.00000 - clamp( bloom, 0.0, 1.0 ));" +
+                        "    return (base + bloom);" +
+                        "}";
+        hShaderProgramBloomCompose = createprogram(generalreverseVS, bloomcompose_FS);
+        //GAUSSIAN BLUR
+        String gaussianBlur_FS =
+                "uniform float SampleOffsetsX[15];" +
+                "uniform float SampleOffsetsY[15];" +
+                "uniform float SampleWeights[15];" +
+                "uniform sampler2D filteredPhoto;" +
+                "varying vec2 UV;" +
+                        "" +
+                        "void main()" +
+                        "{" +
+                        "   int i = 0;" +
+                        "   vec4 c = vec4( 0.000000);" +
+                        "   for ( ; (i < 15); ( i++ )) {" +
+                        "        c += (texture2D( filteredPhoto, (UV + vec2(SampleOffsetsX[ i ], SampleOffsetsY[ i ]))) * SampleWeights[ i ]);" +
+                        "    }" +
+                        "    gl_FragColor = c;" +
+                        "}";
+        hShaderProgramGaussianBlur = createprogram(generalreverseVS, gaussianBlur_FS);
+
         //Proper Film Grain
         String properFilmGrain_FS =
                 "precision mediump float;" +
@@ -511,6 +640,34 @@ public class FilterRenderer implements GLSurfaceView.Renderer
             GLES20.glUniform1i(hrz, PARAMS_CathodeRayTubeIsHorizontal ? 1 : 0);
             drawquad();
         }
+        if (PARAMS_EnableTonality)
+        {
+            SetRenderTarget();
+            GLES20.glUseProgram(hShaderProgramTonality);
+            setVSParams(hShaderProgramTonality);
+            setShaderParamPhoto(hShaderProgramTonality, GetCurTexture());
+            int rw = GLES20.glGetUniformLocation(hShaderProgramTonality, "R");
+            int gw = GLES20.glGetUniformLocation(hShaderProgramTonality, "G");
+            int bw = GLES20.glGetUniformLocation(hShaderProgramTonality, "B");
+            GLES20.glUniform1f(rw, PARAMS_TonalityR);
+            GLES20.glUniform1f(gw, PARAMS_TonalityG);
+            GLES20.glUniform1f(bw, PARAMS_TonalityB);
+            drawquad();
+        }
+        if (PARAMS_EnableContrastSaturationBrightness)
+        {
+            SetRenderTarget();
+            GLES20.glUseProgram(hShaderProgramContrastSaturationBrightness);
+            setVSParams(hShaderProgramContrastSaturationBrightness);
+            setShaderParamPhoto(hShaderProgramContrastSaturationBrightness, GetCurTexture());
+            int sat = GLES20.glGetUniformLocation(hShaderProgramContrastSaturationBrightness, "Saturation");
+            int br = GLES20.glGetUniformLocation(hShaderProgramContrastSaturationBrightness, "Brightness");
+            int ctr = GLES20.glGetUniformLocation(hShaderProgramContrastSaturationBrightness, "Contrast");
+            GLES20.glUniform1f(sat, PARAMS_Saturation);
+            GLES20.glUniform1f(br, PARAMS_Brightness);
+            GLES20.glUniform1f(ctr, PARAMS_Contrast);
+            drawquad();
+        }
         if (PARAMS_EnableNegative) {
             SetRenderTarget();
             GLES20.glUseProgram(hShaderProgramNegative);
@@ -588,6 +745,50 @@ public class FilterRenderer implements GLSurfaceView.Renderer
             GLES20.glUniform1f(rv, PARAMS_ProperFilmGrainRandomValue);
 
             drawquad();
+        }
+        if (PARAMS_EnableBloom)
+        {
+            //if (didshit) firstshit = false;
+            //didshit = true;
+            saveTarget.Set();
+            GLES20.glUseProgram(hShaderProgramBloomExtract);
+            setVSParams(hShaderProgramBloomExtract);
+            setShaderParamPhoto(hShaderProgramBloomExtract, GetCurTexture());
+            int thresh = GLES20.glGetUniformLocation(hShaderProgramBloomExtract, "BloomThreshold");
+            GLES20.glUniform1f(thresh, PARAMS_BloomThreshold);
+            drawquad();
+
+            blur1.Set();
+            GLES20.glUseProgram(hShaderProgramGaussianBlur);
+            setVSParams(hShaderProgramGaussianBlur);
+            setShaderParamPhoto(hShaderProgramGaussianBlur, saveTarget.GetTex());
+            SetBlurEffectParameters(1.0f / (float)ImageWidth, 0);
+            drawquad();
+
+            blur2.Set();
+            setShaderParamPhoto(hShaderProgramGaussianBlur, blur1.GetTex());
+            SetBlurEffectParameters(0, 1.0f / (float)ImageHeigth);
+            drawquad();
+
+            int base = GetCurTexture();
+            SetRenderTarget();
+            GLES20.glUseProgram(hShaderProgramBloomCompose);
+            setVSParams(hShaderProgramBloomCompose);
+
+            setShaderTex(hShaderProgramBloomCompose, base, "BaseSampler");
+            setShaderTex(hShaderProgramBloomCompose, blur2.GetTex(), "BloomSampler");
+
+            int basei = GLES20.glGetUniformLocation(hShaderProgramBloomCompose, "BaseIntensity");
+            int bases = GLES20.glGetUniformLocation(hShaderProgramBloomCompose, "BaseSaturation");
+            int bloomi = GLES20.glGetUniformLocation(hShaderProgramBloomCompose, "BloomIntensity");
+            int blooms = GLES20.glGetUniformLocation(hShaderProgramBloomCompose, "BloomSaturation");
+
+            GLES20.glUniform1f(basei, PARAMS_BloomBaseIntensity);
+            GLES20.glUniform1f(bases, PARAMS_BloomBaseSaturation);
+            GLES20.glUniform1f(bloomi, PARAMS_BloomIntensity);
+            GLES20.glUniform1f(blooms, PARAMS_BloomSaturation);
+            drawquad();
+
         }
 
         if (didshit)
@@ -674,6 +875,56 @@ public class FilterRenderer implements GLSurfaceView.Renderer
         firstshit = true;
     }
 
+    void SetBlurEffectParameters(float dx, float dy)
+    {
+        //GLES20.glUseProgram(hShaderProgramGaussianBlur);
+        int sox = GLES20.glGetUniformLocation(hShaderProgramGaussianBlur, "SampleOffsetsX");
+        int soy = GLES20.glGetUniformLocation(hShaderProgramGaussianBlur, "SampleOffsetsY");
+        int wei = GLES20.glGetUniformLocation(hShaderProgramGaussianBlur, "SampleWeights");
+
+        int sampleCount = 15;
+        float[] sampleOffsetsX = new float[sampleCount];
+        float[] sampleOffsetsY = new float[sampleCount];
+        float[] sampleWeights = new float[sampleCount];
+
+        sampleWeights[0] = ComputeGaussian(0, PARAMS_BloomBlur);
+        sampleOffsetsX[0] = 0;
+        sampleOffsetsY[0] = 0;
+
+        float totalWeights = sampleWeights[0];
+
+        for (int i = 0; i < sampleCount / 2; i++)
+        {
+            float weight = ComputeGaussian(i + 1, PARAMS_BloomBlur);
+
+            sampleWeights[i * 2 + 1] = weight;
+            sampleWeights[i * 2 + 2] = weight;
+
+            totalWeights += weight * 2;
+
+            float sampleOffset = i * 2 + 1.5f;
+
+            sampleOffsetsX[i * 2 + 1] = dx * sampleOffset;
+            sampleOffsetsY[i * 2 + 1] = dy * sampleOffset;
+            sampleOffsetsX[i * 2 + 2] = -dx * sampleOffset;
+            sampleOffsetsY[i * 2 + 2] = -dy * sampleOffset;
+        }
+
+        for (int i = 0; i < sampleWeights.length; i++)
+        {
+            sampleWeights[i] /= totalWeights;
+        }
+
+        GLES20.glUniform1fv(sox, sampleCount, sampleOffsetsX, 0);
+        GLES20.glUniform1fv(soy, sampleCount, sampleOffsetsY, 0);
+        GLES20.glUniform1fv(wei, sampleCount, sampleWeights, 0);
+    }
+    float ComputeGaussian(float n, float theta)
+    {
+        return (float)((1.0 / Math.sqrt(2 * Math.PI * theta)) *
+                Math.exp(-(n * n) / (2 * theta * theta)));
+    }
+
     public void setPARAMS_FilmGrainSeed(float v)
     {
         Random r = new Random();
@@ -685,11 +936,19 @@ public class FilterRenderer implements GLSurfaceView.Renderer
 
     public int rtid;
     private void setShaderParamPhoto(int program, int texID)
+{
+    GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+    GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texID);
+    int loc = GLES20.glGetUniformLocation(program, "filteredPhoto");
+    //if (loc == -1) throw(new RuntimeException("SHEEEET"));
+    GLES20.glUniform1i(loc, 0);
+}
+    private void setShaderTex(int program, int texID, String param)
     {
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texID);
-        int loc = GLES20.glGetUniformLocation(program, "filteredPhoto");
-        if (loc == -1) throw(new RuntimeException("SHEEEET"));
+        int loc = GLES20.glGetUniformLocation(program, param);
+        //if (loc == -1) throw(new RuntimeException("SHEEEET"));
         GLES20.glUniform1i(loc, 0);
     }
     boolean first = true;
@@ -715,6 +974,12 @@ public class FilterRenderer implements GLSurfaceView.Renderer
         if (firstshit) return hToFilterTexture[0];
         if (first) {rtid = 1;return target1.GetTex();}
         else { rtid = 2;return target2.GetTex();}
+    }
+    private int GetNotCurTexture()
+    {
+        if (firstshit) return hToFilterTexture[0];
+        if (first) {rtid = 1;return target2.GetTex();}
+        else { rtid = 2;return target1.GetTex();}
     }
 
     private void drawquad(){        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
