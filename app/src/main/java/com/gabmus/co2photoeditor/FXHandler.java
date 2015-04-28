@@ -17,11 +17,13 @@ public class FXHandler {
                 new FXData(context.getString(R.string.blackAndWhite), R.drawable.demo_icon, 0, new int[0], new String[0]),
                 new FXData(context.getString(R.string.sepia), R.drawable.demo_icon, 0, new int[0], new String[0]),
                 new FXData(context.getString(R.string.negative), R.drawable.demo_icon, 0, new int[0], new String[0]),
-                new FXData("Color Correction", R.drawable.demo_icon, 3, new int [] {0,0,0}, new String[] {context.getString(R.string.brightness), context.getString(R.string.contrast), context.getString(R.string.saturation)}),
+                new FXData("Color Correction", R.drawable.demo_icon, 3, new int [] {50,25,50}, new String[] {context.getString(R.string.brightness), context.getString(R.string.contrast), context.getString(R.string.saturation)}),
                 new FXData(context.getString(R.string.toneMapping1), R.drawable.demo_icon, 2, new int [] {0,0}, new String[] {context.getString(R.string.exposure), context.getString(R.string.vignetting)}),
                 new FXData(context.getString(R.string.crt), R.drawable.demo_icon, 1, new int [] {0}, new String[] {context.getString(R.string.lineWidth)}),
                 new FXData(context.getString(R.string.noise1), R.drawable.demo_icon, 5, new int [] {0,0,0,0,0}, new String [] {context.getString(R.string.amount), context.getString(R.string.size), context.getString(R.string.luminance), context.getString(R.string.color), context.getString(R.string.randomizerSeed)}),
                 new FXData(context.getString(R.string.filmGrain), R.drawable.demo_icon, 4, new int [] {0,0,0,0}, new String [] {context.getString(R.string.strength), context.getString(R.string.darkNoisePower), context.getString(R.string.randomNoiseStrength), context.getString(R.string.randomizerSeed)})
+                new FXData(context.getString(R.string.filmGrain), R.drawable.demo_icon, 4, new int [] {0,0,0,0}, new String [] {context.getString(R.string.strength), context.getString(R.string.darkNoisePower), context.getString(R.string.randomNoiseStrength), context.getString(R.string.randomizerSeed)})
+
         };
         FXList = tmpFXList;
     }
@@ -131,17 +133,17 @@ public class FXHandler {
                 switch (valIndex) {
                     case 1:
                         //edit brightness
-                        finalValue = (tuningValue/100f)*10f;
+                        finalValue = (tuningValue/100f)*2f;
                         mFsv.renderer.PARAMS_Brightness = finalValue;
                         break;
                     case 2:
                         //edit contrast
-                        finalValue = (tuningValue/100f)*5f;
+                        finalValue = (tuningValue/100f)*4f;
                         mFsv.renderer.PARAMS_Contrast = finalValue;
                         break;
                     case 3:
                         //edit saturation
-                        finalValue = (tuningValue/100f)*30f;
+                        finalValue = (tuningValue/100f)*2f;
                         mFsv.renderer.PARAMS_Saturation = finalValue;
                         break;
                 }
