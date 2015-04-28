@@ -201,7 +201,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "   c.g = ((c.g-0.5) * Contrast) + 0.5;\n" +
                         "   c.b = ((c.b-0.5) * Contrast) + 0.5;\n" +
                         "   //Saturation\n" +
-                        "   float grey = dot(c, vec4(0.299, 0.587, 0.114, 1));\n" +
+                        "   float grey = c.r * 0.299 + c.g * 0.587 + c.b * 0.114;\n" +
                         "   c.r = grey + ((c.r - grey) * Saturation);\n" +
                         "   c.g = grey + ((c.g - grey) * Saturation);\n" +
                         "   c.b = grey + ((c.b - grey) * Saturation);\n" +
