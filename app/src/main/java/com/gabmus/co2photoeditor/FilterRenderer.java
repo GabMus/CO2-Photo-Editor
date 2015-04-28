@@ -460,6 +460,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "void main()" +
                         "{" +
                         "   vec4 c = texture2D(filteredPhoto, UV);" +
+                        //"   float grey = c.r * 0.299 + c.g * 0.587 + c.b * 0.114;\n" +
                         "   gl_FragColor = clamp((c - BloomThreshold) / (1.00000 - BloomThreshold), 0.0, 1.0);" +
                         "}";
         hShaderProgramBloomExtract = createprogram(generalreverseVS, bloomextract_FS);
@@ -474,10 +475,10 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "varying vec2 UV;" +
                         "vec4 AdjustSaturation(vec4 color, float saturation ) {" +
                         "    float grey;" +
-                        "    grey = dot( color, vec4( vec3( 0.300000, 0.590000, 0.110000), 0.000000));\n" +
-                        "    color.r = mix(grey, color.r, saturation);" +
-                        "   color.g = mix(grey, color.g, saturation);" +
-                        "   color.b = mix(grey, color.b, saturation);" +
+                        "    grey =  color.r * 0.299 + color.g * 0.587 + color.b * 0.114;\n" +
+                        "    color.r = grey + ((color.r - grey) * saturation);" +
+                        "   color.g = grey + ((color.g - grey) * saturation);" +
+                        "   color.b = grey + ((color.b - grey) * saturation);" +
                         "   color.a = 1.0;" +
                         "    return color;" +
                         "}"+
@@ -488,8 +489,11 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "    base = texture2D( BaseSampler, UV);" +
                         "    bloom = (AdjustSaturation( bloom, BloomSaturation) * BloomIntensity);" +
                         "    base = (AdjustSaturation( base, BaseSaturation) * BaseIntensity);" +
-                        "    base *= (1.00000 - clamp( bloom, 0.0, 1.0 ));" +
+                        "    base.r = base.r * (1.0 - clamp(bloom.r, 0.0, 1.0));" +
+                        "    base.g = base.g * (1.0 - clamp(bloom.g, 0.0, 1.0));" +
+                        "    base.b = base.b * (1.0 - clamp(bloom.b, 0.0, 1.0));" +
                         "    gl_FragColor = (base + bloom);" +
+                        //"    gl_FragColor = texture2D(BaseSampler, UV);" +
                         "}";
         hShaderProgramBloomCompose = createprogram(generalreverseVS, bloomcompose_FS);
         //GAUSSIAN BLUR
@@ -746,6 +750,15 @@ public class FilterRenderer implements GLSurfaceView.Renderer
         {
             //if (didshit) firstshit = false;
             //didshit = true;
+            //SetRenderTarget();
+            //GLES20.glUseProgram(hShaderProgramFinalPass);
+           // setVSParams(hShaderProgramFinalPass);
+            //setShaderParamPhoto(hShaderProgramFinalPass, GetCurTexture());
+            //drawquad();
+
+            //int base =  GetCurTexture();
+
+
             saveTarget.Set();
             GLES20.glUseProgram(hShaderProgramBloomExtract);
             setVSParams(hShaderProgramBloomExtract);
@@ -762,19 +775,19 @@ public class FilterRenderer implements GLSurfaceView.Renderer
             drawquad();
 
             blur2.Set();
+            //SetRenderTarget();
             GLES20.glUseProgram(hShaderProgramGaussianBlur);
             setVSParams(hShaderProgramGaussianBlur);
             setShaderParamPhoto(hShaderProgramGaussianBlur, blur1.GetTex());
             SetBlurEffectParameters(0, 1.0f / (float)ImageHeigth);
             drawquad();
 
-            int base = GetCurTexture();
             SetRenderTarget();
             GLES20.glUseProgram(hShaderProgramBloomCompose);
             setVSParams(hShaderProgramBloomCompose);
-
-            setShaderTex(hShaderProgramBloomCompose, base, "BaseSampler");
-            setShaderTex(hShaderProgramBloomCompose, blur2.GetTex(), "BloomSampler");
+            //Log.d("quassiasi", "b: " + base + "\nbl: " + blur2.GetTex());
+            setShaderTex(hShaderProgramBloomCompose, GetCurTexture(), "BaseSampler", 0);
+            setShaderTex(hShaderProgramBloomCompose, blur2.GetTex(), "BloomSampler", 1);
 
             int basei = GLES20.glGetUniformLocation(hShaderProgramBloomCompose, "BaseIntensity");
             int bases = GLES20.glGetUniformLocation(hShaderProgramBloomCompose, "BaseSaturation");
@@ -941,13 +954,24 @@ public class FilterRenderer implements GLSurfaceView.Renderer
     //if (loc == -1) throw(new RuntimeException("SHEEEET"));
     GLES20.glUniform1i(loc, 0);
 }
-    private void setShaderTex(int program, int texID, String param)
+    private void setShaderTex(int program, int texID, String param, int optz)
     {
-        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+        switch (optz)
+        {
+            case 0:
+            GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+            break;
+            case 1:
+                GLES20.glActiveTexture(GLES20.GL_TEXTURE1);
+                break;
+            case 2:
+                GLES20.glActiveTexture(GLES20.GL_TEXTURE2);
+                break;
+        }
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texID);
         int loc = GLES20.glGetUniformLocation(program, param);
         //if (loc == -1) throw(new RuntimeException("SHEEEET"));
-        GLES20.glUniform1i(loc, 0);
+        GLES20.glUniform1i(loc, optz);
     }
     boolean first = true;
     boolean didshit = false;
