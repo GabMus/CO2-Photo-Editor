@@ -1,6 +1,7 @@
 package com.gabmus.co2photoeditor;
 
 import android.opengl.GLES20;
+import android.util.Log;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -11,7 +12,7 @@ public class RenderTarget2D
     private int[] fb;
     private int[] depthRb;
     private int[] renderTex;
-    private IntBuffer texBuffer;
+    //private IntBuffer texBuffer;
     public int Width;
     public int Height;
 
@@ -46,14 +47,16 @@ public class RenderTarget2D
 
     public void Release()
     {
-        try
-        {
+        //try
+        //
             GLES20.glDeleteRenderbuffers(1, depthRb, 0);
             GLES20.glDeleteTextures(1, renderTex, 0);
             GLES20.glDeleteFramebuffers(1, fb, 0);
             GLES20.glFlush();
-        }
-        catch(Exception e){ }
+            System.gc();
+            //Log.d("Cazzo", "Hai releasato");
+        //}
+        //catch(Exception e){ }
     }
 
     public static void SetDefault(int x, int y, int w, int h)
@@ -87,7 +90,7 @@ public class RenderTarget2D
                 GLES20.GL_LINEAR);
 
         int[] buf = new int[Width * Height];
-        texBuffer = ByteBuffer.allocateDirect(buf.length
+        IntBuffer texBuffer = ByteBuffer.allocateDirect(buf.length
                 * 4).order(ByteOrder.nativeOrder()).asIntBuffer();;
 
         GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGB, Width, Height, 0, GLES20.GL_RGB, GLES20.GL_UNSIGNED_SHORT_5_6_5, texBuffer);
@@ -98,5 +101,6 @@ public class RenderTarget2D
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, fb[0]);
         GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0, GLES20.GL_TEXTURE_2D, renderTex[0], 0);
         GLES20.glFramebufferRenderbuffer(GLES20.GL_FRAMEBUFFER, GLES20.GL_DEPTH_ATTACHMENT, GLES20.GL_RENDERBUFFER, depthRb[0]);
+
     }
 }

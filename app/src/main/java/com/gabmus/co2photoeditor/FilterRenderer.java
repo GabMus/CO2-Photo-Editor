@@ -613,6 +613,8 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                     cmp_X = (int) (((float) scrW - (float) cmp_W) / 2f);
                 }
             }
+            fsv.toLoad = null;
+            System.gc();
             BOOL_LoadTexture = false;
         }
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
@@ -760,6 +762,8 @@ public class FilterRenderer implements GLSurfaceView.Renderer
             drawquad();
 
             blur2.Set();
+            GLES20.glUseProgram(hShaderProgramGaussianBlur);
+            setVSParams(hShaderProgramGaussianBlur);
             setShaderParamPhoto(hShaderProgramGaussianBlur, blur1.GetTex());
             SetBlurEffectParameters(0, 1.0f / (float)ImageHeigth);
             drawquad();
