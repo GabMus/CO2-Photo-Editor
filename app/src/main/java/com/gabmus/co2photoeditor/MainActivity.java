@@ -381,6 +381,7 @@ public class MainActivity extends Activity {
         }
 
         if (id == R.id.action_save) {
+            System.gc();
             String imgPath = prepareImagePath();
             fsv.SaveImage(imgPath);
             Toast.makeText(this, getString(R.string.toast_image_saved) + imgPath, Toast.LENGTH_LONG).show();
@@ -388,6 +389,7 @@ public class MainActivity extends Activity {
         }
 
         if (id == R.id.action_selectpic) {
+            System.gc();
             Intent intentChooseUpdate = new Intent(Intent.ACTION_GET_CONTENT);
             intentChooseUpdate.setType("image/*");
             startActivityForResult(Intent.createChooser(intentChooseUpdate, "Choose a picture"), REQUEST_IMAGE_CHOOSE);
