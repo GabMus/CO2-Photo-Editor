@@ -15,6 +15,11 @@ public class FXPreset {
         }
     }
 
+    public FXPreset(int fxCount_, FXPresetTunings [] presetList_) {
+        fxCount=fxCount_;
+        presetList = presetList_.clone();
+    }
+
     public void toggleAllFX(FXHandler mFX, FilterSurfaceView mFsv, boolean active) {
         mFX.resetAllFX(mFsv);
         if (active)

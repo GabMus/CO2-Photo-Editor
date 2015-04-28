@@ -184,30 +184,30 @@ public class FilterRenderer implements GLSurfaceView.Renderer
 
         //Contrast, brightness, saturation
         String cbs_FS =
-                "precision mediump float;" +
-                        "uniform sampler2D filteredPhoto;" +
-                        "uniform float Contrast;" +
-                        "uniform float Brightness;" +
-                        "uniform float Saturation;" +
-                        "varying vec2 UV;" +
-                        "" +
-                        "void main()" +
-                        "{" +
-                        "   vec4 c = texture2D(filteredPhoto, UV);" +
-                        "   //Brightness" +
-                        "   c = dot(c, vec4(Brightness,Brightness,Brightness,Brightness));" +
-                        "   //Contrast" +
-                        "   c.r = ((c.r-0.5) * Contrast) + 0.5;" +
-                        "   c.g = ((c.g-0.5) * Contrast) + 0.5;" +
-                        "   c.b = ((c.b-0.5) * Contrast) + 0.5;" +
-                        "   //Saturation" +
-                        "   float grey = dot(c, vec4(0.299, 0.587, 0.114, 1));" +
-                        "   c.r = mix(grey, c.r, Saturation);" +
-                        "   c.g = mix(grey, c.g, Saturation);" +
-                        "   c.b = mix(grey, c.b, Saturation);" +
-                        "" +
-                        "   gl_FragColor = c;" +
-                        "}";
+                "precision mediump float;\n" +
+                        "uniform sampler2D filteredPhoto;\n" +
+                        "uniform float Contrast;\n" +
+                        "uniform float Brightness;\n" +
+                        "uniform float Saturation;\n" +
+                        "varying vec2 UV;\n" +
+                        "\n" +
+                        "void main()\n" +
+                        "{\n" +
+                        "   vec4 c = texture2D(filteredPhoto, UV);\n" +
+                        "   //Brightness\n" +
+                        "   c = vec4(c.r * Brightness, c.g * Brightness, c.b * Brightness, 1);\n" +
+                        "   //Contrast\n" +
+                        "   c.r = ((c.r-0.5) * Contrast) + 0.5;\n" +
+                        "   c.g = ((c.g-0.5) * Contrast) + 0.5;\n" +
+                        "   c.b = ((c.b-0.5) * Contrast) + 0.5;\n" +
+                        "   //Saturation\n" +
+                        "   float grey = dot(c, vec4(0.299, 0.587, 0.114, 1));\n" +
+                        "   c.r = mix(grey, c.r, Saturation);\n" +
+                        "   c.g = mix(grey, c.g, Saturation);\n" +
+                        "   c.b = mix(grey, c.b, Saturation);\n" +
+                        "\n" +
+                        "   gl_FragColor = c;\n" +
+                        "}\n";
         hShaderProgramContrastSaturationBrightness = createprogram(generalreverseVS, cbs_FS);
 
         //Tonality Adjustment
@@ -489,7 +489,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "    bloom = (AdjustSaturation( bloom, BloomSaturation) * BloomIntensity);" +
                         "    base = (AdjustSaturation( base, BaseSaturation) * BaseIntensity);" +
                         "    base *= (1.00000 - clamp( bloom, 0.0, 1.0 ));" +
-                        "    return (base + bloom);" +
+                        "    gl_FragColor = (base + bloom);" +
                         "}";
         hShaderProgramBloomCompose = createprogram(generalreverseVS, bloomcompose_FS);
         //GAUSSIAN BLUR
