@@ -107,10 +107,10 @@ public class MainActivity extends Activity {
 
 
 
-        {
+        { //check if need to run the welcome activity
             sharedpreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences.Editor editor = sharedpreferences.edit();
             if (!sharedpreferences.contains("userWelcomedKey")) {
-                SharedPreferences.Editor editor = sharedpreferences.edit();
                 editor.putBoolean("userWelcomedKey", false);
                 editor.commit();
                 userWelcomed=false;
@@ -120,12 +120,10 @@ public class MainActivity extends Activity {
                 if (!userWelcomed) {
                     welcomeUser();
                     userWelcomed=true;
-                    SharedPreferences.Editor editor = sharedpreferences.edit();
                     editor.putBoolean("userWelcomedKey", true);
                     editor.commit();
                 }
             }
-
         }
 
         //DONE: launch welcome activity
@@ -294,6 +292,8 @@ public class MainActivity extends Activity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 FXselected=i;
                 FX.SelectFX(i);
+                if (!FX.FXList[i].fxActive && Boolean.parseBoolean(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("pref_activate_onclick_key", "true")))
+                    FX.enableFX(i, fsv, true);
                 fxDrawer.closeDrawers();
             }
         });

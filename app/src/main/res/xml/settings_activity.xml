@@ -6,7 +6,13 @@
         android:summary="@string/pref_save_path_description"
         android:inputType="text"
         android:defaultValue="@string/pref_save_path_default"
-        android:singleLine="true"/>
+        android:singleLine="true" />
+
+    <CheckBoxPreference
+        android:key="pref_activate_onclick_key"
+        android:title="@string/pref_activate_onclick"
+        android:summary="@string/pref_activate_onclick_desc"
+        android:defaultValue="true" />
 
     <!-- <ListPreference
         android:key="pref_save_format_key"

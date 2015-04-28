@@ -20,6 +20,9 @@
     <string name="pref_save_path">Saved pictures folder</string>
     <string name="pref_save_path_description">Choose where CO₂ should save your edited photos</string>
     <string name="pref_save_path_default">Pictures/CO2-Photo-Editor</string>
+
+    <string name="pref_activate_onclick">Tap an effect to activate it</string>
+    <string name="pref_activate_onclick_desc">Activate an effect automatically without having to use the switch</string>
     
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_welcome">Welcome</string>
