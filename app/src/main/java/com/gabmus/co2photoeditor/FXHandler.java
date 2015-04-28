@@ -220,7 +220,7 @@ public class FXHandler {
                 }
                 break;
 
-            case 8:
+            case 8: //bloom
                 switch (valIndex) {
                     case 1: //threshold
                         finalValue = (tuningValue / 100f) * 1f;
@@ -235,12 +235,12 @@ public class FXHandler {
                         mFsv.renderer.PARAMS_BloomBlur = finalValue;
                         break;
                     case 4: //intensity
-                        finalValue = (tuningValue / 100f) * 1f;
-                        mFsv.renderer.PARAMS_BloomIntensity=tuningValue;
+                        finalValue = (tuningValue / 100f) * 2f;
+                        mFsv.renderer.PARAMS_BloomIntensity=finalValue;
                         break;
                     case 5: //base-intensity
-                        finalValue = (tuningValue / 100f) * 1f;
-                        mFsv.renderer.PARAMS_BloomBaseIntensity=tuningValue;
+                        finalValue = (tuningValue / 100f) * 2f;
+                        mFsv.renderer.PARAMS_BloomBaseIntensity=finalValue;
                         break;
                 }
                 break;
