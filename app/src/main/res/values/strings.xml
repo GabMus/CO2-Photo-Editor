@@ -53,6 +53,12 @@
     <string name="strength">Strength</string>
     <string name="darkNoisePower">Dark Noise Power</string>
     <string name="randomNoiseStrength">Random Noise Strength</string>
+    <string name="bloom">Bloom</string>
+    <string name="bloomThreshold">Threshold</string>
+    <string name="bloomSaturation">Bloom Saturation</string>
+    <string name="bloomBlur">Bloom Blur</string>
+    <string name="bloomIntensity">Bloom Intensity</string>
+    <string name="bloomBaseIntensity">Base Intensity</string>
     <string name="title_activity_about">About</string>
 
 

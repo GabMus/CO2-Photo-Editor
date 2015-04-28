@@ -21,8 +21,8 @@ public class FXHandler {
                 new FXData(context.getString(R.string.toneMapping1), R.drawable.demo_icon, 2, new int [] {0,0}, new String[] {context.getString(R.string.exposure), context.getString(R.string.vignetting)}),
                 new FXData(context.getString(R.string.crt), R.drawable.demo_icon, 1, new int [] {0}, new String[] {context.getString(R.string.lineWidth)}),
                 new FXData(context.getString(R.string.noise1), R.drawable.demo_icon, 5, new int [] {0,0,0,0,0}, new String [] {context.getString(R.string.amount), context.getString(R.string.size), context.getString(R.string.luminance), context.getString(R.string.color), context.getString(R.string.randomizerSeed)}),
-                new FXData(context.getString(R.string.filmGrain), R.drawable.demo_icon, 4, new int [] {0,0,0,0}, new String [] {context.getString(R.string.strength), context.getString(R.string.darkNoisePower), context.getString(R.string.randomNoiseStrength), context.getString(R.string.randomizerSeed)})
-                new FXData(context.getString(R.string.filmGrain), R.drawable.demo_icon, 4, new int [] {0,0,0,0}, new String [] {context.getString(R.string.strength), context.getString(R.string.darkNoisePower), context.getString(R.string.randomNoiseStrength), context.getString(R.string.randomizerSeed)})
+                new FXData(context.getString(R.string.filmGrain), R.drawable.demo_icon, 4, new int [] {0,0,0,0}, new String [] {context.getString(R.string.strength), context.getString(R.string.darkNoisePower), context.getString(R.string.randomNoiseStrength), context.getString(R.string.randomizerSeed)}),
+                new FXData(context.getString(R.string.bloom), R.drawable.demo_icon, 5, new int [] {0,0,0,0,0}, new String [] {context.getString(R.string.bloomThreshold), context.getString(R.string.bloomSaturation), context.getString(R.string.bloomBlur), context.getString(R.string.bloomIntensity), context.getString(R.string.bloomBaseIntensity)})
 
         };
         FXList = tmpFXList;
@@ -120,6 +120,8 @@ public class FXHandler {
             case 7: //Proper Film Grain
                 mFsv.renderer.PARAMS_EnableProperFilmGrain = active;
                 break;
+            case 8: //bloom
+                mFsv.renderer.PARAMS_EnableBloom = active;
             default:
                 Log.e("CO2 Photo Editor", "enableFX: index out of range");
                 break;
@@ -218,6 +220,30 @@ public class FXHandler {
                 }
                 break;
 
+            case 8:
+                switch (valIndex) {
+                    case 1: //threshold
+                        finalValue = (tuningValue / 100f) * 1f;
+                        mFsv.renderer.PARAMS_BloomThreshold = finalValue;
+                        break;
+                    case 2: //saturation
+                        finalValue = (tuningValue / 100f) * 1f;
+                        mFsv.renderer.PARAMS_BloomSaturation = finalValue;
+                        break;
+                    case 3: //blur
+                        finalValue = ((tuningValue / 100f) * 9f)+1f;
+                        mFsv.renderer.PARAMS_BloomBlur = finalValue;
+                        break;
+                    case 4: //intensity
+                        finalValue = (tuningValue / 100f) * 1f;
+                        mFsv.renderer.PARAMS_BloomIntensity=tuningValue;
+                        break;
+                    case 5: //base-intensity
+                        finalValue = (tuningValue / 100f) * 1f;
+                        mFsv.renderer.PARAMS_BloomBaseIntensity=tuningValue;
+                        break;
+                }
+                break;
             //other cases
 
             default:
