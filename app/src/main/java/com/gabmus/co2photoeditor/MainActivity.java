@@ -292,7 +292,7 @@ public class MainActivity extends Activity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 FXselected=i;
                 FX.SelectFX(i);
-                if (!FX.FXList[i].fxActive && Boolean.parseBoolean(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("pref_activate_onclick_key", "true"))) {
+                if (!FX.FXList[i].fxActive && (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("pref_activate_onclick_key", true))) {
                     //FX.enableFX(i, fsv, true);
                     fxToggle.setChecked(true);
                 }
