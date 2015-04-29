@@ -72,7 +72,10 @@ public class FilterRenderer implements GLSurfaceView.Renderer
     public boolean PARAMS_EnableToneMapping = false;
     public float PARAMS_ToneMappingExposure = 2.0f;
     public float PARAMS_ToneMappingVignetting = 1.0f;
+    public float PARAMS_ToneMappingWhiteLevel = 1.0f;
+    public float PARAMS_ToneMappingLuminanceSaturation = 1.0f;
 
+    public boolean PARAMS_RecomputeBloom = true;
 
     public boolean PARAMS_EnableCathodeRayTube = false;
     public int PARAMS_CathodeRayTubeLineWidth = 1;
@@ -309,15 +312,40 @@ public class FilterRenderer implements GLSurfaceView.Renderer
         String tonemapping_FS =
                 "precision mediump float;" +
                         "uniform sampler2D filteredPhoto;" +
-                        "uniform float exposure;" +
+                        "uniform float lensExposure;" +
+                        "uniform float luminanceSaturation;\n" +
+                        "uniform float whiteLevel;" +
                         "uniform float vign;" +
                         "varying vec2 UV;" +
+                        "" +
+                        "vec3 ExposureColor( vec3 color ) {\n" +
+                        "    float exposure;\n" +
+                        "    exposure = exp2( lensExposure );\n" +
+                        "    return (color * exposure);\n" +
+                        "}" +
+                        "" +
+                        "float CalcLuminance(vec3 color ) {\n" +
+                        "\n" +
+                        "    return max( dot( color, vec3( 0.299000, 0.587000, 0.114000)), 0.000100000);\n" +
+                        "}\n" +
+                        "\n" +
+                        "vec3 ToneMapExponential(vec3 color ) {\n" +
+                        "    float pixelLuminance;\n" +
+                        "    float toneMappedLuminance;\n" +
+                        "\n" +
+                        "    pixelLuminance = CalcLuminance( color);\n" +
+                        "    toneMappedLuminance = (1.00000 - exp( (( -pixelLuminance ) / whiteLevel) ));\n" +
+                        "    return (toneMappedLuminance * pow( (color / pixelLuminance), vec3( luminanceSaturation)));\n" +
+                        "}" +
+                        "" +
                         "void main() {" +
                         "vec4 color;\n" +
                         "float vignette;\n" +
                         "vec2 vtc = vec2( (UV - 0.500000));" +
                         "color = texture2D( filteredPhoto, UV);\n" +
                         "vignette = pow( (1.00000 - (dot( vtc, vtc) * vign)), 2.00000);\n" +
+                        "color = vec4(ExposureColor(vec3(color)), 1.0);" +
+                        "color = vec4(ToneMapExponential( vec3(color)), 1.0);" +
                         "gl_FragColor = vec4(color.r * vignette, color.g * vignette, color.b * vignette, 1);" +
                         "}";
 
@@ -460,7 +488,6 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "void main()" +
                         "{" +
                         "   vec4 c = texture2D(filteredPhoto, UV);" +
-                        //"   float grey = c.r * 0.299 + c.g * 0.587 + c.b * 0.114;\n" +
                         "   gl_FragColor = clamp((c - BloomThreshold) / (1.00000 - BloomThreshold), 0.0, 1.0);" +
                         "}";
         hShaderProgramBloomExtract = createprogram(generalreverseVS, bloomextract_FS);
@@ -694,10 +721,14 @@ public class FilterRenderer implements GLSurfaceView.Renderer
             GLES20.glUseProgram(hShaderProgramToneMapping);
             setVSParams(hShaderProgramToneMapping);
             setShaderParamPhoto(hShaderProgramToneMapping, GetCurTexture());
-            int exposure = GLES20.glGetUniformLocation(hShaderProgramToneMapping, "exposure");
+            int exposure = GLES20.glGetUniformLocation(hShaderProgramToneMapping, "lensExposure");
+            int whtlvl = GLES20.glGetUniformLocation(hShaderProgramToneMapping, "whiteLevel");
+            int lumsat = GLES20.glGetUniformLocation(hShaderProgramToneMapping, "luminanceSaturation");
             int vign = GLES20.glGetUniformLocation(hShaderProgramToneMapping, "vign");
             GLES20.glUniform1f(exposure, PARAMS_ToneMappingExposure);
             GLES20.glUniform1f(vign, PARAMS_ToneMappingVignetting);
+            GLES20.glUniform1f(whtlvl, PARAMS_ToneMappingWhiteLevel);
+            GLES20.glUniform1f(lumsat, PARAMS_ToneMappingLuminanceSaturation);
             drawquad();
         }
         if (PARAMS_EnableFilmGrain) {
@@ -758,29 +789,31 @@ public class FilterRenderer implements GLSurfaceView.Renderer
 
             //int base =  GetCurTexture();
 
+            if (PARAMS_RecomputeBloom) {
 
-            saveTarget.Set();
-            GLES20.glUseProgram(hShaderProgramBloomExtract);
-            setVSParams(hShaderProgramBloomExtract);
-            setShaderParamPhoto(hShaderProgramBloomExtract, GetCurTexture());
-            int thresh = GLES20.glGetUniformLocation(hShaderProgramBloomExtract, "BloomThreshold");
-            GLES20.glUniform1f(thresh, PARAMS_BloomThreshold);
-            drawquad();
+                saveTarget.Set();
+                GLES20.glUseProgram(hShaderProgramBloomExtract);
+                setVSParams(hShaderProgramBloomExtract);
+                setShaderParamPhoto(hShaderProgramBloomExtract, GetCurTexture());
+                int thresh = GLES20.glGetUniformLocation(hShaderProgramBloomExtract, "BloomThreshold");
+                GLES20.glUniform1f(thresh, PARAMS_BloomThreshold);
+                drawquad();
 
-            blur1.Set();
-            GLES20.glUseProgram(hShaderProgramGaussianBlur);
-            setVSParams(hShaderProgramGaussianBlur);
-            setShaderParamPhoto(hShaderProgramGaussianBlur, saveTarget.GetTex());
-            SetBlurEffectParameters(1.0f / (float)ImageWidth, 0);
-            drawquad();
+                blur1.Set();
+                GLES20.glUseProgram(hShaderProgramGaussianBlur);
+                setVSParams(hShaderProgramGaussianBlur);
+                setShaderParamPhoto(hShaderProgramGaussianBlur, saveTarget.GetTex());
+                SetBlurEffectParameters(1.0f / (float) ImageWidth, 0);
+                drawquad();
 
-            blur2.Set();
-            //SetRenderTarget();
-            GLES20.glUseProgram(hShaderProgramGaussianBlur);
-            setVSParams(hShaderProgramGaussianBlur);
-            setShaderParamPhoto(hShaderProgramGaussianBlur, blur1.GetTex());
-            SetBlurEffectParameters(0, 1.0f / (float)ImageHeigth);
-            drawquad();
+                blur2.Set();
+                //SetRenderTarget();
+                GLES20.glUseProgram(hShaderProgramGaussianBlur);
+                setVSParams(hShaderProgramGaussianBlur);
+                setShaderParamPhoto(hShaderProgramGaussianBlur, blur1.GetTex());
+                SetBlurEffectParameters(0, 1.0f / (float) ImageHeigth);
+                drawquad();
+            }
 
             SetRenderTarget();
             GLES20.glUseProgram(hShaderProgramBloomCompose);
