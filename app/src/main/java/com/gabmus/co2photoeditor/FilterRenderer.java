@@ -39,6 +39,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
     private int hShaderProgramGaussianBlur;
     private int hShaderProgramContrastSaturationBrightness;
     private int hShaderProgramTonality;
+    private int hShaderProgramToneMappingFilmicALU;
 
     public boolean PARAMS_EnableTonality = false;
     public float PARAMS_TonalityR = 1f;
@@ -74,6 +75,9 @@ public class FilterRenderer implements GLSurfaceView.Renderer
     public float PARAMS_ToneMappingVignetting = 1.0f;
     public float PARAMS_ToneMappingWhiteLevel = 1.0f;
     public float PARAMS_ToneMappingLuminanceSaturation = 1.0f;
+
+    public boolean PARAMS_EnableToneMappingFilmicALU = false;
+    public float PARAMS_FilmicALUToneMappingExposure = 0.3f;
 
     public boolean PARAMS_RecomputeBloom = true;
 
@@ -351,6 +355,31 @@ public class FilterRenderer implements GLSurfaceView.Renderer
 
         hShaderProgramToneMapping = createprogram(generalreverseVS, tonemapping_FS);
 
+
+        //Tone Mapping Filmic ALU
+        String tonemappingalu_FS=
+                "precision mediump float;" +
+                        "uniform sampler2D filteredPhoto;" +
+                        "uniform float lensExposure;" +
+                        "varying vec2 UV;" +
+                        "" +
+                        "vec3 ExposureColor( vec3 color ) {\n" +
+                        "    float exposure;\n" +
+                        "    exposure = exp2( lensExposure );\n" +
+                        "    return (color * exposure);\n" +
+                        "}" +
+                        "" +
+                        "void main()" +
+                        "{" +
+                        "    vec3 color = vec3(texture2D(filteredPhoto, UV));" +
+                        "    color = ExposureColor(color);" +
+                        "    color = vec3( max( 0.000000, float( (color - 0.00400000))));\n" +
+                        "    color = ((color * ((6.20000 * color) + 0.500000)) / ((color * ((6.20000 * color) + 1.70000)) + 0.0600000));" +
+                        "    gl_FragColor = vec4(pow(color.r, 2.2), pow(color.g, 2.2), pow(color.b, 2.2), 1.0);" +
+                        "}" +
+                        "\n" ;
+
+        hShaderProgramToneMappingFilmicALU = createprogram(generalreverseVS,tonemappingalu_FS );
 
         //Film Grain
         String filmGrain_FS =
@@ -729,6 +758,16 @@ public class FilterRenderer implements GLSurfaceView.Renderer
             GLES20.glUniform1f(vign, PARAMS_ToneMappingVignetting);
             GLES20.glUniform1f(whtlvl, PARAMS_ToneMappingWhiteLevel);
             GLES20.glUniform1f(lumsat, PARAMS_ToneMappingLuminanceSaturation);
+            drawquad();
+        }
+        if (PARAMS_EnableToneMappingFilmicALU && PARAMS_FilmicALUToneMappingExposure != 0)
+        {
+            SetRenderTarget();
+            GLES20.glUseProgram(hShaderProgramToneMappingFilmicALU);
+            setVSParams(hShaderProgramToneMappingFilmicALU);
+            setShaderParamPhoto(hShaderProgramToneMappingFilmicALU, GetCurTexture());
+            int exposure = GLES20.glGetUniformLocation(hShaderProgramToneMappingFilmicALU, "lensExposure");
+            GLES20.glUniform1f(exposure, PARAMS_FilmicALUToneMappingExposure);
             drawquad();
         }
         if (PARAMS_EnableFilmGrain) {
