@@ -8,14 +8,19 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Log;
+import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.ShareActionProvider;
 import android.widget.Switch;
@@ -33,7 +38,7 @@ public class MainActivity extends Activity {
     public static DrawerLayout fxDrawer;
 
     public static int FXselected = -1;
-    public LinearLayout customViewLayout;
+    public FrameLayout customViewLayout;
 
     public static Switch fxToggle;
     public static TextView textViewFXTitle;
@@ -67,6 +72,8 @@ public class MainActivity extends Activity {
 
     ActionBarDrawerToggle drawerToggle;
 
+    ScrollView scroller;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +86,7 @@ public class MainActivity extends Activity {
         FX = new FXHandler(context);
 
         //initialize the filtersurfaceview
-        customViewLayout = (LinearLayout) findViewById(R.id.customViewLayout);
+        customViewLayout = (FrameLayout) findViewById(R.id.customViewLayout);
         fsv = new FilterSurfaceView(getApplicationContext(), this);
         fsv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         customViewLayout.addView(fsv);
@@ -238,6 +245,15 @@ public class MainActivity extends Activity {
             makeAllSlidersDisappear();
 
         }
+
+        scroller = (ScrollView) findViewById(R.id.scrollView);
+        scroller.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                Log.d("badango", Integer.toString(view.getScrollY()));
+                return false;
+            }
+        });
 
         effectsList = (ListView) findViewById(R.id.listView);
         effectsList.setAdapter(new CustomFXAdapter(this, FX.getFXnames(), FX.getFXicons()));
