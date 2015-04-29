@@ -7,12 +7,14 @@ package com.gabmus.co2photoeditor;
 public class FXPreset {
     private int fxCount;
     private FXPresetTunings [] presetList;
-    public FXPreset(int fxCount_, int [] fxID_, int [] tuningCount_, int [][] tuningValues_) {
+    public String presetTitle;
+    public FXPreset(int fxCount_, int [] fxID_, int [] tuningCount_, int [][] tuningValues_, String presetTitle_) {
         fxCount=fxCount_;
         presetList = new FXPresetTunings[fxCount];
         for (int i = 0; i < fxCount; i++) {
             presetList[i] = new FXPresetTunings(fxID_[i], tuningCount_[i], tuningValues_[i]);
         }
+        presetTitle=presetTitle_;
     }
 
     public FXPreset(int fxCount_, FXPresetTunings [] presetList_) {

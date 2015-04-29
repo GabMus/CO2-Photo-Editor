@@ -59,6 +59,15 @@
     <string name="bloomBlur">Bloom Blur</string>
     <string name="bloomIntensity">Bloom Intensity</string>
     <string name="bloomBaseIntensity">Base Intensity</string>
+    <string name="whiteLevel">White Level</string>
+    <string name="luminanceSaturation">Luminance Saturation</string>
+    <string name="tonality">Tonality</string>
+    <string name="red">Red</string>
+    <string name="green">Green</string>
+    <string name="blue">Blue</string>
+
+
+
     <string name="title_activity_about">About</string>
 
     <string name="textView_listTitleFX">Filters</string>

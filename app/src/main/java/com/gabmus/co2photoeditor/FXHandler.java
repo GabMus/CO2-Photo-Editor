@@ -18,11 +18,12 @@ public class FXHandler {
                 new FXData(context.getString(R.string.sepia), R.drawable.demo_icon, 0, new int[0], new String[0]),
                 new FXData(context.getString(R.string.negative), R.drawable.demo_icon, 0, new int[0], new String[0]),
                 new FXData("Color Correction", R.drawable.demo_icon, 3, new int [] {50,25,50}, new String[] {context.getString(R.string.brightness), context.getString(R.string.contrast), context.getString(R.string.saturation)}),
-                new FXData(context.getString(R.string.toneMapping1), R.drawable.demo_icon, 2, new int [] {0,0}, new String[] {context.getString(R.string.exposure), context.getString(R.string.vignetting)}),
+                new FXData(context.getString(R.string.toneMapping1), R.drawable.demo_icon, 4, new int [] {0,0,50,50}, new String[] {context.getString(R.string.exposure), context.getString(R.string.vignetting), context.getString(R.string.whiteLevel), context.getString(R.string.luminanceSaturation)}),
                 new FXData(context.getString(R.string.crt), R.drawable.demo_icon, 1, new int [] {0}, new String[] {context.getString(R.string.lineWidth)}),
                 new FXData(context.getString(R.string.noise1), R.drawable.demo_icon, 5, new int [] {0,0,0,0,0}, new String [] {context.getString(R.string.amount), context.getString(R.string.size), context.getString(R.string.luminance), context.getString(R.string.color), context.getString(R.string.randomizerSeed)}),
                 new FXData(context.getString(R.string.filmGrain), R.drawable.demo_icon, 4, new int [] {0,0,0,0}, new String [] {context.getString(R.string.strength), context.getString(R.string.darkNoisePower), context.getString(R.string.randomNoiseStrength), context.getString(R.string.randomizerSeed)}),
-                new FXData(context.getString(R.string.bloom), R.drawable.demo_icon, 5, new int [] {0,0,0,0,50}, new String [] {context.getString(R.string.bloomThreshold), context.getString(R.string.bloomSaturation), context.getString(R.string.bloomBlur), context.getString(R.string.bloomIntensity), context.getString(R.string.bloomBaseIntensity)})
+                new FXData(context.getString(R.string.bloom), R.drawable.demo_icon, 5, new int [] {0,0,0,0,50}, new String [] {context.getString(R.string.bloomThreshold), context.getString(R.string.bloomSaturation), context.getString(R.string.bloomBlur), context.getString(R.string.bloomIntensity), context.getString(R.string.bloomBaseIntensity)}),
+                new FXData(context.getString(R.string.tonality), R.drawable.demo_icon, 3, new int [] {50,50,50}, new String [] {context.getString(R.string.red), context.getString(R.string.green), context.getString(R.string.blue)})
 
         };
         FXList = tmpFXList;
@@ -122,6 +123,10 @@ public class FXHandler {
                 break;
             case 8: //bloom
                 mFsv.renderer.PARAMS_EnableBloom = active;
+                break;
+            case 9: //tonality
+                mFsv.renderer.PARAMS_EnableTonality = active;
+                break;
             default:
                 Log.e("CO2 Photo Editor", "enableFX: index out of range");
                 break;
@@ -161,6 +166,16 @@ public class FXHandler {
                         //edit vignetting
                         finalValue = (tuningValue/100f)*3f;
                         mFsv.renderer.PARAMS_ToneMappingVignetting = finalValue;
+                        break;
+                    case 3:
+                        //edit white level
+                        finalValue = (tuningValue/100f)*2f;
+                        mFsv.renderer.PARAMS_ToneMappingWhiteLevel = finalValue;
+                        break;
+                    case 4:
+                        //edit luminance saturation
+                        finalValue= (tuningValue/100f)*2f;
+                        mFsv.renderer.PARAMS_ToneMappingLuminanceSaturation = finalValue;
                         break;
                 }
                 break;
@@ -241,6 +256,22 @@ public class FXHandler {
                     case 5: //base-intensity
                         finalValue = (tuningValue / 100f) * 2f;
                         mFsv.renderer.PARAMS_BloomBaseIntensity=finalValue;
+                        break;
+                }
+                break;
+            case 9: //tonality
+                switch (valIndex) {
+                    case 1: //Red
+                        finalValue = (tuningValue / 100f) * 2f;
+                        mFsv.renderer.PARAMS_TonalityR = finalValue;
+                        break;
+                    case 2: //Green
+                        finalValue = (tuningValue / 100f) * 2f;
+                        mFsv.renderer.PARAMS_TonalityG = finalValue;
+                        break;
+                    case 3: //Blue
+                        finalValue = (tuningValue / 100f) * 2f;
+                        mFsv.renderer.PARAMS_TonalityB = finalValue;
                         break;
                 }
                 break;
