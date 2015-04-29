@@ -140,9 +140,9 @@ public class FilterRenderer implements GLSurfaceView.Renderer
         IB.put(indices); IB.position(0);
         TC.put(texCoords); TC.position(0);
         loadShaders();
-        if (MainActivity.gotSharedPic) {
-            MainActivity.gotSharedPic = false;
-            fsv.LoadBitmap(MainActivity.sharedPicBmp);
+        if (MainHelper.gotSharedPic) {
+            MainHelper.gotSharedPic = false;
+            fsv.LoadBitmap(MainHelper.sharedPicBmp);
         }
         else {
             fsv.LoadBitmap(fsv.generateTestBitmap());

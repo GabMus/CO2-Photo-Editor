@@ -3,12 +3,8 @@ package com.gabmus.co2photoeditor;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -25,17 +21,13 @@ import android.widget.ShareActionProvider;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-import java.io.File;
 import java.io.IOException;
 
 
 public class MainActivity extends Activity {
 
     private final int REQUEST_IMAGE_CHOOSE=1;
-
-    public static boolean userWelcomed;
-    public static boolean gotSharedPic = false;
-    public static Bitmap sharedPicBmp;
+    public static MainHelper helper;
     private Intent mShareIntent;
     private ShareActionProvider mShareActionProvider;
     public static DrawerLayout fxDrawer;
@@ -74,62 +66,31 @@ public class MainActivity extends Activity {
     Context context;
 
     ActionBarDrawerToggle drawerToggle;
-    SharedPreferences sharedpreferences;
 
-    public static void makeAllSlidersDisappear() {
-        sst1.setVisibility(View.GONE);
-        sst2.setVisibility(View.GONE);
-        sst3.setVisibility(View.GONE);
-        sst4.setVisibility(View.GONE);
-        sst5.setVisibility(View.GONE);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        helper= new MainHelper(this);
 
         context = this;
 
         FX = new FXHandler(context);
 
+        //initialize the filtersurfaceview
+        customViewLayout = (LinearLayout) findViewById(R.id.customViewLayout);
+        fsv = new FilterSurfaceView(getApplicationContext(), this);
+        fsv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        customViewLayout.addView(fsv);
+
         //receive share implicit intent
-        Uri imageUriFromShare = this.getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
-        if (imageUriFromShare != null) {
-            try {
-                sharedPicBmp = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUriFromShare);
-                gotSharedPic = true;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        helper.receiveShareIntent();
 
+        //welcome activity
+        helper.checkAndWelcomeUser();
 
-
-
-        { //check if need to run the welcome activity
-            sharedpreferences = PreferenceManager.getDefaultSharedPreferences(this);
-            SharedPreferences.Editor editor = sharedpreferences.edit();
-            if (!sharedpreferences.contains("userWelcomedKey")) {
-                editor.putBoolean("userWelcomedKey", false);
-                editor.commit();
-                userWelcomed=false;
-            }
-            if (sharedpreferences.contains("userWelcomedKey")) {
-                userWelcomed = sharedpreferences.getBoolean("userWelcomedKey", false);
-                if (!userWelcomed) {
-                    welcomeUser();
-                    userWelcomed=true;
-                    editor.putBoolean("userWelcomedKey", true);
-                    editor.commit();
-                }
-            }
-        }
-
-        //DONE: launch welcome activity
-        //welcomeUser();
-
-        //DONE: insert drawer button
+        //navigation drawer management
         fxDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         drawerToggle = new ActionBarDrawerToggle(this, fxDrawer, R.string.drawer_open, R.string.drawer_close) {
@@ -149,141 +110,134 @@ public class MainActivity extends Activity {
         };
         fxDrawer.setDrawerListener(drawerToggle);
 
-        customViewLayout = (LinearLayout) findViewById(R.id.customViewLayout);
-
-        fsv = new FilterSurfaceView(getApplicationContext(), this);
-
-        fsv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        //setContentView(fsv);
-        customViewLayout.addView(fsv);
-
         textViewFXTitle = (TextView) findViewById(R.id.textViewEffectTitle);
 
         strNoFXSelected = getString(R.string.effect_title_textview);
 
         fxToggle = (Switch) findViewById(R.id.switch1);
 
-        sk1 = (SeekBar) findViewById(R.id.seekBar1);
-        sk2 = (SeekBar) findViewById(R.id.seekBar2);
-        sk3 = (SeekBar) findViewById(R.id.seekBar3);
-        sk4 = (SeekBar) findViewById(R.id.seekBar4);
-        sk5 = (SeekBar) findViewById(R.id.seekBar5);
+        {
+            sk1 = (SeekBar) findViewById(R.id.seekBar1);
+            sk2 = (SeekBar) findViewById(R.id.seekBar2);
+            sk3 = (SeekBar) findViewById(R.id.seekBar3);
+            sk4 = (SeekBar) findViewById(R.id.seekBar4);
+            sk5 = (SeekBar) findViewById(R.id.seekBar5);
 
-        slb1 = (TextView) findViewById(R.id.sliderLabel1);
-        slb2 = (TextView) findViewById(R.id.sliderLabel2);
-        slb3 = (TextView) findViewById(R.id.sliderLabel3);
-        slb4 = (TextView) findViewById(R.id.sliderLabel4);
-        slb5 = (TextView) findViewById(R.id.sliderLabel5);
+            slb1 = (TextView) findViewById(R.id.sliderLabel1);
+            slb2 = (TextView) findViewById(R.id.sliderLabel2);
+            slb3 = (TextView) findViewById(R.id.sliderLabel3);
+            slb4 = (TextView) findViewById(R.id.sliderLabel4);
+            slb5 = (TextView) findViewById(R.id.sliderLabel5);
 
-        sst1 = (android.support.v7.widget.CardView) findViewById(R.id.sSetting1);
-        sst2 = (android.support.v7.widget.CardView) findViewById(R.id.sSetting2);
-        sst3 = (android.support.v7.widget.CardView) findViewById(R.id.sSetting3);
-        sst4 = (android.support.v7.widget.CardView) findViewById(R.id.sSetting4);
-        sst5 = (android.support.v7.widget.CardView) findViewById(R.id.sSetting5);
+            sst1 = (android.support.v7.widget.CardView) findViewById(R.id.sSetting1);
+            sst2 = (android.support.v7.widget.CardView) findViewById(R.id.sSetting2);
+            sst3 = (android.support.v7.widget.CardView) findViewById(R.id.sSetting3);
+            sst4 = (android.support.v7.widget.CardView) findViewById(R.id.sSetting4);
+            sst5 = (android.support.v7.widget.CardView) findViewById(R.id.sSetting5);
 
-        //DONE: setup seekbar methods
+            //DONE: setup seekbar methods
 
-        sk1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override                                   //i=value, b=by user?
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+            sk1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override                                   //i=value, b=by user?
+                public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                     FX.FXList[FXselected].parValues[0] = i;
                     FX.tuneFX(FXselected, 1, i, fsv);
-            }
+                }
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
 
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
 
-            }
-        });
+                }
+            });
 
-        sk2.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override                                   //i=value, b=by user?
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+            sk2.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override                                   //i=value, b=by user?
+                public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                     FX.FXList[FXselected].parValues[1] = i;
                     FX.tuneFX(FXselected, 2, i, fsv);
-            }
+                }
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
 
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
-        });
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+            });
 
-        sk3.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override                                   //i=value, b=by user?
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+            sk3.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override                                   //i=value, b=by user?
+                public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                     FX.FXList[FXselected].parValues[2] = i;
                     FX.tuneFX(FXselected, 3, i, fsv);
-            }
+                }
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
 
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
-        });
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+            });
 
-        sk4.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override                                   //i=value, b=by user?
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+            sk4.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override                                   //i=value, b=by user?
+                public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                     FX.FXList[FXselected].parValues[3] = i;
                     FX.tuneFX(FXselected, 4, i, fsv);
-            }
+                }
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
 
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
-        });
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+            });
 
-        sk5.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override                                   //i=value, b=by user?
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+            sk5.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override                                   //i=value, b=by user?
+                public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                     FX.FXList[FXselected].parValues[4] = i;
                     FX.tuneFX(FXselected, 5, i, fsv);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
-        });
-
-        //DONE: implement on switch state changed.
-
-        //this makes the switches consistent and changes the FXList value to match the switch
-        fxToggle.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
-                    FX.enableFX(FXselected, fsv, true);
-                } else {
-                    FX.enableFX(FXselected, fsv, false);
                 }
-            }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+            });
+
+            //DONE: implement on switch state changed.
+
+            //this makes the switches consistent and changes the FXList value to match the switch
+            fxToggle.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    if (b) {
+                        FX.enableFX(FXselected, fsv, true);
+                    } else {
+                        FX.enableFX(FXselected, fsv, false);
+                    }
+                }
 
 
-        });
+            });
 
-        //disable all sliders by default
-        makeAllSlidersDisappear();
+            //disable all sliders by default
+            makeAllSlidersDisappear();
 
-
+        }
 
         effectsList = (ListView) findViewById(R.id.listView);
         effectsList.setAdapter(new CustomFXAdapter(this, FX.getFXnames(), FX.getFXicons()));
@@ -292,8 +246,7 @@ public class MainActivity extends Activity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 FXselected=i;
                 FX.SelectFX(i);
-                if (!FX.FXList[i].fxActive && (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("pref_activate_onclick_key", true))) {
-                    //FX.enableFX(i, fsv, true);
+                if (!FX.FXList[i].fxActive && (helper.sharedpreferences.getBoolean("pref_activate_onclick_key", true))) {
                     fxToggle.setChecked(true);
                 }
                 fxDrawer.closeDrawers();
@@ -304,16 +257,6 @@ public class MainActivity extends Activity {
         mShareIntent.setAction(Intent.ACTION_SEND);
         mShareIntent.setType("image/*");
 
-
-
-
-    }
-
-    private void welcomeUser() {
-        if (!Boolean.parseBoolean(PreferenceManager.getDefaultSharedPreferences(this).getString("pref_user_welcomed", "false"))) {
-            Intent i = new Intent(this, WelcomeActivity.class);
-            startActivity(i);
-        }
     }
 
     @Override
@@ -346,26 +289,6 @@ public class MainActivity extends Activity {
         return true;
     }
 
-    public String prepareImagePath() {
-        String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() +
-                "/" + PreferenceManager.getDefaultSharedPreferences(this).getString("pref_save_path_key", getString(R.string.pref_save_path_default));
-        //tempfile is necessary because it creates the subdirectories if they don't exist
-        File tempfile = new File(file_path);
-        tempfile.mkdirs();
-        String preferredFormat = "jpg";
-        String imageName = Long.toString(System.currentTimeMillis() / 1000L);
-        return file_path + "/" + imageName + "." + preferredFormat;
-    }
-
-    public void setShareIntent(Intent shareIntent) {
-        if (mShareActionProvider != null) {
-            String shareLocation = prepareImagePath();
-            fsv.SaveImage(shareLocation);
-            mShareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(shareLocation));
-            mShareActionProvider.setShareIntent(shareIntent);
-        }
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -382,7 +305,7 @@ public class MainActivity extends Activity {
 
         if (id == R.id.action_save) {
             System.gc();
-            String imgPath = prepareImagePath();
+            String imgPath = helper.prepareImagePath();
             fsv.SaveImage(imgPath);
             Toast.makeText(this, getString(R.string.toast_image_saved) + imgPath, Toast.LENGTH_LONG).show();
             return true;
@@ -414,13 +337,13 @@ public class MainActivity extends Activity {
 
         if (id == R.id.menu_item_share) {
 
-            setShareIntent(mShareIntent);
+            helper.setShareIntent(mShareIntent, mShareActionProvider);
             return true;
         }
 
         //add temp menu for testing welcomeactivity
         if (id == R.id.tmpWelcome) {
-            welcomeUser();
+            helper.welcomeUser();
             return true;
         }
 
@@ -438,4 +361,11 @@ public class MainActivity extends Activity {
         drawerToggle.syncState();
     }
 
+    public static void makeAllSlidersDisappear() {
+        sst1.setVisibility(View.GONE);
+        sst2.setVisibility(View.GONE);
+        sst3.setVisibility(View.GONE);
+        sst4.setVisibility(View.GONE);
+        sst5.setVisibility(View.GONE);
+    }
 }
