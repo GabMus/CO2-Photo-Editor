@@ -32,7 +32,6 @@ public class FXHandler {
          //boolean type is just to kill the method with return
     public boolean SelectFX(int fxID) {
         //Sliders not shown by default, so make them invisible
-        MainActivity.makeAllSlidersDisappear();
         //Enable the toggle, since no fx is selected by default, thus it's disabled
 
         //on fxID==-1 get to starting screen
@@ -41,6 +40,7 @@ public class FXHandler {
             MainActivity.fxToggle.setChecked(false);
             MainActivity.textViewFXTitle.setText(MainActivity.strNoFXSelected);
             MainActivity.FXselected=-1;
+            MainActivity.slidersListView.setAdapter(null);
             return true;
         }
         MainActivity.textViewFXTitle.setText(FXList[fxID].name);
@@ -49,31 +49,9 @@ public class FXHandler {
         if (FXList[fxID].fxActive) MainActivity.fxToggle.setChecked(true);
         else MainActivity.fxToggle.setChecked(false);
         //DONE: Enable sliders needed for each kind of effect, give them the correct label
-        if (FXList[fxID].parCount > 0) {
-            MainActivity.sst1.setVisibility(View.VISIBLE);
-            MainActivity.sk1.setProgress(FXList[fxID].parValues[0]);
-            MainActivity.slb1.setText(FXList[fxID].parNames[0]);
-            if (FXList[fxID].parCount > 1) {
-                MainActivity.sst2.setVisibility(View.VISIBLE);
-                MainActivity.sk2.setProgress(FXList[fxID].parValues[1]);
-                MainActivity.slb2.setText(FXList[fxID].parNames[1]);
-                if (FXList[fxID].parCount > 2) {
-                    MainActivity.sst3.setVisibility(View.VISIBLE);
-                    MainActivity.sk3.setProgress(FXList[fxID].parValues[2]);
-                    MainActivity.slb3.setText(FXList[fxID].parNames[2]);
-                    if (FXList[fxID].parCount > 3) {
-                        MainActivity.sst4.setVisibility(View.VISIBLE);
-                        MainActivity.sk4.setProgress(FXList[fxID].parValues[3]);
-                        MainActivity.slb4.setText(FXList[fxID].parNames[3]);
-                        if (FXList[fxID].parCount > 4) {
-                            MainActivity.sst5.setVisibility(View.VISIBLE);
-                            MainActivity.sk5.setProgress(FXList[fxID].parValues[4]);
-                            MainActivity.slb5.setText(FXList[fxID].parNames[4]);
-                        }
-                    }
-                }
-            }
-        }
+
+        MainActivity.slidersListView.setAdapter(new CustomSlidersAdapter(MainActivity.context, FXList[fxID].parNames, FXList[fxID].parValues));
+
         return true;
 
     }
@@ -285,20 +263,26 @@ public class FXHandler {
 
 
 
-    public boolean resetFX(int index) {
+    public boolean resetFX(int index, FilterSurfaceView mFsv) {
         if (index==-1) return false;
         SelectFX(-1); //go to default screen
         FXList[index].parValues=FXList[index].parValuesDefault.clone();
+        for (int i = 0; i < FXList[index].parCount; i++) {
+            tuneFX(index, i+1, FXList[index].parValuesDefault[i], mFsv);
+        }
         return true;
     }
 
-    private void resetFXModular(int index) {
+    private void resetFXModular(int index, FilterSurfaceView mFsv) {
         FXList[index].parValues=FXList[index].parValuesDefault.clone();
+        for (int i = 0; i < FXList[index].parCount; i++) {
+            tuneFX(index, i+1, FXList[index].parValuesDefault[i], mFsv);
+        }
     }
 
     public void resetAllFX(FilterSurfaceView mFsv) {
         for (int i = 0; i < FXList.length; i++) {
-            resetFXModular(i);
+            resetFXModular(i, mFsv);
             enableFX(i, mFsv, false);
         }
         SelectFX(-1); //go to default screen

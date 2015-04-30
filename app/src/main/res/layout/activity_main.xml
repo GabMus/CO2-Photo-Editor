@@ -56,7 +56,13 @@
             android:layout_width="match_parent"
             android:layout_height="10dp" />
 
-        <ScrollView
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="210dp"
+            android:id="@+id/sliders_list_view"/>
+
+        <!-- former slider container -->
+        <ScrollView android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="210dp"
             android:id="@+id/scrollView"

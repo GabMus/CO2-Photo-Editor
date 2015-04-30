@@ -44,31 +44,16 @@ public class MainActivity extends Activity {
     public static TextView textViewFXTitle;
     public static String strNoFXSelected;
 
-    //declared up to 5 sliders (already present in the GUI but hidden by default) since various effects can have 0 to 5 parameters
-    public static SeekBar sk1;
-    public static SeekBar sk2;
-    public static SeekBar sk3;
-    public static SeekBar sk4;
-    public static SeekBar sk5;
 
-    public static TextView slb1;
-    public static TextView slb2;
-    public static TextView slb3;
-    public static TextView slb4;
-    public static TextView slb5;
 
-    public static android.support.v7.widget.CardView sst1;
-    public static android.support.v7.widget.CardView sst2;
-    public static android.support.v7.widget.CardView sst3;
-    public static android.support.v7.widget.CardView sst4;
-    public static android.support.v7.widget.CardView sst5;
+    public static ListView slidersListView;
 
     public static FilterSurfaceView fsv;
 
     public static FXHandler FX;
 
     ListView effectsList;
-    Context context;
+    public static Context context;
 
     ActionBarDrawerToggle drawerToggle;
 
@@ -97,6 +82,8 @@ public class MainActivity extends Activity {
         //welcome activity
         helper.checkAndWelcomeUser();
 
+        slidersListView = (ListView) findViewById(R.id.sliders_list_view);
+
         //navigation drawer management
         fxDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -123,136 +110,20 @@ public class MainActivity extends Activity {
 
         fxToggle = (Switch) findViewById(R.id.switch1);
 
-        {
-            sk1 = (SeekBar) findViewById(R.id.seekBar1);
-            sk2 = (SeekBar) findViewById(R.id.seekBar2);
-            sk3 = (SeekBar) findViewById(R.id.seekBar3);
-            sk4 = (SeekBar) findViewById(R.id.seekBar4);
-            sk5 = (SeekBar) findViewById(R.id.seekBar5);
+        //DONE: implement on switch state changed.
 
-            slb1 = (TextView) findViewById(R.id.sliderLabel1);
-            slb2 = (TextView) findViewById(R.id.sliderLabel2);
-            slb3 = (TextView) findViewById(R.id.sliderLabel3);
-            slb4 = (TextView) findViewById(R.id.sliderLabel4);
-            slb5 = (TextView) findViewById(R.id.sliderLabel5);
-
-            sst1 = (android.support.v7.widget.CardView) findViewById(R.id.sSetting1);
-            sst2 = (android.support.v7.widget.CardView) findViewById(R.id.sSetting2);
-            sst3 = (android.support.v7.widget.CardView) findViewById(R.id.sSetting3);
-            sst4 = (android.support.v7.widget.CardView) findViewById(R.id.sSetting4);
-            sst5 = (android.support.v7.widget.CardView) findViewById(R.id.sSetting5);
-
-            //DONE: setup seekbar methods
-
-            sk1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override                                   //i=value, b=by user?
-                public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                    FX.FXList[FXselected].parValues[0] = i;
-                    FX.tuneFX(FXselected, 1, i, fsv);
-                }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-
-                }
-            });
-
-            sk2.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override                                   //i=value, b=by user?
-                public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                    FX.FXList[FXselected].parValues[1] = i;
-                    FX.tuneFX(FXselected, 2, i, fsv);
-                }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-                }
-            });
-
-            sk3.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override                                   //i=value, b=by user?
-                public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                    FX.FXList[FXselected].parValues[2] = i;
-                    FX.tuneFX(FXselected, 3, i, fsv);
-                }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-                }
-            });
-
-            sk4.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override                                   //i=value, b=by user?
-                public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                    FX.FXList[FXselected].parValues[3] = i;
-                    FX.tuneFX(FXselected, 4, i, fsv);
-                }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-                }
-            });
-
-            sk5.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override                                   //i=value, b=by user?
-                public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                    FX.FXList[FXselected].parValues[4] = i;
-                    FX.tuneFX(FXselected, 5, i, fsv);
-                }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-                }
-            });
-
-            //DONE: implement on switch state changed.
-
-            //this makes the switches consistent and changes the FXList value to match the switch
-            fxToggle.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    if (b) {
-                        FX.enableFX(FXselected, fsv, true);
-                    } else {
-                        FX.enableFX(FXselected, fsv, false);
-                    }
-                }
-
-
-            });
-
-            //disable all sliders by default
-            makeAllSlidersDisappear();
-
-        }
-
-        scroller = (ScrollView) findViewById(R.id.scrollView);
-        scroller.setOnTouchListener(new View.OnTouchListener() {
+        //this makes the switches consistent and changes the FXList value to match the switch
+        fxToggle.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                Log.d("badango", Integer.toString(view.getScrollY()));
-                return false;
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    FX.enableFX(FXselected, fsv, true);
+                } else {
+                    FX.enableFX(FXselected, fsv, false);
+                }
             }
+
+
         });
 
         effectsList = (ListView) findViewById(R.id.listView);
@@ -262,6 +133,7 @@ public class MainActivity extends Activity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 FXselected=i;
                 FX.SelectFX(i);
+                //slidersListView.setAdapter(new CustomSlidersAdapter(getApplicationContext(), FX.FXList[i].parNames, FX.FXList[i].parValues));
                 if (!FX.FXList[i].fxActive && (helper.sharedpreferences.getBoolean("pref_activate_onclick_key", true))) {
                     fxToggle.setChecked(true);
                 }
@@ -336,7 +208,7 @@ public class MainActivity extends Activity {
         }
 
         if (id == R.id.action_resetFX) {
-            boolean res = FX.resetFX(FXselected);
+            boolean res = FX.resetFX(FXselected, fsv);
             if (!res) Toast.makeText(this, getString(R.string.no_fx_selected), Toast.LENGTH_LONG).show();
             return true;
         }
@@ -377,11 +249,4 @@ public class MainActivity extends Activity {
         drawerToggle.syncState();
     }
 
-    public static void makeAllSlidersDisappear() {
-        sst1.setVisibility(View.GONE);
-        sst2.setVisibility(View.GONE);
-        sst3.setVisibility(View.GONE);
-        sst4.setVisibility(View.GONE);
-        sst5.setVisibility(View.GONE);
-    }
 }
