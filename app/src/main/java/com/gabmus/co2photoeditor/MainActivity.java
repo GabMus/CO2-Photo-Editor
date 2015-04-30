@@ -44,8 +44,6 @@ public class MainActivity extends Activity {
     public static TextView textViewFXTitle;
     public static String strNoFXSelected;
 
-
-
     public static ListView slidersListView;
 
     public static FilterSurfaceView fsv;
@@ -78,6 +76,11 @@ public class MainActivity extends Activity {
 
         //receive share implicit intent
         helper.receiveShareIntent();
+
+        Log.d("badango", helper.gotSharedPic+"  -  "+helper.choosePicOnStart);
+        if (!helper.gotSharedPic && helper.choosePicOnStart && helper.currentBitmap==null) {
+            startPickerIntent();
+        }
 
         //welcome activity
         helper.checkAndWelcomeUser();
@@ -155,7 +158,8 @@ public class MainActivity extends Activity {
             Uri imgPath = data.getData();
 
             try {
-                fsv.LoadBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), imgPath));
+                helper.currentBitmap=MediaStore.Images.Media.getBitmap(this.getContentResolver(), imgPath);
+                fsv.LoadBitmap(helper.currentBitmap);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -200,10 +204,7 @@ public class MainActivity extends Activity {
         }
 
         if (id == R.id.action_selectpic) {
-            System.gc();
-            Intent intentChooseUpdate = new Intent(Intent.ACTION_GET_CONTENT);
-            intentChooseUpdate.setType("image/*");
-            startActivityForResult(Intent.createChooser(intentChooseUpdate, "Choose a picture"), REQUEST_IMAGE_CHOOSE);
+            startPickerIntent();
             return true;
         }
 
@@ -247,6 +248,13 @@ public class MainActivity extends Activity {
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         drawerToggle.syncState();
+    }
+
+    public void startPickerIntent() {
+        System.gc();
+        Intent intentChooseUpdate = new Intent(Intent.ACTION_GET_CONTENT);
+        intentChooseUpdate.setType("image/*");
+        startActivityForResult(Intent.createChooser(intentChooseUpdate, "Choose a picture"), REQUEST_IMAGE_CHOOSE);
     }
 
 }

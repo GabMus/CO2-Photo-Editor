@@ -23,6 +23,9 @@
 
     <string name="pref_activate_onclick">Tap an effect to activate it</string>
     <string name="pref_activate_onclick_desc">Activate an effect automatically without having to use the switch</string>
+
+    <string name="pref_choose_file_on_start">Choose new picture on startup</string>
+    <string name="pref_choose_file_on_start_desc">Start the file picker as soon as you launch the app</string>
     
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_welcome">Welcome</string>

@@ -19,12 +19,16 @@ public class MainHelper {
     MainActivity act;
     public static boolean gotSharedPic = false;
     public static Bitmap sharedPicBmp;
+    public static Bitmap currentBitmap;
     SharedPreferences sharedpreferences;
     public static boolean userWelcomed;
+    public static boolean choosePicOnStart = false;
 
     public MainHelper(MainActivity act_) {
         act=act_;
         sharedpreferences = PreferenceManager.getDefaultSharedPreferences(act);
+
+        choosePicOnStart=sharedpreferences.getBoolean("pref_choose_file_on_start_key", false);
     }
 
     public void receiveShareIntent() {
@@ -33,6 +37,7 @@ public class MainHelper {
         if (imageUriFromShare != null) {
             try {
                 sharedPicBmp = MediaStore.Images.Media.getBitmap(act.getContentResolver(), imageUriFromShare);
+                currentBitmap = sharedPicBmp;
                 gotSharedPic = true;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -59,7 +64,7 @@ public class MainHelper {
     }
 
     public void welcomeUser() {
-        if (!Boolean.parseBoolean(PreferenceManager.getDefaultSharedPreferences(act).getString("pref_user_welcomed", "false"))) {
+        if (!Boolean.parseBoolean(sharedpreferences.getString("pref_user_welcomed", "false"))) {
             Intent i = new Intent(act, WelcomeActivity.class);
             act.startActivity(i);
         }

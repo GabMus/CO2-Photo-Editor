@@ -151,6 +151,9 @@ public class FilterRenderer implements GLSurfaceView.Renderer
             MainHelper.gotSharedPic = false;
             fsv.LoadBitmap(MainHelper.sharedPicBmp);
         }
+        else if (MainHelper.currentBitmap!=null) {
+            fsv.LoadBitmap(MainHelper.currentBitmap);
+        }
         else {
             fsv.LoadBitmap(fsv.generateTestBitmap());
         }
@@ -236,13 +239,13 @@ public class FilterRenderer implements GLSurfaceView.Renderer
 
         //CRT
         String crt_FS =
-                "precision mediump float;" +
-                        "uniform sampler2D filteredPhoto;" +
+                "precision mediump float;\n" +
+                        "uniform sampler2D filteredPhoto;\n" +
                         "uniform int horizontal;\n" +
                         "uniform int linewidth;\n" +
                         "uniform float pixheigth;\n" +
                         "uniform float pixwidth;\n" +
-                        "varying vec2 UV;" +
+                        "varying vec2 UV;\n" +
                         "" +
                         "" +
                         "void main() {\n" +
@@ -256,7 +259,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                 "            fv = (UV.y  / pixheigth);\n" +
                 "        }\n" +
                 "        val = mod(float(fv), float(3 * linewidth));\n" +
-                        "val = val -0.008f;" +
+                        "val = val -0.008f;\n" +
                 "        if ( ((val >= 0.0) && (val < float(linewidth))) ){\n" +
                 "            c = vec4( c.x , 0.000000, 0.000000, 1.00000);\n" +
                 "        }\n" +
@@ -271,7 +274,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                 "        }\n" +
                 "    }\n" +
                         "    gl_FragColor = c;\n" +
-                        "}";
+                        "}\n";
         hShaderProgramCathodeRayTube = createprogram(generalreverseVS, crt_FS);
 
         //NEGATIVE

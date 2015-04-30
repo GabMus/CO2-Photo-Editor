@@ -56,7 +56,8 @@ public class CustomSlidersAdapter extends BaseAdapter{
         holder.titleTV=(TextView) rowView.findViewById(R.id.sliderLabelGlobal);
         holder.seekBar=(SeekBar) rowView.findViewById(R.id.seekBarGlobal);
         holder.titleTV.setText(titles[position]);
-        holder.seekBar.setProgress(startingValues[position]);
+        //holder.seekBar.setProgress(startingValues[position]);
+        holder.seekBar.setProgress(MainActivity.FX.FXList[MainActivity.FXselected].parValues[position]);
 
         holder.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override                                   //i=value, b=by user?
