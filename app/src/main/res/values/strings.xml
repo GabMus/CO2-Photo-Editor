@@ -26,6 +26,22 @@
 
     <string name="pref_choose_file_on_start">Choose new picture on startup</string>
     <string name="pref_choose_file_on_start_desc">Start the file picker as soon as you launch the app</string>
+
+
+    <string name="pref_theme_title">Choose theme</string>
+    <string name="pref_theme_desc">Change the color theme of CO₂. Close and reopen the app to apply changes</string>
+
+    <string-array name="themeValues">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="themeEntries">
+        <item>Carbon red (default)</item>
+        <item>Carbon blue</item>
+        <item>Carbon green</item>
+    </string-array>
     
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_welcome">Welcome</string>

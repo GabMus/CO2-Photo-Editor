@@ -2,9 +2,26 @@
 <resources>
 
     <style name="AppTheme" parent="android:Theme.Material">
+    </style>
+
+    <style name="AppTheme_red" parent="android:Theme.Material">
         <item name="android:colorPrimary">@color/primary</item>
         <item name="android:colorPrimaryDark">@color/primary_dark</item>
         <item name="android:colorAccent">@color/accent</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+    </style>
+
+    <style name="AppTheme_blue" parent="android:Theme.Material">
+        <item name="android:colorPrimary">@color/primary_blue</item>
+        <item name="android:colorPrimaryDark">@color/primary_dark_blue</item>
+        <item name="android:colorAccent">@color/accent_blue</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+    </style>
+
+    <style name="AppTheme_green" parent="android:Theme.Material">
+        <item name="android:colorPrimary">@color/primary_green</item>
+        <item name="android:colorPrimaryDark">@color/primary_dark_green</item>
+        <item name="android:colorAccent">@color/accent_green</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
     </style>
 
@@ -13,7 +30,4 @@
         <item name="color">@android:color/white</item>
     </style>
 
-    <color name="primary">#ffd44933</color>
-    <color name="primary_dark">#ff9f3727</color>
-    <color name="accent">#ff547fce</color>
 </resources>

@@ -90,5 +90,24 @@ public class MainHelper {
         return file_path + "/" + imageName + "." + preferredFormat;
     }
 
+    public int changeTheme() {
+        int themeid;
+        String themestring = sharedpreferences.getString("pref_theme_key", "1");
+        switch (themestring) {
+            case "1":
+                themeid=R.style.AppTheme_red;
+                break;
+            case "2":
+                themeid=R.style.AppTheme_blue;
+                break;
+            case "3":
+                themeid=R.style.AppTheme_green;
+                break;
+            default:
+                themeid=R.style.AppTheme;
+                break;
+        }
+        return themeid;
+    }
 
 }

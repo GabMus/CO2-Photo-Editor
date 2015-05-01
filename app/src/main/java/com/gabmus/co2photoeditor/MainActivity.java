@@ -61,8 +61,9 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         helper= new MainHelper(this);
+        setTheme(helper.changeTheme());
+        setContentView(R.layout.activity_main);
 
         context = this;
 
@@ -77,7 +78,6 @@ public class MainActivity extends Activity {
         //receive share implicit intent
         helper.receiveShareIntent();
 
-        Log.d("badango", helper.gotSharedPic+"  -  "+helper.choosePicOnStart);
         if (!helper.gotSharedPic && helper.choosePicOnStart && helper.currentBitmap==null) {
             startPickerIntent();
         }

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#ffd44933</color>
+    <color name="primary_dark">#ff9f3727</color>
+    <color name="accent">#ff547fce</color>
+
+    <color name="primary_blue">#ff547fce</color>
+    <color name="primary_dark_blue">#ff2f4672</color>
+    <color name="accent_blue">#ffd44933</color>
+
+    <color name="primary_green">#ff8eba5e</color>
+    <color name="primary_dark_green">#ff6d8c43</color>
+    <color name="accent_green">#ff7c3db6</color>
+</resources>

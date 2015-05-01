@@ -21,6 +21,15 @@
         android:summary="@string/pref_choose_file_on_start_desc"
         android:defaultValue="false" />
 
+    <ListPreference
+        android:key="pref_theme_key"
+        android:title="@string/pref_theme_title"
+        android:summary="@string/pref_theme_desc"
+        android:entries="@array/themeEntries"
+        android:entryValues="@array/themeValues"
+        android:defaultValue="1"/>
+
+
     <!-- <ListPreference
         android:key="pref_save_format_key"
         android:title="@string/pref_save_format"
