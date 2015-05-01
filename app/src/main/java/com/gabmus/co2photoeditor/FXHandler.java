@@ -14,16 +14,16 @@ public class FXHandler {
 
     public FXHandler(Context context) {
         FXData[] tmpFXList = {
-                new FXData(context.getString(R.string.blackAndWhite), R.drawable.demo_icon, 0, new int[0], new String[0]),
-                new FXData(context.getString(R.string.sepia), R.drawable.demo_icon, 0, new int[0], new String[0]),
-                new FXData(context.getString(R.string.negative), R.drawable.demo_icon, 0, new int[0], new String[0]),
-                new FXData("Color Correction", R.drawable.demo_icon, 3, new int [] {50,25,50}, new String[] {context.getString(R.string.brightness), context.getString(R.string.contrast), context.getString(R.string.saturation)}),
-                new FXData(context.getString(R.string.toneMapping1), R.drawable.demo_icon, 4, new int [] {0,0,50,50}, new String[] {context.getString(R.string.exposure), context.getString(R.string.vignetting), context.getString(R.string.whiteLevel), context.getString(R.string.luminanceSaturation)}),
-                new FXData(context.getString(R.string.crt), R.drawable.demo_icon, 1, new int [] {0}, new String[] {context.getString(R.string.lineWidth)}),
-                new FXData(context.getString(R.string.noise1), R.drawable.demo_icon, 5, new int [] {0,0,0,0,0}, new String [] {context.getString(R.string.amount), context.getString(R.string.size), context.getString(R.string.luminance), context.getString(R.string.color), context.getString(R.string.randomizerSeed)}),
+                new FXData(context.getString(R.string.blackAndWhite), R.drawable.bnw, 0, new int[0], new String[0]),
+                new FXData(context.getString(R.string.sepia), R.drawable.sepia, 0, new int[0], new String[0]),
+                new FXData(context.getString(R.string.negative), R.drawable.negative, 0, new int[0], new String[0]),
+                new FXData("Color Correction", R.drawable.colorcorrection, 3, new int [] {50,25,50}, new String[] {context.getString(R.string.brightness), context.getString(R.string.contrast), context.getString(R.string.saturation)}),
+                new FXData(context.getString(R.string.toneMapping1), R.drawable.tonemapping1, 4, new int [] {0,0,50,50}, new String[] {context.getString(R.string.exposure), context.getString(R.string.vignetting), context.getString(R.string.whiteLevel), context.getString(R.string.luminanceSaturation)}),
+                new FXData(context.getString(R.string.crt), R.drawable.crt, 1, new int [] {0}, new String[] {context.getString(R.string.lineWidth)}),
+                new FXData(context.getString(R.string.noise1), R.drawable.noise, 5, new int [] {0,0,0,0,0}, new String [] {context.getString(R.string.amount), context.getString(R.string.size), context.getString(R.string.luminance), context.getString(R.string.color), context.getString(R.string.randomizerSeed)}),
                 new FXData(context.getString(R.string.filmGrain), R.drawable.demo_icon, 4, new int [] {0,0,0,0}, new String [] {context.getString(R.string.strength), context.getString(R.string.darkNoisePower), context.getString(R.string.randomNoiseStrength), context.getString(R.string.randomizerSeed)}),
-                new FXData(context.getString(R.string.bloom), R.drawable.demo_icon, 5, new int [] {0,0,0,0,50}, new String [] {context.getString(R.string.bloomThreshold), context.getString(R.string.bloomSaturation), context.getString(R.string.bloomBlur), context.getString(R.string.bloomIntensity), context.getString(R.string.bloomBaseIntensity)}),
-                new FXData(context.getString(R.string.tonality), R.drawable.demo_icon, 3, new int [] {50,50,50}, new String [] {context.getString(R.string.red), context.getString(R.string.green), context.getString(R.string.blue)})
+                new FXData(context.getString(R.string.bloom), R.drawable.bloom, 5, new int [] {0,0,0,0,50}, new String [] {context.getString(R.string.bloomThreshold), context.getString(R.string.bloomSaturation), context.getString(R.string.bloomBlur), context.getString(R.string.bloomIntensity), context.getString(R.string.bloomBaseIntensity)}),
+                new FXData(context.getString(R.string.tonality), R.drawable.tonality, 3, new int [] {50,50,50}, new String [] {context.getString(R.string.red), context.getString(R.string.green), context.getString(R.string.blue)})
 
         };
         FXList = tmpFXList;
