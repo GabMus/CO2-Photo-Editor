@@ -1,31 +1,16 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo">
-    </style>
-    <style name="AppTheme_red" parent="android:Theme.Holo">
-        <item name="android:actionBarStyle">@style/RedActionBar</item>
-        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
-    </style>
-    <style name="AppTheme_blue" parent="android:Theme.Holo">
 
-        <item name="android:actionBarStyle">@style/BlueActionBar</item>
-        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
-    </style>
-    <style name="AppTheme_green" parent="android:Theme.Holo">
-        <item name="android:actionBarStyle">@style/GreenActionBar</item>
+    <style name="AppTheme" parent="android:Theme.Holo">
+        <item name="android:actionBarStyle">@style/RedActionBar</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
     </style>
 
     <style name="RedActionBar" parent="android:Widget.Holo.ActionBar">
         <item name="android:background">@color/primary</item>
     </style>
-    <style name="BlueActionBar" parent="android:Widget.Holo.ActionBar">
-        <item name="android:background">@color/primary_blue</item>
-    </style>
-    <style name="GreenActionBar" parent="android:Widget.Holo.ActionBar">
-        <item name="android:background">@color/primary_green</item>
-    </style>
+
 
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle" >
         <item name="spinBars">true</item>

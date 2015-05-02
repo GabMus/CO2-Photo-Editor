@@ -1,9 +1,16 @@
 package com.gabmus.co2photoeditor;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.widget.DrawerLayout;
@@ -15,6 +22,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
@@ -33,6 +41,7 @@ public class MainActivity extends Activity {
 
     private final int REQUEST_IMAGE_CHOOSE=1;
     public static MainHelper helper;
+    public static Bitmap appIcon;
     private Intent mShareIntent;
     private ShareActionProvider mShareActionProvider;
     public static DrawerLayout fxDrawer;
@@ -63,7 +72,6 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         helper= new MainHelper(this);
-        setTheme(helper.changeTheme());
         setContentView(R.layout.activity_main);
 
         context = this;
@@ -76,6 +84,8 @@ public class MainActivity extends Activity {
         fsv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         customViewLayout.addView(fsv);
 
+
+        appIcon=BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher);
         //receive share implicit intent
         helper.receiveShareIntent();
 
@@ -164,6 +174,7 @@ public class MainActivity extends Activity {
 
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CHOOSE && resultCode == RESULT_OK) {
@@ -174,10 +185,12 @@ public class MainActivity extends Activity {
             try {
                 helper.currentBitmap=MediaStore.Images.Media.getBitmap(this.getContentResolver(), imgPath);
                 fsv.LoadBitmap(helper.currentBitmap);
+                helper.setNewColors();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -210,7 +223,6 @@ public class MainActivity extends Activity {
         }
 
         if (id == R.id.action_save) {
-            System.gc();
             String imgPath = helper.prepareImagePath();
             fsv.SaveImage(imgPath);
             Toast.makeText(this, getString(R.string.toast_image_saved) + imgPath, Toast.LENGTH_LONG).show();
@@ -265,7 +277,6 @@ public class MainActivity extends Activity {
     }
 
     public void startPickerIntent() {
-        System.gc();
         Intent intentChooseUpdate = new Intent(Intent.ACTION_GET_CONTENT);
         intentChooseUpdate.setType("image/*");
         startActivityForResult(Intent.createChooser(intentChooseUpdate, "Choose a picture"), REQUEST_IMAGE_CHOOSE);

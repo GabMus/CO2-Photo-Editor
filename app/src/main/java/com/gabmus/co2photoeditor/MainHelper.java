@@ -1,12 +1,17 @@
 package com.gabmus.co2photoeditor;
 
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.v7.graphics.Palette;
 import android.widget.ShareActionProvider;
 
 import java.io.File;
@@ -39,6 +44,7 @@ public class MainHelper {
                 sharedPicBmp = MediaStore.Images.Media.getBitmap(act.getContentResolver(), imageUriFromShare);
                 currentBitmap = sharedPicBmp;
                 gotSharedPic = true;
+                setNewColors();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -90,24 +96,22 @@ public class MainHelper {
         return file_path + "/" + imageName + "." + preferredFormat;
     }
 
-    public int changeTheme() {
-        int themeid;
-        String themestring = sharedpreferences.getString("pref_theme_key", "1");
-        switch (themestring) {
-            case "1":
-                themeid=R.style.AppTheme_red;
-                break;
-            case "2":
-                themeid=R.style.AppTheme_blue;
-                break;
-            case "3":
-                themeid=R.style.AppTheme_green;
-                break;
-            default:
-                themeid=R.style.AppTheme;
-                break;
-        }
-        return themeid;
+    public int generatePalette(Bitmap bmp) {
+        Palette pal = Palette.generate(bmp);
+        return pal.getVibrantColor(0);
     }
 
+    public void setNewColors() {
+        if (android.os.Build.VERSION.SDK_INT>= 21) {
+            int color = generatePalette(currentBitmap);
+            act.getActionBar().setBackgroundDrawable(new ColorDrawable(color));
+            float[] hsv = new float[3];
+            Color.colorToHSV(color, hsv);
+            hsv[2] -= 0.2;
+            int darkColor = Color.HSVToColor(hsv);
+            act.getWindow().setStatusBarColor(darkColor);
+            ActivityManager.TaskDescription desc = new ActivityManager.TaskDescription(act.getString(R.string.app_name), act.appIcon, color);
+            act.setTaskDescription(desc);
+        }
+    }
 }
