@@ -11,7 +11,7 @@ public class FXPresetTunings {
     public FXPresetTunings(int fxID_, int tuningCount_, int [] tuningValues_) {
         fxID=fxID_;
         tuningCount=tuningCount_;
-        tuningValues=tuningValues_.clone();
+        if (tuningValues_!=null) tuningValues=tuningValues_.clone();
     }
 
 }

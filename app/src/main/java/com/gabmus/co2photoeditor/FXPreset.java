@@ -17,7 +17,8 @@ public class FXPreset {
         presetTitle=presetTitle_;
     }
 
-    public FXPreset(int fxCount_, FXPresetTunings [] presetList_) {
+    public FXPreset(String presetTitle_, int fxCount_, FXPresetTunings [] presetList_) {
+        presetTitle=presetTitle_;
         fxCount=fxCount_;
         presetList = presetList_.clone();
     }
@@ -29,6 +30,7 @@ public class FXPreset {
                 mFX.enableFX(presetList[i].fxID, MainActivity.fsv, active);
                 for (int j = 0; j < presetList[i].tuningCount; j++) {
                     mFX.tuneFX(presetList[i].fxID, j, presetList[i].tuningValues[j], mFsv);
+                    mFX.FXList[presetList[i].fxID].parValues[j]=presetList[i].tuningValues[j];
                 }
             }
     }

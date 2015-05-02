@@ -51,6 +51,7 @@ public class MainActivity extends Activity {
     public static FXHandler FX;
 
     ListView effectsList;
+    ListView presetList;
     public static Context context;
 
     ActionBarDrawerToggle drawerToggle;
@@ -140,6 +141,19 @@ public class MainActivity extends Activity {
                 if (!FX.FXList[i].fxActive && (helper.sharedpreferences.getBoolean("pref_activate_onclick_key", true))) {
                     fxToggle.setChecked(true);
                 }
+                fxDrawer.closeDrawers();
+            }
+        });
+
+
+        presetList = (ListView) findViewById(R.id.listViewPresets);
+        presetList.setAdapter(new CustomPresetAdapter(this, FX.getPresetNames()));
+        presetList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                FXselected=-1;
+                FX.resetAllFX(fsv);
+                FX.PresetList[i].toggleAllFX(FX,fsv,true);
                 fxDrawer.closeDrawers();
             }
         });

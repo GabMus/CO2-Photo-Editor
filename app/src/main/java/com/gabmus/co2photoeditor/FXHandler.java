@@ -10,7 +10,8 @@ import android.view.View;
  */
 public class FXHandler {
 
-    public FXData[] FXList;
+    public static FXData[] FXList;
+    public static FXPreset[] PresetList;
 
     public FXHandler(Context context) {
         FXData[] tmpFXList = {
@@ -26,7 +27,23 @@ public class FXHandler {
                 new FXData(context.getString(R.string.tonality), R.drawable.tonality, 3, new int [] {50,50,50}, new String [] {context.getString(R.string.red), context.getString(R.string.green), context.getString(R.string.blue)})
 
         };
-        FXList = tmpFXList;
+
+        FXPreset[] tmpPresetList = {
+                new FXPreset("Old Style",2,
+                new FXPresetTunings[]{
+                    new FXPresetTunings(1,0,null),
+                    new FXPresetTunings(4,4,new int[]{0,25,50,50})
+                }),
+                new FXPreset("Vaporwave",2,
+                new FXPresetTunings[]{
+                    new FXPresetTunings(6,5,new int[]{80,80,100,25,45}),
+                    new FXPresetTunings(9,3,new int[]{70,50,70})
+                })
+        };
+
+
+        FXList = tmpFXList.clone();
+        PresetList = tmpPresetList.clone();
     }
 
          //boolean type is just to kill the method with return
@@ -68,6 +85,14 @@ public class FXHandler {
         int[] toRet = new int[FXList.length];
         for (int i=0; i< toRet.length; i++) {
             toRet[i]=FXList[i].icon;
+        }
+        return toRet;
+    }
+
+    public String[] getPresetNames() {
+        String[] toRet = new String[PresetList.length];
+        for (int i = 0; i < toRet.length; i++) {
+            toRet[i]=PresetList[i].presetTitle;
         }
         return toRet;
     }
