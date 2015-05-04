@@ -50,30 +50,6 @@ public class WelcomeActivity extends FragmentActivity {
         }
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_welcome, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
 
         private final int[] slidesPics = {R.drawable.rms1, R.drawable.rms2, R.drawable.rms3, R.drawable.demo_icon, -1};
@@ -116,8 +92,8 @@ public class WelcomeActivity extends FragmentActivity {
             imgVw = (ImageView) rootView.findViewById(R.id.imageViewWelcome);
             if (slide==-1) {
                 imgVw.setVisibility(View.GONE);
-                ((ScrollView) rootView.findViewById(R.id.cont_tutorial_complete)).setVisibility(View.VISIBLE);
-                ((Button) rootView.findViewById(R.id.buttonGoToApp)).setOnClickListener(new View.OnClickListener() {
+                (rootView.findViewById(R.id.cont_tutorial_complete)).setVisibility(View.VISIBLE);
+                (rootView.findViewById(R.id.buttonGoToApp)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         getActivity().finish();

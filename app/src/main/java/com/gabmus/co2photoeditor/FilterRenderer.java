@@ -147,16 +147,15 @@ public class FilterRenderer implements GLSurfaceView.Renderer
         IB.put(indices); IB.position(0);
         TC.put(texCoords); TC.position(0);
         loadShaders();
+
         if (MainHelper.gotSharedPic) {
             MainHelper.gotSharedPic = false;
-            fsv.LoadBitmap(MainHelper.sharedPicBmp);
-        }
-        else if (MainHelper.currentBitmap!=null) {
-            fsv.LoadBitmap(MainHelper.currentBitmap);
+            MainHelper.currentBitmap=MainHelper.sharedPicBmp;
         }
         else {
-            fsv.LoadBitmap(fsv.generateTestBitmap());
+            MainHelper.currentBitmap=fsv.generateTestBitmap();
         }
+        fsv.LoadBitmap(MainHelper.currentBitmap);
     }
 
 
@@ -661,7 +660,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                 int scrH = fsv.getHeight();
                 float wRat = (float) ImageWidth / (float) scrW;
                 float hRat = (float) ImageHeigth / (float) scrH;
-                boolean majW = wRat > hRat ? true : false;
+                boolean majW = wRat > hRat;
                 float aspect = (float) (majW ? (float) ImageWidth / (float) ImageHeigth : (float) ImageHeigth / (float) ImageWidth);
                 if (majW) {
                     cmp_W = scrW;

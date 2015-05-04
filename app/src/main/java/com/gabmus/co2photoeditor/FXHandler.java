@@ -20,11 +20,11 @@ public class FXHandler {
                 new FXData(context.getString(R.string.negative), R.drawable.negative, 0, new int[0], new String[0]),
                 new FXData("Color Correction", R.drawable.colorcorrection, 3, new int [] {50,25,50}, new String[] {context.getString(R.string.brightness), context.getString(R.string.contrast), context.getString(R.string.saturation)}),
                 new FXData(context.getString(R.string.toneMapping1), R.drawable.tonemapping1, 4, new int [] {0,0,50,50}, new String[] {context.getString(R.string.exposure), context.getString(R.string.vignetting), context.getString(R.string.whiteLevel), context.getString(R.string.luminanceSaturation)}),
-                new FXData(context.getString(R.string.crt), R.drawable.crt, 1, new int [] {0}, new String[] {context.getString(R.string.lineWidth)}),
+                new FXData(context.getString(R.string.tonality), R.drawable.tonality, 3, new int [] {50,50,50}, new String [] {context.getString(R.string.red), context.getString(R.string.green), context.getString(R.string.blue)}),
                 new FXData(context.getString(R.string.noise1), R.drawable.noise, 5, new int [] {0,0,0,0,0}, new String [] {context.getString(R.string.amount), context.getString(R.string.size), context.getString(R.string.luminance), context.getString(R.string.color), context.getString(R.string.randomizerSeed)}),
                 new FXData(context.getString(R.string.filmGrain), R.drawable.demo_icon, 4, new int [] {0,0,0,0}, new String [] {context.getString(R.string.strength), context.getString(R.string.darkNoisePower), context.getString(R.string.randomNoiseStrength), context.getString(R.string.randomizerSeed)}),
                 new FXData(context.getString(R.string.bloom), R.drawable.bloom, 5, new int [] {0,0,0,0,50}, new String [] {context.getString(R.string.bloomThreshold), context.getString(R.string.bloomSaturation), context.getString(R.string.bloomBlur), context.getString(R.string.bloomIntensity), context.getString(R.string.bloomBaseIntensity)}),
-                new FXData(context.getString(R.string.tonality), R.drawable.tonality, 3, new int [] {50,50,50}, new String [] {context.getString(R.string.red), context.getString(R.string.green), context.getString(R.string.blue)})
+                new FXData(context.getString(R.string.crt), R.drawable.crt, 1, new int [] {0}, new String[] {context.getString(R.string.lineWidth)})
 
         };
 
@@ -36,8 +36,8 @@ public class FXHandler {
                 }),
                 new FXPreset("Vaporwave",2,
                 new FXPresetTunings[]{
-                    new FXPresetTunings(6,5,new int[]{80,80,100,25,45}),
-                    new FXPresetTunings(9,3,new int[]{70,50,70})
+                    new FXPresetTunings(6,5,new int[]{80,80,60,60,44}),
+                    new FXPresetTunings(5,3,new int[]{70,50,70})
                 })
         };
 
@@ -115,7 +115,7 @@ public class FXHandler {
             case 4: // Tone mapping 1
                 mFsv.renderer.PARAMS_EnableToneMapping = active;
                 break;
-            case 5: //CRT
+            case 9: //CRT
                 mFsv.renderer.PARAMS_EnableCathodeRayTube = active;
                 break;
             case 6: //VHS Noise, ex Film Grain
@@ -127,7 +127,7 @@ public class FXHandler {
             case 8: //bloom
                 mFsv.renderer.PARAMS_EnableBloom = active;
                 break;
-            case 9: //tonality
+            case 5: //tonality
                 mFsv.renderer.PARAMS_EnableTonality = active;
                 break;
             default:
@@ -183,7 +183,7 @@ public class FXHandler {
                 }
                 break;
 
-            case 5: //crt
+            case 9: //crt
                 switch (valIndex) {
                     case 1: //edit line width
                         finalValue = ((tuningValue/100f)*10)+1;
@@ -262,7 +262,7 @@ public class FXHandler {
                         break;
                 }
                 break;
-            case 9: //tonality
+            case 5: //tonality
                 switch (valIndex) {
                     case 1: //Red
                         finalValue = (tuningValue / 100f) * 2f;

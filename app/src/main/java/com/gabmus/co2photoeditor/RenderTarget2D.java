@@ -91,7 +91,7 @@ public class RenderTarget2D
 
         int[] buf = new int[Width * Height];
         IntBuffer texBuffer = ByteBuffer.allocateDirect(buf.length
-                * 4).order(ByteOrder.nativeOrder()).asIntBuffer();;
+                * 4).order(ByteOrder.nativeOrder()).asIntBuffer();
 
         GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGB, Width, Height, 0, GLES20.GL_RGB, GLES20.GL_UNSIGNED_SHORT_5_6_5, texBuffer);
 

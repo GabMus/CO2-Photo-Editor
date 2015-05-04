@@ -33,6 +33,7 @@ public class FXPreset {
                     mFX.FXList[presetList[i].fxID].parValues[j]=presetList[i].tuningValues[j];
                 }
             }
+        mFX.initializeAll(mFsv);
     }
 
 
