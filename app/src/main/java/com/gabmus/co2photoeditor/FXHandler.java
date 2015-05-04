@@ -313,6 +313,13 @@ public class FXHandler {
         SelectFX(-1); //go to default screen
     }
 
+    public void initializeAll(FilterSurfaceView mFsv) {
+        for (int i = 0; i < FXList.length; i++) {
+            for (int j = 0; j < FXList[i].parCount; j++) {
+                tuneFX(i, j+1, FXList[i].parValues[j], mFsv);
+            }
+        }
 
+    }
 
 }

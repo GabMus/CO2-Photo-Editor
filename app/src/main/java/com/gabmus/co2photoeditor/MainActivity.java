@@ -84,6 +84,7 @@ public class MainActivity extends Activity {
         fsv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         customViewLayout.addView(fsv);
 
+        FX.initializeAll(fsv);
 
         appIcon=BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher);
         //receive share implicit intent
