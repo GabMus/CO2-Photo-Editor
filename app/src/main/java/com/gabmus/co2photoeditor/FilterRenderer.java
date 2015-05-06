@@ -697,13 +697,13 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                 setVSParams(hShaderProgramFinalPass);
                 setShaderParamPhoto(hShaderProgramFinalPass, GetCurTexture());
                 drawquad();
-                didshit = false;
-                firstshit = true;
                 return;
             }
             else
                 shallRenderImage = false;
         }
+        didshit = false;
+        firstshit = true;
 
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
@@ -982,8 +982,8 @@ public class FilterRenderer implements GLSurfaceView.Renderer
         setVSParams(hShaderProgramFinalPass);
         setShaderParamPhoto(hShaderProgramFinalPass, tx);
         drawquad();
-        didshit = false;
-        firstshit = true;
+        //didshit = false;
+        //firstshit = true;
     }
 
     void SetBlurEffectParameters(float dx, float dy)
