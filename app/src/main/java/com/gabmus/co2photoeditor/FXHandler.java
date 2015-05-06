@@ -98,8 +98,10 @@ public class FXHandler {
     }
 
     public void enableFX(int index, FilterSurfaceView mFsv, boolean active) {
-        FXList[index].fxActive=active;
+        if (index!=-1) FXList[index].fxActive=active;
         switch (index) {
+            case -1: //no fx
+                break;
             case 0: //B&W
                 mFsv.renderer.PARAMS_EnableBlackAndWhite = active;
                 break;
@@ -214,7 +216,7 @@ public class FXHandler {
                         break;
                     case 5: //randomizer seed
                         //this has a certain amount of randomicity
-                        mFsv.renderer.setPARAMS_FilmGrainSeed(tuningValue);
+                        mFsv.renderer.PARAMS_FilmGrainSeed=tuningValue;
                         break;
                 }
                 break;

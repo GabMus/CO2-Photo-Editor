@@ -1009,7 +1009,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
         return (float)((1.0 / Math.sqrt(2 * Math.PI * theta)) *
                 Math.exp(-(n * n) / (2 * theta * theta)));
     }
-
+/*
     public void setPARAMS_FilmGrainSeed(float v)
     {
         Random r = new Random();
@@ -1018,7 +1018,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
         v+=a;
         PARAMS_FilmGrainSeed = v;
     }
-
+*/
     public int rtid;
     private void setShaderParamPhoto(int program, int texID)
 {
