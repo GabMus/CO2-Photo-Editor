@@ -98,34 +98,12 @@ class FilterSurfaceView extends GLSurfaceView
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++)
             {
-                bitmap.setPixel(x, y, 0x9FF9F9FF);
+                bitmap.setPixel(x, y, 0xFF000000);
             }
         }
-        p.setColor(0xFFFFFFFF);
-        c.drawLine(2, 52, 152, 350, p);
-        p.setColor(0xFF00FFFF);
-        p.setTextSize(15);
-        c.drawText("CASHMADAFFACCA", 300, 300, p);
 
         //Bitmap bemp = BitmapFactory.decodeResource(getResources(), R.drawable.abc_list_selector_disabled_holo_light);
         return bitmap;
     }
 
-    public Bitmap generateTestBitmap2()
-    {
-        int width = 600;
-        int height = 800;
-        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        bitmap.setPixel(10, 10, 0xFFFFFFFF);
-        Canvas c = new Canvas(bitmap);
-        Paint p = new Paint();
-        p.setColor(0xFFFFFFFF);
-        c.drawLine(2, 52, 152, 350, p);
-        p.setColor(0xFF0FFFFF);
-        p.setTextSize(15);
-        c.drawText("CASHMADAFFACCA2", 300, 300, p);
-
-        //Bitmap bemp = BitmapFactory.decodeResource(getResources(), R.drawable.abc_list_selector_disabled_holo_light);
-        return bitmap;
-    }
 }
