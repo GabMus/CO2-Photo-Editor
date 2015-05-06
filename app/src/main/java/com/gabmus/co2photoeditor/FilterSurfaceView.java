@@ -57,6 +57,7 @@ class FilterSurfaceView extends GLSurfaceView
         renderer.saveTarget = new RenderTarget2D(bmp.getWidth(), bmp.getHeight());
         renderer.blur1 = new RenderTarget2D(bmp.getWidth() /2, bmp.getHeight() / 2);
         renderer.blur2 = new RenderTarget2D(bmp.getWidth() / 2, bmp.getHeight() / 2);
+        renderer.Render();
     }
 
     private int[] loadTexture(Bitmap bitmap)

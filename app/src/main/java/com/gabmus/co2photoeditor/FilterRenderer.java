@@ -100,7 +100,13 @@ public class FilterRenderer implements GLSurfaceView.Renderer
     public int ImageHeigth = 0;
 
     public boolean SaveImage = false;
+    private boolean shallRenderImage = false;
     public String SavePath = "";
+
+    public void Render()
+    {
+        shallRenderImage = true;
+    }
 
     private FloatBuffer VB;
     private ShortBuffer IB;
@@ -652,6 +658,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
     private int hPos, hTex;
     private int cmp_W, cmp_H, cmp_X, cmp_Y;
     public void onDrawFrame(GL10 unused) {
+
         if (BOOL_LoadTexture) {
 
             if (fsv.toLoad != null) {
@@ -679,6 +686,25 @@ public class FilterRenderer implements GLSurfaceView.Renderer
             System.gc();
             BOOL_LoadTexture = false;
         }
+        else {
+            if (!SaveImage && !shallRenderImage) {
+                GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
+                if (didshit)
+                    firstshit = false;
+                first = !first;
+                RenderTarget2D.SetDefault(cmp_X, cmp_Y, cmp_W, cmp_H);
+                GLES20.glUseProgram(hShaderProgramFinalPass);
+                setVSParams(hShaderProgramFinalPass);
+                setShaderParamPhoto(hShaderProgramFinalPass, GetCurTexture());
+                drawquad();
+                didshit = false;
+                firstshit = true;
+                return;
+            }
+            else
+                shallRenderImage = false;
+        }
+
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
         if (PARAMS_EnableCathodeRayTube) {
