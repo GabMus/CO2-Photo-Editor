@@ -64,6 +64,7 @@ public class CustomSlidersAdapter extends BaseAdapter{
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 MainActivity.FX.FXList[MainActivity.FXselected].parValues[position] = i;
                 MainActivity.FX.tuneFX(MainActivity.FXselected, position+1, i, MainActivity.fsv);
+                MainActivity.fsv.renderer.Render();
             }
 
             @Override

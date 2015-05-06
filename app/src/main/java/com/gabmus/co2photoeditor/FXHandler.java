@@ -99,6 +99,7 @@ public class FXHandler {
 
     public void enableFX(int index, FilterSurfaceView mFsv, boolean active) {
         if (index!=-1) FXList[index].fxActive=active;
+        mFsv.renderer.Render();
         switch (index) {
             case -1: //no fx
                 break;
