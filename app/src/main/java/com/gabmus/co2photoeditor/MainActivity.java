@@ -58,6 +58,7 @@ public class MainActivity extends Activity {
     public static FilterSurfaceView fsv;
 
     public static FXHandler FX;
+    public static CustomFXAdapter effectsListAdapter;
 
     ListView effectsList;
     ListView presetList;
@@ -126,6 +127,21 @@ public class MainActivity extends Activity {
 
         fxToggle = (Switch) findViewById(R.id.switch1);
 
+        effectsListAdapter=new CustomFXAdapter(this, FX.getFXnames(), FX.getFXicons());
+        effectsList = (ListView) findViewById(R.id.listView);
+        effectsList.setAdapter(effectsListAdapter);
+        effectsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                FXselected=i;
+                FX.SelectFX(i);
+                if (!FX.FXList[i].fxActive && (helper.sharedpreferences.getBoolean("pref_activate_onclick_key", true))) {
+                    fxToggle.setChecked(true);
+                }
+                fxDrawer.closeDrawers();
+            }
+        });
+
         //DONE: implement on switch state changed.
 
         //this makes the switches consistent and changes the FXList value to match the switch
@@ -138,25 +154,7 @@ public class MainActivity extends Activity {
                     FX.enableFX(FXselected, fsv, false);
                 }
             }
-
-
         });
-
-        effectsList = (ListView) findViewById(R.id.listView);
-        effectsList.setAdapter(new CustomFXAdapter(this, FX.getFXnames(), FX.getFXicons()));
-        effectsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                FXselected=i;
-                FX.SelectFX(i);
-                //slidersListView.setAdapter(new CustomSlidersAdapter(getApplicationContext(), FX.FXList[i].parNames, FX.FXList[i].parValues));
-                if (!FX.FXList[i].fxActive && (helper.sharedpreferences.getBoolean("pref_activate_onclick_key", true))) {
-                    fxToggle.setChecked(true);
-                }
-                fxDrawer.closeDrawers();
-            }
-        });
-
 
         presetList = (ListView) findViewById(R.id.listViewPresets);
         presetList.setAdapter(new CustomPresetAdapter(this, FX.getPresetNames()));

@@ -134,6 +134,7 @@ public class FXHandler {
                 Log.e("CO2 Photo Editor", "enableFX: index out of range");
                 break;
         }
+        MainActivity.effectsListAdapter.notifyDataSetChanged();
     }
 
     public void tuneFX(int FXIndex, int valIndex, int tuningValue, FilterSurfaceView mFsv) {
