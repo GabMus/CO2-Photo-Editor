@@ -657,6 +657,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
 
     private int hPos, hTex;
     private int cmp_W, cmp_H, cmp_X, cmp_Y;
+    private int tx;
     public void onDrawFrame(GL10 unused) {
 
         if (BOOL_LoadTexture) {
@@ -688,11 +689,8 @@ public class FilterRenderer implements GLSurfaceView.Renderer
         }
         else {
             if (!SaveImage && !shallRenderImage) {
-                GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
-                if (didshit)
-                    firstshit = false;
-                first = !first;
                 RenderTarget2D.SetDefault(cmp_X, cmp_Y, cmp_W, cmp_H);
+                GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
                 GLES20.glUseProgram(hShaderProgramFinalPass);
                 setVSParams(hShaderProgramFinalPass);
                 setShaderParamPhoto(hShaderProgramFinalPass, GetCurTexture());
@@ -704,7 +702,6 @@ public class FilterRenderer implements GLSurfaceView.Renderer
         }
         didshit = false;
         firstshit = true;
-
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
         if (PARAMS_EnableCathodeRayTube) {
