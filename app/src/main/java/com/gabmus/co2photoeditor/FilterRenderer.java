@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -910,6 +911,9 @@ public class FilterRenderer implements GLSurfaceView.Renderer
         if (SaveImage) {
             SaveImage = false;
 
+
+            MainActivity.toastHandler.post(MainActivity.loadingRunnableShow);
+
             saveTarget.Set();
             GLES20.glUseProgram(hShaderProgramFinalPass);
             setVSParams(hShaderProgramFinalPass);
@@ -972,7 +976,8 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
+            MainActivity.toastHandler.post(MainActivity.toastRunnable);
+            MainActivity.toastHandler.post(MainActivity.loadingRunnableDismiss);
         }
         RenderTarget2D.SetDefault(cmp_X, cmp_Y, cmp_W, cmp_H);
         GLES20.glUseProgram(hShaderProgramFinalPass);

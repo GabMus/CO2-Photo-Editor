@@ -1,6 +1,7 @@
 package com.gabmus.co2photoeditor;
 
 import android.app.ActivityManager;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -28,11 +29,14 @@ public class MainHelper {
     SharedPreferences sharedpreferences;
     public static boolean userWelcomed;
     public static boolean choosePicOnStart = false;
+    public static ProgressDialog loadingDialog;
 
     public MainHelper(MainActivity act_) {
         act=act_;
         sharedpreferences = PreferenceManager.getDefaultSharedPreferences(act);
-
+        loadingDialog= new ProgressDialog(act);
+        loadingDialog.setTitle("");
+        loadingDialog.setMessage(act.getString(R.string.loading_message));
         choosePicOnStart=sharedpreferences.getBoolean("pref_choose_file_on_start_key", false);
     }
 
@@ -97,6 +101,7 @@ public class MainHelper {
     }
 
     public int generatePalette(Bitmap bmp) {
+        //note: could do this in an asyntask, but it's not worth it, i tried
         Palette pal = Palette.generate(bmp);
         return pal.getVibrantColor(0);
     }

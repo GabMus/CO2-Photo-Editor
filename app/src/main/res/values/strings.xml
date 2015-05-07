@@ -103,7 +103,7 @@
     <string name="label_about_wantToHelp_c">Check out the Tech Pills YouTube channel by GabMus. By watching my videos and subscribing to my channel you can be of great help!</string>
     <string name="label_about_license_c">Apache License Version 2.0, January 2004</string>
 
-
+    <string name="loading_message">Saving your picture...</string>
 
     <!--
         <string name="pref_save_format">Picture format</string>

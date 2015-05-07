@@ -12,6 +12,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -66,8 +67,10 @@ public class MainActivity extends Activity {
 
     ActionBarDrawerToggle drawerToggle;
 
-    ScrollView scroller;
-
+    public static Handler toastHandler = new Handler();
+    public static Runnable toastRunnable;
+    public static Runnable loadingRunnableShow;
+    public static Runnable loadingRunnableDismiss;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +99,19 @@ public class MainActivity extends Activity {
             startPickerIntent();
         }
 
+
+        toastRunnable = new Runnable() {
+            public void run() {
+                Toast.makeText(context, getString(R.string.toast_image_saved) + fsv.renderer.SavePath, Toast.LENGTH_LONG).show();
+            }};
+        loadingRunnableShow = new Runnable() {
+            public void run() {
+                helper.loadingDialog.show();
+            }};
+        loadingRunnableDismiss = new Runnable() {
+            public void run() {
+                helper.loadingDialog.dismiss();
+            }};
         //welcome activity
         helper.checkAndWelcomeUser();
 
@@ -225,7 +241,7 @@ public class MainActivity extends Activity {
         if (id == R.id.action_save) {
             String imgPath = helper.prepareImagePath();
             fsv.SaveImage(imgPath);
-            Toast.makeText(this, getString(R.string.toast_image_saved) + imgPath, Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, getString(R.string.toast_image_saved) + imgPath, Toast.LENGTH_LONG).show();
             return true;
         }
 
@@ -281,5 +297,7 @@ public class MainActivity extends Activity {
         intentChooseUpdate.setType("image/*");
         startActivityForResult(Intent.createChooser(intentChooseUpdate, "Choose a picture"), REQUEST_IMAGE_CHOOSE);
     }
+
+
 
 }
