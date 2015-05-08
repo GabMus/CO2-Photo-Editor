@@ -11,21 +11,21 @@
     <string name="action_resetFXAll_label">Reset all effects</string>
     <string name="no_fx_selected">No effect has been selected</string>
 
-    <string name="label_tutorial_complete">Awesome! You have completed the tutorial, now you can start using CO₂ like a pro!</string>
+    <string name="label_tutorial_complete">Great! You have completed the tutorial, now you can start using CO₂ like a pro!</string>
     <string name="button_goToApp">Start using CO₂</string>
 
-    <string name="drawer_open">Drawer open</string>
-    <string name="drawer_close">Drawer close</string>
+    <string name="drawer_open">Open drawer</string>
+    <string name="drawer_close">Close drawer</string>
 
     <string name="pref_save_path">Saved pictures folder</string>
     <string name="pref_save_path_description">Choose where CO₂ should save your edited photos</string>
-    <string name="pref_save_path_default">Pictures/CO2-Photo-Editor</string>
+    <string name="pref_save_path_default" translatable="false">Pictures/CO2-Photo-Editor</string>
 
     <string name="pref_activate_onclick">Tap an effect to activate it</string>
     <string name="pref_activate_onclick_desc">Activate an effect automatically without having to use the switch</string>
 
     <string name="pref_choose_file_on_start">Choose new picture on startup</string>
-    <string name="pref_choose_file_on_start_desc">Start the file picker as soon as you launch the app</string>
+    <string name="pref_choose_file_on_start_desc">Start the photo picker as soon as you launch the app</string>
 
 
     <string name="pref_theme_title">Choose theme</string>
@@ -47,13 +47,13 @@
     <string name="title_activity_welcome">Welcome</string>
 
 
-    <string name="toast_image_saved">Image saved in </string>
+    <string name="toast_image_saved">Picture saved in</string>
 
 
     <string name="blackAndWhite">Black and white</string>
     <string name="sepia">Sepia</string>
     <string name="negative">Negative</string>
-    <string name="toneMapping1">Tone Mapping 1</string>
+    <string name="toneMapping1">Tone Mapping</string>
     <string name="crt">CRT Effect</string>
     <string name="noise1">Noise</string>
     <string name="filmGrain">Film Grain</string>
@@ -100,22 +100,9 @@
 
     <string name="label_about_appAuthor_c">Gabriele Musco aka GabMus</string>
     <string name="label_about_glAuthor_c">Mattia Panettiere aka xerdent</string>
-    <string name="label_about_wantToHelp_c">Check out the Tech Pills YouTube channel by GabMus. By watching my videos and subscribing to my channel you can be of great help!</string>
+    <string name="label_about_wantToHelp_c">Check out the Tech Pills YouTube channel. By watching my videos and subscribing to my channel you can be of great help!</string>
     <string name="label_about_license_c">Apache License Version 2.0, January 2004</string>
 
-    <string name="loading_message">Saving your picture...</string>
+    <string name="loading_message">Saving your picture…</string>
 
-    <!--
-        <string name="pref_save_format">Picture format</string>
-        <string name="pref_save_format_default">1</string>
-        <string-array name="img_formats">
-            <item name="jpg">jpg</item>
-            <item name="png">png</item>
-        </string-array>
-
-        <string-array name="img_formats_values">
-            <item name="jpg">1</item>
-            <item name="png">2</item>
-        </string-array>
-        -->
 </resources>
