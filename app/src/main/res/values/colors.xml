@@ -3,5 +3,5 @@
     <color name="primary">#ffd44933</color>
     <color name="primary_dark">#ff9f3727</color>
     <color name="accent">#ff547fce</color>
-    <color name="listItemActiveColor">#16502D</color>
+    <color name="listItemActiveColor">#262626</color>
 </resources>
