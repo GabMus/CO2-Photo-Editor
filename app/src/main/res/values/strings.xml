@@ -53,6 +53,7 @@
     <string name="blackAndWhite">Black and white</string>
     <string name="sepia">Sepia</string>
     <string name="negative">Negative</string>
+    <string name="adjustments">Adjustments</string>
     <string name="toneMapping1">Tone Mapping</string>
     <string name="crt">CRT Effect</string>
     <string name="noise1">Noise</string>

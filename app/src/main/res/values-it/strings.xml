@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">CO₂</string>
     <string name="action_about">A proposito</string>
     <string name="action_resetFXAll_label">Resetta tutti gli effetti</string>
     <string name="action_resetFX_label">Resetta questo effetto</string>
@@ -71,4 +70,5 @@
     <string name="toneMapping1">Mappatura tonale</string>
     <string name="vignetting">Vignettatura</string>
     <string name="whiteLevel">Livello di bianco</string>
+    <string name="adjustments">Regolazioni</string>
 </resources>
