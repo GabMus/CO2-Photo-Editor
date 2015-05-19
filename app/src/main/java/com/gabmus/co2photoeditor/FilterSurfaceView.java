@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLUtils;
+import java.lang.Math;
 
 class FilterSurfaceView extends GLSurfaceView
 {
@@ -15,8 +16,8 @@ class FilterSurfaceView extends GLSurfaceView
 
     public FilterSurfaceView(Context context, MainActivity act)
     {
-
         super(context);
+        int[] tmpVal = new int[1];
         setEGLContextClientVersion(2);
         activity = act;
         renderer = new FilterRenderer(this);
@@ -36,6 +37,15 @@ class FilterSurfaceView extends GLSurfaceView
     {
         if (!startup && default_b) default_b = false;
         startup = false;
+        if ((bmp.getHeight()*bmp.getWidth())>=7900001) { //if pic bigger then 8Mpx resize to 8Mpx
+            double h = bmp.getHeight();
+            double b = bmp.getWidth();
+            double y = b/h;
+            double x = 7900000;
+            h=Math.sqrt(x/y);
+            b=x/(h);
+            bmp= Bitmap.createScaledBitmap(bmp, (int)b, (int)h, true);
+        }
         toLoad = bmp;
         renderer.BOOL_LoadTexture = true;
     }

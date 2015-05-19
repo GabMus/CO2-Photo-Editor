@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.opengl.GLES20;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;

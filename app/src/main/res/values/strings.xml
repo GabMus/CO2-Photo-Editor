@@ -58,6 +58,10 @@
     <string name="crt">CRT Effect</string>
     <string name="noise1">Noise</string>
     <string name="filmGrain">Film Grain</string>
+    <string name="sharpness">Sharpness</string>
+    <string name="radius">Radius</string>
+    <string name="intensity">Intensity</string>
+
 
     <string name="brightness">Brightness</string>
     <string name="contrast">Contrast</string>

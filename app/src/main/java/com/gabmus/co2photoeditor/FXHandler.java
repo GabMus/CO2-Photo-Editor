@@ -24,7 +24,8 @@ public class FXHandler {
                 new FXData(context.getString(R.string.noise1), R.drawable.noise, 5, new int [] {0,0,0,0,0}, new String [] {context.getString(R.string.amount), context.getString(R.string.size), context.getString(R.string.luminance), context.getString(R.string.color), context.getString(R.string.randomizerSeed)}),
                 new FXData(context.getString(R.string.filmGrain), R.drawable.demo_icon, 4, new int [] {0,0,0,0}, new String [] {context.getString(R.string.strength), context.getString(R.string.darkNoisePower), context.getString(R.string.randomNoiseStrength), context.getString(R.string.randomizerSeed)}),
                 new FXData(context.getString(R.string.bloom), R.drawable.bloom, 5, new int [] {0,0,0,0,50}, new String [] {context.getString(R.string.bloomThreshold), context.getString(R.string.bloomSaturation), context.getString(R.string.bloomBlur), context.getString(R.string.bloomIntensity), context.getString(R.string.bloomBaseIntensity)}),
-                new FXData(context.getString(R.string.crt), R.drawable.crt, 1, new int [] {0}, new String[] {context.getString(R.string.lineWidth)})
+                new FXData(context.getString(R.string.crt), R.drawable.crt, 1, new int [] {0}, new String[] {context.getString(R.string.lineWidth)}),
+                new FXData(context.getString(R.string.sharpness), R.drawable.demo_icon, 2, new int [] {0,0}, new String[] {context.getString(R.string.radius), context.getString(R.string.intensity)})
 
         };
 
@@ -132,6 +133,9 @@ public class FXHandler {
                 break;
             case 5: //tonality
                 mFsv.renderer.PARAMS_EnableTonality = active;
+                break;
+            case 10: //sharpness
+                mFsv.renderer.PARAMS_EnableSharpness = active;
                 break;
             default:
                 Log.e("CO2 Photo Editor", "enableFX: index out of range");
@@ -279,6 +283,19 @@ public class FXHandler {
                     case 3: //Blue
                         finalValue = (tuningValue / 100f) * 2f;
                         mFsv.renderer.PARAMS_TonalityB = finalValue;
+                        break;
+                }
+                break;
+
+            case 10: //sharpness
+                switch (valIndex) {
+                    case 1: //radius
+                        finalValue = (tuningValue / 100f) * 4f;
+                        mFsv.renderer.PARAMS_SharpnessRadius = finalValue;
+                        break;
+                    case 2: //intensity
+                        finalValue = (tuningValue / 100f) * 3f;
+                        mFsv.renderer.PARAMS_SharpnessIntensity = finalValue;
                         break;
                 }
                 break;
