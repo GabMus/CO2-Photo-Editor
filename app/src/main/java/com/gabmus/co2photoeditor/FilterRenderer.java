@@ -41,11 +41,17 @@ public class FilterRenderer implements GLSurfaceView.Renderer
     private int hShaderProgramContrastSaturationBrightness;
     private int hShaderProgramTonality;
     private int hShaderProgramToneMappingFilmicALU;
+    private int hShaderProgramSharpness;
 
     public boolean PARAMS_EnableTonality = false;
     public float PARAMS_TonalityR = 1f;
     public float PARAMS_TonalityG = 1f;
     public float PARAMS_TonalityB = 1f;
+
+
+    public boolean PARAMS_EnableSharpness = false;
+    public float PARAMS_SharpnessIntensity = 1.0f;
+    public float PARAMS_SharpnessRadius = 1.0f;
 
     public boolean PARAMS_EnableContrastSaturationBrightness;
     public float PARAMS_Contrast = 1f;
@@ -242,6 +248,35 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "}";
 
         hShaderProgramTonality = createprogram(generalreverseVS, tonality_FS);
+
+
+        //Sharpness Adjustment
+        String sharpness_FS =
+                "precision mediump float;" +
+                        "uniform sampler2D filteredPhoto;" +
+                        "uniform float Radius;" +
+                        "uniform float Sharpness;" +
+                        "uniform float pixwidth;" +
+                        "varying vec2 UV;" +
+                        "" +
+                        "void main()" +
+                        "{" +
+                        "  vec4 c = texture2D(filteredPhoto, UV);" +
+                        "  vec4 cp1 = texture2D(filteredPhoto, UV + vec2(pixwidth * Radius, 0));" +
+                        "  vec4 cp2 = texture2D(filteredPhoto, UV - vec2(pixwidth * Radius, 0));" +
+                        "  " +
+                        "  float halfK = Sharpness / 2.0;" +
+                        "  float sK = 1.0 - Sharpness;" +
+                        "  " +
+                        "  vec4 toRet;" +
+                        "  toRet.r = (c.r - (halfK * (cp1.r + cp2.r))) / sK;" +
+                        "  toRet.g = (c.g - (halfK * (cp1.g + cp2.g))) / sK;" +
+                        "  toRet.b = (c.b - (halfK * (cp1.b + cp2.b))) / sK;" +
+                        "  toRet.a = 1.0;" +
+                        "  gl_FragColor = toRet;" +
+                        "}";
+
+        hShaderProgramSharpness = createprogram(generalreverseVS, sharpness_FS);
 
         //CRT
         String crt_FS =
@@ -748,6 +783,20 @@ public class FilterRenderer implements GLSurfaceView.Renderer
             GLES20.glUniform1f(sat, PARAMS_Saturation);
             GLES20.glUniform1f(br, PARAMS_Brightness);
             GLES20.glUniform1f(ctr, PARAMS_Contrast);
+            drawquad();
+        }
+        if (PARAMS_EnableSharpness)
+        {
+            SetRenderTarget();
+            GLES20.glUseProgram(hShaderProgramSharpness);
+            setVSParams(hShaderProgramSharpness);
+            setShaderParamPhoto(hShaderProgramSharpness, GetCurTexture());
+            int shar = GLES20.glGetUniformLocation(hShaderProgramSharpness, "Sharpness");
+            int rad = GLES20.glGetUniformLocation(hShaderProgramSharpness, "Radius");
+            int pw = GLES20.glGetUniformLocation(hShaderProgramSharpness, "pixwidth");
+            GLES20.glUniform1f(shar, PARAMS_SharpnessIntensity);
+            GLES20.glUniform1f(rad, PARAMS_SharpnessRadius);
+            GLES20.glUniform1f(pw, (float)(1.0f / (float)ImageWidth));
             drawquad();
         }
         if (PARAMS_EnableNegative) {
