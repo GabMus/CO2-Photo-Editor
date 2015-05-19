@@ -267,7 +267,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "  " +
                         "  float halfK = Sharpness / 2.0;" +
                         "  float sK = 1.0 - Sharpness;" +
-                        "  " +
+                        "  if (sK == 0) sK = 0.01;" +
                         "  vec4 toRet;" +
                         "  toRet.r = (c.r - (halfK * (cp1.r + cp2.r))) / sK;" +
                         "  toRet.g = (c.g - (halfK * (cp1.g + cp2.g))) / sK;" +
@@ -627,7 +627,6 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "float xlat_lib_saturate( float x) {\n" +
                         "  return clamp( x, 0.0, 1.0);\n" +
                         "}\n" +
-                        "vec3 FilmGrain( vec3 color, vec2 uv );\n" +
                         "\n" +
                         "\n" +
                         "vec3 FilmGrain( vec3 color, vec2 uv ) {\n" +
@@ -638,23 +637,23 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "    float noise;\n" +
                         "    float accentuateDarkNoise;\n" +
                         "\n" +
-                        "    x = ((uv.x  * uv.y ) * 50000.0);\n" +
-                        "    x = mod( x, 13.0000);\n" +
-                        "    x = (x * x);\n" +
+                        "    x = ((uv.x  * uv.y ) * 1000.0);\n" +
+                        "    x = mod( x, 13.0000) * mod(x, 123.0);\n" +
+                        "    //x = (x / 2.0);\n" +
                         "    dx = mod( x, 0.0100000);\n" +
                         "    y = ((x * randomValue) + randomValue);\n" +
                         "    dy = mod( y, 0.0100000);\n" +
                         "    noise = (xlat_lib_saturate( (0.100000 + (dx * 100.000)) ) + (xlat_lib_saturate( (0.100000 + (dy * 100.000)) ) * randomNoiseStrength));\n" +
                         "    noise = ((noise * 2.00000) - 1.00000);\n" +
                         "    accentuateDarkNoise = pow( (1.00000 - ((color.x  + color.y  + color.z ) / 3.00000)), accentuateDarkNoisePower);\n" +
-                        "    return (color + (((color * noise) * accentuateDarkNoise) * filmGrainStrength));\n" +
+                        "    return color + color * noise * accentuateDarkNoise * filmGrainStrength;\n" +
                         "}\n" +
                         "void main() {\n" +
-                        "    vec3 xlat_retVal = vec3(texture2D(filteredPhoto, UV));\n" +
+                        "    vec4 xlat_retVal = texture2D(filteredPhoto, UV);\n" +
                         "   " +
-                        "    xlat_retVal = FilmGrain( vec3(xlat_retVal), vec2(UV));\n" +
+                        "    xlat_retVal = vec4(FilmGrain( vec3(xlat_retVal.r, xlat_retVal.g, xlat_retVal.b), vec2(UV)), 1.0);\n" +
                         "\n" +
-                        "    gl_FragColor = vec4( xlat_retVal, 1.0);" +
+                        "    gl_FragColor = xlat_retVal;" +
                         "}\n";
         hShaderProgramProperFilmGrain = createprogram(generalreverseVS, properFilmGrain_FS);
 
