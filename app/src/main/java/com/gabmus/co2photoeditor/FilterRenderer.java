@@ -267,7 +267,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "  " +
                         "  float halfK = Sharpness / 2.0;" +
                         "  float sK = 1.0 - Sharpness;" +
-                        "  if (sK == 0) sK = 0.01;" +
+                        "  if ( sK == 0.0 ) sK = 0.01;" +
                         "  vec4 toRet;" +
                         "  toRet.r = (c.r - (halfK * (cp1.r + cp2.r))) / sK;" +
                         "  toRet.g = (c.g - (halfK * (cp1.g + cp2.g))) / sK;" +
