@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 
 public class WelcomeActivity extends FragmentActivity {
@@ -79,6 +80,8 @@ public class WelcomeActivity extends FragmentActivity {
 
         private ImageView imgVw;
         private int slide;
+        private TextView bottomTutText;
+        private TextView topTutText;
 
         public WelcomeFragment() {}
 
@@ -88,7 +91,27 @@ public class WelcomeActivity extends FragmentActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_welcome, container, false);
+            bottomTutText=(TextView)rootView.findViewById(R.id.textViewTutorialBottom);
+            topTutText=(TextView)rootView.findViewById(R.id.textViewTutorialTop);
             slide= getArguments().getInt("currentSlide");
+            switch (slide) {
+                case R.drawable.tut1:
+                    bottomTutText.setVisibility(View.VISIBLE);
+                    bottomTutText.setText(R.string.tutorial1);
+                    break;
+                case R.drawable.tut2:
+                    bottomTutText.setVisibility(View.VISIBLE);
+                    bottomTutText.setText(R.string.tutorial2);
+                    break;
+                case R.drawable.tut3:
+                    bottomTutText.setVisibility(View.VISIBLE);
+                    bottomTutText.setText(R.string.tutorial3);
+                    break;
+                case R.drawable.tut4:
+                    topTutText.setVisibility(View.VISIBLE);
+                    topTutText.setText(R.string.tutorial4);
+                    break;
+            }
             imgVw = (ImageView) rootView.findViewById(R.id.imageViewWelcome);
             if (slide==-1) {
                 imgVw.setVisibility(View.GONE);

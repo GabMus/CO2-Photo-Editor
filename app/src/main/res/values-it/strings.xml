@@ -73,4 +73,8 @@
     <string name="intensity">Intensità</string>
     <string name="radius">Raggio</string>
     <string name="sharpness">Nitidezza</string>
+    <string name="tutorial1">1: Seleziona una nuova foto\n2: Salva la foto corrente\n3: Tocca il menu hamburger o scorri dal lato sinistro dello schermo per rivelare il menu degli effetti</string>
+    <string name="tutorial2">Accedi al menu overflow per raggiungere più azioni</string>
+    <string name="tutorial3">Nel menu degli effetti, scegli un filtro dalla colonna a destra (1) o un preset da quella di sinistra (2)\nI preset sono combinazioni di filtri che dopo puoi modificare a piacere\nI filtri con lo sfondo grigio più chiaro sono attivi</string>
+    <string name="tutorial4">1: Usa l\'interruttore per disattivare un filtro attivo\n2: Regola i filtri tramite gli sliders. Scorri la lista degli sliders per rivelarne altri</string>
 </resources>

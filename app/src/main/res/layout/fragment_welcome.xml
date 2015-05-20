@@ -4,13 +4,46 @@
     tools:context="com.gabmus.co2photoeditor.WelcomeActivity.WelcomeFragment">
 
 
-    <ImageView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/imageViewWelcome"
-        android:layout_gravity="center"
-        android:src="@drawable/tut1"
-        />
+        android:layout_height="match_parent">
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/imageViewWelcome"
+            android:layout_gravity="center"
+            android:src="@drawable/tut1"
+            />
+
+        <TextView
+            android:padding="50dp"
+            android:background="@color/listItemActiveColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="BOTTOM_DESC"
+            android:id="@+id/textViewTutorialBottom"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="left"
+            android:gravity="left"
+            android:visibility="gone" />
+
+        <TextView
+            android:padding="50dp"
+            android:background="@color/listItemActiveColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="TOP_DESC"
+            android:id="@+id/textViewTutorialTop"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="left"
+            android:gravity="left"
+            android:visibility="gone" />
+
+    </RelativeLayout>
 
     <ScrollView
         android:layout_width="match_parent"
