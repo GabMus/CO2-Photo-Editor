@@ -52,7 +52,7 @@ public class WelcomeActivity extends FragmentActivity {
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
 
-        private final int[] slidesPics = {R.drawable.rms1, R.drawable.rms2, R.drawable.rms3, R.drawable.demo_icon, -1};
+        private final int[] slidesPics = {R.drawable.tut1, R.drawable.tut2, R.drawable.tut3, R.drawable.tut4, -1};
 
         public ScreenSlidePagerAdapter(FragmentManager fm) {
             super(fm);

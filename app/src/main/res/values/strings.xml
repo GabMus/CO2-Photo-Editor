@@ -31,13 +31,13 @@
     <string name="pref_theme_title">Choose theme</string>
     <string name="pref_theme_desc">Change the color theme of CO₂. Close and reopen the app to apply changes</string>
 
-    <string-array name="themeValues">
+    <string-array name="themeValues" translatable="false">
         <item>1</item>
         <item>2</item>
         <item>3</item>
     </string-array>
 
-    <string-array name="themeEntries">
+    <string-array name="themeEntries" translatable="false">
         <item>Carbon red (default)</item>
         <item>Carbon blue</item>
         <item>Carbon green</item>

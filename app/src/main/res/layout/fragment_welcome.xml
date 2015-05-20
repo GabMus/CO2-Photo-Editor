@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:id="@+id/imageViewWelcome"
         android:layout_gravity="center"
-        android:src="@drawable/rms1"
+        android:src="@drawable/tut1"
         />
 
     <ScrollView
