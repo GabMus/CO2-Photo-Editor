@@ -20,7 +20,7 @@
         <TextView
             android:padding="50dp"
             android:background="@color/listItemActiveColor"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="BOTTOM_DESC"
@@ -33,7 +33,7 @@
         <TextView
             android:padding="50dp"
             android:background="@color/listItemActiveColor"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="TOP_DESC"
