@@ -92,7 +92,7 @@ public class MainHelper {
 
     public String prepareImagePath() {
         String prefPath = sharedpreferences.getString("pref_save_path_key", act.getString(R.string.pref_save_path_default));
-        if (prefPath == "" || prefPath==null) prefPath = act.getString(R.string.pref_save_path_default); //this should go away
+        if (prefPath.length() <=0) prefPath = act.getString(R.string.pref_save_path_default); //this should go away
         String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() +
                 "/" + prefPath;
         //tempfile is necessary because it creates the subdirectories if they don't exist

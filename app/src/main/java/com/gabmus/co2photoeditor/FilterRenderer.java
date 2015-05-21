@@ -685,8 +685,8 @@ public class FilterRenderer implements GLSurfaceView.Renderer
         GLES20.glShaderSource(shader, shaderCode);
         GLES20.glCompileShader(shader);
         ERROR = GLES20.glGetShaderInfoLog(shader);
-        if (ERROR.length() > 0)
-        throw(new RuntimeException(ERROR));
+        if (ERROR.length() > 0) Log.e("CO2 Photo editor - ", "Exception not thrown! FilterRenderer line 688\n"+ERROR);
+        //throw(new RuntimeException(ERROR));
         return shader;
     }
 
