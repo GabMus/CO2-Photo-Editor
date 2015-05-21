@@ -85,6 +85,5 @@
                 android:id="@+id/buttonGoToApp"
                 android:layout_gravity="center_horizontal" />
         </LinearLayout>
-
     </ScrollView>
 </FrameLayout>
