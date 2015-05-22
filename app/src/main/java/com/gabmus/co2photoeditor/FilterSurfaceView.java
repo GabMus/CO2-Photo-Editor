@@ -6,6 +6,10 @@ import android.graphics.Paint;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLUtils;
+import android.support.v4.view.MotionEventCompat;
+import android.util.Log;
+import android.view.MotionEvent;
+
 import java.lang.Math;
 
 class FilterSurfaceView extends GLSurfaceView
@@ -84,7 +88,8 @@ class FilterSurfaceView extends GLSurfaceView
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_NEAREST);
 
         GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
-        bitmap.recycle();
+        activity.helper.currentBitmap=bitmap;
+        //bitmap.recycle();
 
 
         return textureHandle;

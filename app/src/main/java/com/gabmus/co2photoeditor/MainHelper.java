@@ -14,6 +14,8 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v7.graphics.Palette;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.widget.ShareActionProvider;
 
 import java.io.File;
@@ -39,6 +41,7 @@ public class MainHelper {
         loadingDialog.setTitle("");
         loadingDialog.setMessage(act.getString(R.string.loading_message));
         choosePicOnStart=sharedpreferences.getBoolean("pref_choose_file_on_start_key", false);
+
     }
 
     public void receiveShareIntent() {

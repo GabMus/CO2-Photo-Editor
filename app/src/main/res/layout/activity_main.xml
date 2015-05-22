@@ -13,9 +13,9 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="230dp"
             android:id="@+id/customViewLayout"
-            android:layout_weight="1"
+            android:layout_weight="0"
             android:minHeight="170dp">
 
         </FrameLayout>
@@ -52,12 +52,12 @@
 
         <ListView
             android:layout_width="match_parent"
-            android:layout_height="225dp"
+            android:layout_height="wrap_content"
             android:id="@+id/sliders_list_view"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:divider="@android:color/transparent"
-            android:layout_weight="1"
+            android:layout_weight="0"
             android:minHeight="60dp" />
 
     </LinearLayout>

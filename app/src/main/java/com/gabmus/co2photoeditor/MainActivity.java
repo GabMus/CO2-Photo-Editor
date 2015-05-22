@@ -1,36 +1,26 @@
 package com.gabmus.co2photoeditor;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
-import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ScrollView;
-import android.widget.SeekBar;
 import android.widget.ShareActionProvider;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -48,7 +38,7 @@ public class MainActivity extends Activity {
     public static DrawerLayout fxDrawer;
 
     public static int FXselected = -1;
-    public FrameLayout customViewLayout;
+    public static FrameLayout customViewLayout;
 
     public static Switch fxToggle;
     public static TextView textViewFXTitle;
@@ -72,6 +62,8 @@ public class MainActivity extends Activity {
     public static Runnable loadingRunnableShow;
     public static Runnable loadingRunnableDismiss;
 
+    private boolean isFsvBig=false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +79,24 @@ public class MainActivity extends Activity {
         fsv = new FilterSurfaceView(getApplicationContext(), this);
         fsv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         customViewLayout.addView(fsv);
+
+        fsv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                float scale = context.getResources().getDisplayMetrics().density;
+                int pixels;
+                if (!isFsvBig) {
+                    pixels = (int) (380 * scale + 0.5f);
+                    isFsvBig=true;
+                }
+                else {
+                    pixels = (int) (230 * scale + 0.5f);
+                    isFsvBig=false;
+                }
+                fsv.LoadBitmap(helper.currentBitmap);
+                customViewLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, pixels));
+            }
+        });
 
         //set default values on startup
         FX.initializeAll(fsv);
@@ -177,9 +187,9 @@ public class MainActivity extends Activity {
         presetList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                FXselected=-1;
+                FXselected = -1;
                 FX.resetAllFX(fsv);
-                FX.PresetList[i].toggleAllFX(FX,fsv,true);
+                FX.PresetList[i].toggleAllFX(FX, fsv, true);
                 fxDrawer.closeDrawers();
             }
         });
@@ -187,10 +197,8 @@ public class MainActivity extends Activity {
         mShareIntent = new Intent();
         mShareIntent.setAction(Intent.ACTION_SEND);
         mShareIntent.setType("image/*");
-
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CHOOSE && resultCode == RESULT_OK) {
