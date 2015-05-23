@@ -1,13 +1,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".MainActivity">
 
     <!-- <item android:id="@+id/action_show_fx" android:title="@string/action_show_fx"
         android:orderInCategory="0" android:icon="@android:drawable/ic_menu_view" android:showAsAction="always" /> -->
 
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="200" android:showAsAction="never" />
+        android:orderInCategory="200" app:showAsAction="never" />
     <item android:id="@+id/action_about" android:title="@string/action_about"
-        android:orderInCategory="190" android:showAsAction="never" />
+        android:orderInCategory="190" app:showAsAction="never" />
     <item android:id="@+id/action_save" android:title="@string/action_save"
         android:orderInCategory="90" android:icon="@drawable/ic_action_save" android:showAsAction="always" />
     <item android:id="@+id/action_selectpic" android:title="@string/action_selectpic"
@@ -16,18 +18,18 @@
     <item android:id="@+id/tmpWelcome" android:title="Welcome Test"
         android:orderInCategory="820" android:showAsAction="never" /> -->
     <item android:id="@+id/action_resetFX" android:title="@string/action_resetFX_label"
-        android:orderInCategory="115" android:showAsAction="never" />
+        android:orderInCategory="115" app:showAsAction="never" />
     <item android:id="@+id/action_resetFXAll" android:title="@string/action_resetFXAll_label"
-        android:orderInCategory="120" android:showAsAction="never" />
+        android:orderInCategory="120" app:showAsAction="never" />
 
-    <item android:id="@+id/tmpLogVals" android:title="Log Vals"
-        android:orderInCategory="1200" android:showAsAction="never" />
+    <!-- <item android:id="@+id/tmpLogVals" android:title="Log Vals"
+        android:orderInCategory="1200" android:showAsAction="never" /> -->
 
 
     <!-- <item android:id="@+id/action_restore_originals" android:title="@string/action_restore_originals"
         android:orderInCategory="93" android:icon="@android:drawable/ic_menu_revert" android:showAsAction="always" /> -->
 
-    <item android:id="@+id/menu_item_share" android:showAsAction="ifRoom"
+    <item android:id="@+id/menu_item_share" app:showAsAction="ifRoom"
         android:orderInCategory="95"
         android:title="@string/action_share"
         android:actionProviderClass="android.widget.ShareActionProvider" />

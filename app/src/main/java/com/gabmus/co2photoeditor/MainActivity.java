@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -30,6 +31,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.io.IOException;
+import java.lang.reflect.Field;
 
 
 public class MainActivity extends Activity {
@@ -125,7 +127,21 @@ public class MainActivity extends Activity {
             startPickerIntent();
         }
 
+        //force show overflow button TO TEST!
+        try {
+            ViewConfiguration config = ViewConfiguration.get(this);
+            Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
+            if(menuKeyField != null) {
+                menuKeyField.setAccessible(true);
+                menuKeyField.setBoolean(config, false);
+            }
+        } catch (Exception ex) {
+            // Ignore
+        }
 
+
+
+        //runnables for use in external threads
         toastRunnable = new Runnable() {
             public void run() {
                 Toast.makeText(context, getString(R.string.toast_image_saved) + fsv.renderer.SavePath, Toast.LENGTH_LONG).show();
@@ -175,12 +191,25 @@ public class MainActivity extends Activity {
         effectsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                FXselected=i;
+                FXselected = i;
                 FX.SelectFX(i);
                 if (!FX.FXList[i].fxActive && (helper.sharedpreferences.getBoolean("pref_activate_onclick_key", true))) {
                     fxToggle.setChecked(true);
                 }
                 fxDrawer.closeDrawers();
+            }
+        });
+
+        effectsList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (!FX.FXList[i].fxActive) return false;
+                FXselected = i;
+                FX.SelectFX(i);
+                fxToggle.setChecked(false);
+                FX.SelectFX(-1);
+                Toast.makeText(context, context.getString(R.string.effect_disabled_message), Toast.LENGTH_LONG).show();
+                return true;
             }
         });
 
@@ -258,9 +287,9 @@ public class MainActivity extends Activity {
 
         //noinspection SimplifiableIfStatement
 
-        if (id == R.id.tmpLogVals) {
+        /*if (id == R.id.tmpLogVals) {
             FX.printAllVals();
-        }
+        }*/
 
         if (id == R.id.action_settings) {
             Intent i = new Intent(this, SettingsActivity.class);
