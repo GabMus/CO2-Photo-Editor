@@ -20,6 +20,9 @@
     <item android:id="@+id/action_resetFXAll" android:title="@string/action_resetFXAll_label"
         android:orderInCategory="120" android:showAsAction="never" />
 
+    <item android:id="@+id/tmpLogVals" android:title="Log Vals"
+        android:orderInCategory="1200" android:showAsAction="never" />
+
 
     <!-- <item android:id="@+id/action_restore_originals" android:title="@string/action_restore_originals"
         android:orderInCategory="93" android:icon="@android:drawable/ic_menu_revert" android:showAsAction="always" /> -->

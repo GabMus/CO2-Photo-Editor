@@ -63,7 +63,7 @@ public class CustomSlidersAdapter extends BaseAdapter{
             @Override                                   //i=value, b=by user?
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 MainActivity.FX.FXList[MainActivity.FXselected].parValues[position] = i;
-                MainActivity.FX.tuneFX(MainActivity.FXselected, position+1, i, MainActivity.fsv);
+                MainActivity.FX.tuneFX(MainActivity.FXselected, position + 1, i, MainActivity.fsv);
                 MainActivity.fsv.renderer.Render();
             }
 
@@ -73,7 +73,6 @@ public class CustomSlidersAdapter extends BaseAdapter{
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
             }
         });
 

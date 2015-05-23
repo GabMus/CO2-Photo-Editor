@@ -1,9 +1,13 @@
 package com.gabmus.co2photoeditor;
 
+import android.util.Log;
+
 /**
  * Created by gabmus on 19/04/15.
  */
 public class FXData {
+
+    public static final String DEBUG_PREFIX="Data Values";
 
     public final String name;
     public final int icon;
@@ -20,5 +24,14 @@ public class FXData {
         fxActive = false;
         parValues=parValues_.clone();
         parValuesDefault=parValues_.clone();
+    }
+
+    public void printVals() {
+        if (!fxActive) return;
+
+        Log.d(DEBUG_PREFIX, "Filter: "+name);
+        for (int i = 0; i < parCount; i++) {
+            Log.d(DEBUG_PREFIX, "      "+i+") "+parNames[i]+" "+parValues[i]);
+        }
     }
 }

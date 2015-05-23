@@ -8,18 +8,20 @@ public class FXPreset {
     private int fxCount;
     private FXPresetTunings [] presetList;
     public String presetTitle;
-    public FXPreset(int fxCount_, int [] fxID_, int [] tuningCount_, int [][] tuningValues_, String presetTitle_) {
-        fxCount=fxCount_;
+    public FXPreset(int [] fxID_, int [][] tuningValues_, String presetTitle_) {
+        if (fxID_==null) return;
+        fxCount=fxID_.length;
         presetList = new FXPresetTunings[fxCount];
         for (int i = 0; i < fxCount; i++) {
-            presetList[i] = new FXPresetTunings(fxID_[i], tuningCount_[i], tuningValues_[i]);
+            presetList[i] = new FXPresetTunings(fxID_[i], tuningValues_[i]);
         }
         presetTitle=presetTitle_;
     }
 
-    public FXPreset(String presetTitle_, int fxCount_, FXPresetTunings [] presetList_) {
+    public FXPreset(String presetTitle_, FXPresetTunings [] presetList_) {
+        if (presetList_==null) return;
         presetTitle=presetTitle_;
-        fxCount=fxCount_;
+        fxCount=presetList_.length;
         presetList = presetList_.clone();
     }
 

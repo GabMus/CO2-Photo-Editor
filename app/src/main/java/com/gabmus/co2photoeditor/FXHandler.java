@@ -30,16 +30,51 @@ public class FXHandler {
         };
 
         FXPreset[] tmpPresetList = {
-                new FXPreset("Old Style",2,
-                new FXPresetTunings[]{
-                    new FXPresetTunings(1,0,null),
-                    new FXPresetTunings(4,4,new int[]{0,25,50,50})
-                }),
-                new FXPreset("Vaporwave",2,
-                new FXPresetTunings[]{
-                    new FXPresetTunings(6,5,new int[]{80,80,60,60,44}),
-                    new FXPresetTunings(5,3,new int[]{70,50,70})
-                })
+                new FXPreset("Vintage",
+                        new FXPresetTunings[]{
+                                new FXPresetTunings(1,null),
+                                new FXPresetTunings(4,new int[]{0,25,15,50})
+                        }),
+                new FXPreset("Vaporwave",
+                        new FXPresetTunings[]{
+                                new FXPresetTunings(6,new int[]{80,80,60,60,44}),
+                                new FXPresetTunings(5,new int[]{70,50,70})
+                        }),
+                new FXPreset("Intense",
+                        new FXPresetTunings[]{
+                                new FXPresetTunings(3,new int[]{50,50,20}),
+                                new FXPresetTunings(4,new int[]{20,45,30,35}),
+                                new FXPresetTunings(5,new int[]{40,50,50})
+                        }),
+                new FXPreset("Old TV",
+                        new FXPresetTunings[]{
+                                new FXPresetTunings(9,new int[]{53}),
+                                new FXPresetTunings(3,new int[]{100,15,0})
+                        }),
+                new FXPreset("Cool day",
+                        new FXPresetTunings[]{
+                                new FXPresetTunings(3,new int[]{65,30,100}),
+                                new FXPresetTunings(5,new int[]{35,35,72}),
+                                new FXPresetTunings(8,new int[]{44,100,85,80,55})
+                        }),
+                new FXPreset("Radioactive",
+                        new FXPresetTunings[]{
+                                new FXPresetTunings(3,new int[]{49,19,77}),
+                                new FXPresetTunings(5,new int[]{52,64,66})
+                        }),
+                new FXPreset("Twilight",
+                        new FXPresetTunings[]{
+                                new FXPresetTunings(3,new int[]{51,22,65}),
+                                new FXPresetTunings(4,new int[]{32,0,35,56}),
+                                new FXPresetTunings(5,new int[]{73,62,53})
+                        }),
+                new FXPreset("Thoughts",
+                        new FXPresetTunings[]{
+                                new FXPresetTunings(3,new int[]{51,21,17}),
+                                new FXPresetTunings(4,new int[]{8,0,43,100}),
+                                new FXPresetTunings(5,new int[]{59,45,58}),
+                                new FXPresetTunings(8,new int[]{27,0,0,63,57})
+                        })
         };
 
 
@@ -341,6 +376,16 @@ public class FXHandler {
             }
         }
 
+    }
+
+    public void printAllVals() {
+        for (int i = 0; i < FXList.length; i++) {
+            if (FXList[i].fxActive) {
+                Log.d(FXData.DEBUG_PREFIX, "Index: "+i);
+                FXList[i].printVals();
+                Log.d(FXData.DEBUG_PREFIX, "\n**********\n");
+            }
+        }
     }
 
 }
