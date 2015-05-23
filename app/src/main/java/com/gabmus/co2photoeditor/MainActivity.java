@@ -93,8 +93,9 @@ public class MainActivity extends Activity {
                     pixels = (int) (230 * scale + 0.5f);
                     isFsvBig=false;
                 }
-                fsv.LoadBitmap(helper.currentBitmap);
                 customViewLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, pixels));
+                if (helper.currentBitmap!=null)
+                    fsv.LoadBitmap(helper.currentBitmap);
             }
         });
 
