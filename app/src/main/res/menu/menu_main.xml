@@ -12,8 +12,9 @@
         android:orderInCategory="90" android:icon="@drawable/ic_action_save" android:showAsAction="always" />
     <item android:id="@+id/action_selectpic" android:title="@string/action_selectpic"
         android:orderInCategory="80" android:icon="@drawable/ic_action_add_pic" android:showAsAction="always" />
+    <!--    Hidden welcome test menu entry
     <item android:id="@+id/tmpWelcome" android:title="Welcome Test"
-        android:orderInCategory="820" android:showAsAction="never" />
+        android:orderInCategory="820" android:showAsAction="never" /> -->
     <item android:id="@+id/action_resetFX" android:title="@string/action_resetFX_label"
         android:orderInCategory="115" android:showAsAction="never" />
     <item android:id="@+id/action_resetFXAll" android:title="@string/action_resetFXAll_label"

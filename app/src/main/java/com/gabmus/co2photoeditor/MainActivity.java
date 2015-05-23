@@ -208,6 +208,7 @@ public class MainActivity extends Activity {
             Uri imgPath = data.getData();
 
             try {
+                helper.currentBitmap.recycle();
                 helper.currentBitmap=MediaStore.Images.Media.getBitmap(this.getContentResolver(), imgPath);
                 fsv.LoadBitmap(helper.currentBitmap);
                 helper.setNewColors();
@@ -282,10 +283,10 @@ public class MainActivity extends Activity {
         }
 
         //add temp menu for testing welcomeactivity
-        if (id == R.id.tmpWelcome) {
+        /*if (id == R.id.tmpWelcome) {
             helper.welcomeUser();
             return true;
-        }
+        }*/
 
         if (drawerToggle.onOptionsItemSelected(item)) {
             return true;
