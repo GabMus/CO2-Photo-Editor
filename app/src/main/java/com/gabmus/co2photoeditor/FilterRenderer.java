@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import java.io.File;
@@ -693,30 +694,60 @@ public class FilterRenderer implements GLSurfaceView.Renderer
     private int hPos, hTex;
     private int cmp_W, cmp_H, cmp_X, cmp_Y;
     private int tx;
+
+
+    public void refreshSize() {
+        int scrW = fsv.getWidth();
+        int scrH = fsv.getHeight();
+        float wRat = (float) ImageWidth / (float) scrW;
+        float hRat = (float) ImageHeigth / (float) scrH;
+        boolean majW = wRat > hRat;
+        float aspect = (float) (majW ? (float) ImageWidth / (float) ImageHeigth : (float) ImageHeigth / (float) ImageWidth);
+        if (majW) {
+            cmp_W = scrW;
+            cmp_X = 0;
+            cmp_H = (int) ((float) scrW / aspect);
+            cmp_Y = (int) (((float) scrH - (float) cmp_H) / 2f);
+            //throw(new RuntimeException("IW: " + ImageWidth + "\nIH: " + ImageHeigth + "\nwRat = " + wRat + "\nhRat = " + hRat + "\nX: " + cmp_X + "\nY: " + cmp_Y + "\nW: " + cmp_W + "\nH: " + cmp_H + "\nscW: " + scrW + "\nscH: " + scrH));
+        } else {
+            cmp_H = scrH;
+            cmp_Y = 0;
+            cmp_W = (int) ((float) scrH / (float) aspect);
+            cmp_X = (int) (((float) scrW - (float) cmp_W) / 2f);
+        }
+    }
+
+
+    public void refreshSize(int width_, int height_) {
+        int scrW = width_;
+        int scrH = height_;
+        float wRat = (float) ImageWidth / (float) scrW;
+        float hRat = (float) ImageHeigth / (float) scrH;
+        boolean majW = wRat > hRat;
+        float aspect = (float) (majW ? (float) ImageWidth / (float) ImageHeigth : (float) ImageHeigth / (float) ImageWidth);
+        if (majW) {
+            cmp_W = scrW;
+            cmp_X = 0;
+            cmp_H = (int) ((float) scrW / aspect);
+            cmp_Y = (int) (((float) scrH - (float) cmp_H) / 2f);
+            //throw(new RuntimeException("IW: " + ImageWidth + "\nIH: " + ImageHeigth + "\nwRat = " + wRat + "\nhRat = " + hRat + "\nX: " + cmp_X + "\nY: " + cmp_Y + "\nW: " + cmp_W + "\nH: " + cmp_H + "\nscW: " + scrW + "\nscH: " + scrH));
+        } else {
+            cmp_H = scrH;
+            cmp_Y = 0;
+            cmp_W = (int) ((float) scrH / (float) aspect);
+            cmp_X = (int) (((float) scrW - (float) cmp_W) / 2f);
+        }
+    }
+
+
     public void onDrawFrame(GL10 unused) {
 
         if (BOOL_LoadTexture) {
 
             if (fsv.toLoad != null) {
                 fsv.LoadTexture(fsv.toLoad);
-                int scrW = fsv.getWidth();
-                int scrH = fsv.getHeight();
-                float wRat = (float) ImageWidth / (float) scrW;
-                float hRat = (float) ImageHeigth / (float) scrH;
-                boolean majW = wRat > hRat;
-                float aspect = (float) (majW ? (float) ImageWidth / (float) ImageHeigth : (float) ImageHeigth / (float) ImageWidth);
-                if (majW) {
-                    cmp_W = scrW;
-                    cmp_X = 0;
-                    cmp_H = (int) ((float) scrW / aspect);
-                    cmp_Y = (int) (((float) scrH - (float) cmp_H) / 2f);
-                    //throw(new RuntimeException("IW: " + ImageWidth + "\nIH: " + ImageHeigth + "\nwRat = " + wRat + "\nhRat = " + hRat + "\nX: " + cmp_X + "\nY: " + cmp_Y + "\nW: " + cmp_W + "\nH: " + cmp_H + "\nscW: " + scrW + "\nscH: " + scrH));
-                } else {
-                    cmp_H = scrH;
-                    cmp_Y = 0;
-                    cmp_W = (int) ((float) scrH / (float) aspect);
-                    cmp_X = (int) (((float) scrW - (float) cmp_W) / 2f);
-                }
+                refreshSize();
+                //what was written here is now in the refreshSize() function just above this one :)
             }
             fsv.toLoad = null;
             System.gc();

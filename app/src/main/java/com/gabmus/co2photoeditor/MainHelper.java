@@ -33,6 +33,8 @@ public class MainHelper {
     public static boolean userWelcomed;
     public static boolean choosePicOnStart = false;
     public static ProgressDialog loadingDialog;
+    public static int displayHeightPixels;
+    public static float scale;
 
     public MainHelper(MainActivity act_) {
         act=act_;
@@ -42,6 +44,12 @@ public class MainHelper {
         loadingDialog.setMessage(act.getString(R.string.loading_message));
         choosePicOnStart=sharedpreferences.getBoolean("pref_choose_file_on_start_key", false);
 
+
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        act_.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        displayHeightPixels=metrics.heightPixels;
+        scale=act_.getResources().getDisplayMetrics().density;
     }
 
     public void receiveShareIntent() {

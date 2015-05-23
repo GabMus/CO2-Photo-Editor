@@ -11,11 +11,14 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
@@ -61,6 +64,7 @@ public class MainActivity extends Activity {
     public static Runnable toastRunnable;
     public static Runnable loadingRunnableShow;
     public static Runnable loadingRunnableDismiss;
+    public static LinearLayout fadingSliderContainer;
 
     private boolean isFsvBig=false;
 
@@ -75,27 +79,29 @@ public class MainActivity extends Activity {
         FX = new FXHandler(context);
 
         //initialize the filtersurfaceview
+        fadingSliderContainer= (LinearLayout) findViewById(R.id.fadingSliderContainer);
         customViewLayout = (FrameLayout) findViewById(R.id.customViewLayout);
         fsv = new FilterSurfaceView(getApplicationContext(), this);
         fsv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         customViewLayout.addView(fsv);
-
         fsv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                float scale = context.getResources().getDisplayMetrics().density;
-                int pixels;
                 if (!isFsvBig) {
-                    pixels = (int) (380 * scale + 0.5f);
+                    fadingSliderContainer.animate()
+                            .alpha(0f)
+                            .setDuration(300)
+                            .setListener(null);
                     isFsvBig=true;
                 }
                 else {
-                    pixels = (int) (230 * scale + 0.5f);
+                    fadingSliderContainer.animate()
+                            .alpha(1f)
+                            .setDuration(300)
+                            .setListener(null);
                     isFsvBig=false;
                 }
-                customViewLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, pixels));
-                if (helper.currentBitmap!=null)
-                    fsv.LoadBitmap(helper.currentBitmap);
+
             }
         });
 

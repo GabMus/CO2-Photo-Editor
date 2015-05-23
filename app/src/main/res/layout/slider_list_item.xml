@@ -9,7 +9,7 @@
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        card_view:cardBackgroundColor="#363636"
+        card_view:cardBackgroundColor="#80363636"
         card_view:cardElevation="3dp"
         android:id="@+id/sSettingGlobal"
         android:layout_marginTop="5dp"
