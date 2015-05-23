@@ -1,5 +1,6 @@
 package com.gabmus.co2photoeditor;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -91,7 +92,14 @@ public class MainActivity extends Activity {
                     fadingSliderContainer.animate()
                             .alpha(0f)
                             .setDuration(300)
-                            .setListener(null);
+                            .setListener(new Animator.AnimatorListener() {
+                                @Override public void onAnimationStart(Animator animator) {}
+                                @Override public void onAnimationCancel(Animator animator) {}
+                                @Override public void onAnimationRepeat(Animator animator) {}
+                                @Override public void onAnimationEnd(Animator animator) {
+                                    fadingSliderContainer.setVisibility(View.GONE);
+                                }
+                            });
                     isFsvBig=true;
                 }
                 else {
@@ -99,6 +107,7 @@ public class MainActivity extends Activity {
                             .alpha(1f)
                             .setDuration(300)
                             .setListener(null);
+                    fadingSliderContainer.setVisibility(View.VISIBLE);
                     isFsvBig=false;
                 }
 
