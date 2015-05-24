@@ -91,7 +91,7 @@
     <string name="blue">Blue</string>
     <string name="tutorial1">1: Select a new picture\n2: Save the current picture\n3: Tap the hamburger button or swipe from the left side of the screen to reveal the effects menu</string>
     <string name="tutorial2">Use the menu button to access more actions</string>
-    <string name="tutorial3">In the effects menu, choose a filter from the right column (1) or a preset from the left one (2)\nPresets are combinations of filters that you can later tune to your will\nThe filters with a lighter gray background (3) are the active ones\nHold an active filter to disable it</string>
+    <string name="tutorial3">In the effects menu, choose a filter from the right column (1) or a preset from the left one (2)\nPresets are combinations of filters, you can even make your own!\nHold a preset to delete it\nThe filters with a lighter gray background (3) are the active ones\nHold an active filter to disable it</string>
     <string name="tutorial4">1: Use the toggle to switch off an active filter\n2: Adjust the filter by using the sliders. Scroll the sliders list to reveal more\n3: Click on the picture you are editing to hide/show the sliders view</string>
 
 

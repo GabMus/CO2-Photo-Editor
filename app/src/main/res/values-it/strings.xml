@@ -75,7 +75,14 @@
     <string name="sharpness">Nitidezza</string>
     <string name="tutorial1">1: Seleziona una nuova foto\n2: Salva la foto corrente\n3: Tocca il menu hamburger o scorri dal lato sinistro dello schermo per rivelare il menu degli effetti</string>
     <string name="tutorial2">Premi sul tasto menu per raggiungere più azioni</string>
-    <string name="tutorial3">Nel menu degli effetti, scegli un filtro dalla colonna a destra (1) o un preset da quella a sinistra (2)\nI preset sono combinazioni di filtri che dopo puoi modificare a piacere\nI filtri con lo sfondo grigio più chiaro sono attivi\nTieni premuto un filtro attivo per disattivarlo</string>
+    <string name="tutorial3">Nel menu degli effetti, scegli un filtro dalla colonna a destra (1) o un preset da quella a sinistra (2)\nI preset sono combinazioni di filtri, puoi anche crearne di tuoi!\nTieni premuto un preset per cancellarlo\nI filtri con lo sfondo grigio più chiaro sono attivi\nTieni premuto un filtro attivo per disattivarlo</string>
     <string name="tutorial4">1: Usa l\'interruttore per disattivare un filtro attivo\n2: Regola i filtri tramite gli sliders. Scorri la lista degli sliders per rivelarne altri\n3: Premi sulla foto per nascondere/mostrare gli sliders</string>
     <string name="effect_disabled_message">Filtro disattivato</string>
+    <string name="action_savePreset_label">Salva come preset</string>
+    <string name="alert_ok">Ok</string>
+    <string name="alert_cancel">Annulla</string>
+    <string name="deletePresetAlert_message">Cancellare questo preset?</string>
+    <string name="presetTitleIsEmpty">Il titolo del preset non può essere vuoto</string>
+    <string name="presetTitleIsInvalid">Il titolo del preset contiene caratteri non validi</string>
+    <string name="choosePresetName">Scegli il nome del preset...</string>
 </resources>
