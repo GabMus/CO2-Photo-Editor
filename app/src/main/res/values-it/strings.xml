@@ -84,5 +84,6 @@
     <string name="deletePresetAlert_message">Cancellare questo preset?</string>
     <string name="presetTitleIsEmpty">Il titolo del preset non può essere vuoto</string>
     <string name="presetTitleIsInvalid">Il titolo del preset contiene caratteri non validi</string>
-    <string name="choosePresetName">Scegli il nome del preset...</string>
+    <string name="choosePresetName">Scegli un nome per il preset…</string>
+    <string name="cantDeleteDefaultPresets">Non puoi cancellare un preset predefinito</string>
 </resources>

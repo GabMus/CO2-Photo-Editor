@@ -6,10 +6,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
+        android:padding="15dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/presetLabel"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="left" />
 </LinearLayout>

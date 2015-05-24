@@ -248,8 +248,12 @@ public class MainActivity extends Activity {
         presetList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (i<=7) {
+                    Toast.makeText(context,getString(R.string.cantDeleteDefaultPresets),Toast.LENGTH_LONG).show();
+                    return true;
+                }
                 alertDeletePreset(i);
-                return false;
+                return true;
             }
         });
 
