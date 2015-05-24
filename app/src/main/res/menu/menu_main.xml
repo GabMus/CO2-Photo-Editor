@@ -22,6 +22,9 @@
     <item android:id="@+id/action_resetFXAll" android:title="@string/action_resetFXAll_label"
         android:orderInCategory="120" app:showAsAction="never" />
 
+    <item android:id="@+id/action_savePreset" android:title="@string/action_savePreset_label"
+        android:orderInCategory="122" app:showAsAction="never" />
+
     <!-- <item android:id="@+id/tmpLogVals" android:title="Log Vals"
         android:orderInCategory="1200" android:showAsAction="never" /> -->
 

@@ -117,4 +117,12 @@
 
     <string name="loading_message">Saving your picture…</string>
 
+    <string name="deletePresetAlert_message">Delete this preset?</string>
+    <string name="choosePresetName">Choose the preset name…</string>
+    <string name="presetTitleIsEmpty">Preset title can\'t be empty</string>
+    <string name="presetTitleIsInvalid">Preset title contains invalid characters</string>
+    <string name="alert_ok">Ok</string>
+    <string name="alert_cancel">Cancel</string>
+    <string name="action_savePreset_label">Save as preset</string>
+
 </resources>

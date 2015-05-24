@@ -4,6 +4,10 @@ import android.content.Context;
 import android.util.Log;
 import android.view.View;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 
 /**
  * Created by gabmus on 19/04/15.
@@ -12,6 +16,7 @@ public class FXHandler {
 
     public static FXData[] FXList;
     public static FXPreset[] PresetList;
+    public static String presetData;
 
     public FXHandler(Context context) {
         FXData[] tmpFXList = {
@@ -29,58 +34,105 @@ public class FXHandler {
 
         };
 
-        FXPreset[] tmpPresetList = {
-                new FXPreset("Vintage",
-                        new FXPresetTunings[]{
-                                new FXPresetTunings(1,null),
-                                new FXPresetTunings(4,new int[]{0,25,15,50})
-                        }),
-                new FXPreset("Vaporwave",
-                        new FXPresetTunings[]{
-                                new FXPresetTunings(6,new int[]{80,80,60,60,44}),
-                                new FXPresetTunings(5,new int[]{70,50,70})
-                        }),
-                new FXPreset("Intense",
-                        new FXPresetTunings[]{
-                                new FXPresetTunings(3,new int[]{50,50,20}),
-                                new FXPresetTunings(4,new int[]{20,45,30,35}),
-                                new FXPresetTunings(5,new int[]{40,50,50})
-                        }),
-                new FXPreset("Old TV",
-                        new FXPresetTunings[]{
-                                new FXPresetTunings(9,new int[]{53}),
-                                new FXPresetTunings(3,new int[]{100,15,0})
-                        }),
-                new FXPreset("Cool day",
-                        new FXPresetTunings[]{
-                                new FXPresetTunings(3,new int[]{65,30,100}),
-                                new FXPresetTunings(5,new int[]{35,35,72}),
-                                new FXPresetTunings(8,new int[]{44,100,85,80,55})
-                        }),
-                new FXPreset("Radioactive",
-                        new FXPresetTunings[]{
-                                new FXPresetTunings(3,new int[]{49,19,77}),
-                                new FXPresetTunings(5,new int[]{52,64,66})
-                        }),
-                new FXPreset("Twilight",
-                        new FXPresetTunings[]{
-                                new FXPresetTunings(3,new int[]{51,22,65}),
-                                new FXPresetTunings(4,new int[]{32,0,35,56}),
-                                new FXPresetTunings(5,new int[]{73,62,53})
-                        }),
-                new FXPreset("Thoughts",
-                        new FXPresetTunings[]{
-                                new FXPresetTunings(3,new int[]{51,21,17}),
-                                new FXPresetTunings(4,new int[]{8,0,43,100}),
-                                new FXPresetTunings(5,new int[]{59,45,58}),
-                                new FXPresetTunings(8,new int[]{27,0,0,63,57})
-                        })
-        };
+        presetData=MainActivity.helper.getPresetsPreference();
+
+
 
 
         FXList = tmpFXList.clone();
-        PresetList = tmpPresetList.clone();
+        refreshPresetList();
     }
+
+    public void refreshPresetList() {
+        PresetList = buildPresetsFromPreference().clone();
+    }
+
+    public void addPreset(String name) {
+        presetData= presetData.substring(0,presetData.length()-1)+getPreset(name)+"#";
+        refreshPresetList();
+        MainActivity.helper.writePresetPreference(presetData);
+    }
+
+    public void deletePreset(int index) {
+        int i=-1;
+        int pointer=-1;
+        while (i!=index) {
+            pointer++;
+            if (presetData.charAt(pointer)=='$') i++;
+        }
+        int trailer=pointer;
+        while (presetData.charAt(trailer)!='€') {
+            trailer++;
+        }
+        presetData=presetData.substring(0, pointer)+presetData.substring(trailer+1,presetData.length());
+        refreshPresetList();
+        MainActivity.helper.writePresetPreference(presetData);
+    }
+
+    public FXPreset[] buildPresetsFromPreference() {
+        String pref=presetData;
+        ArrayList<FXPreset> list = new ArrayList<>();
+        ArrayList<Integer> indexes = new ArrayList<>();
+        ArrayList<Integer[]> tuningValues = new ArrayList<>();
+        ArrayList<Integer> tuningGroup = new ArrayList<>();
+        String singleTuning="";
+        String presetName="";
+        String tmpPresetIndex="";
+        int i=0;
+        while (pref.charAt(i)!='#') {
+            if (pref.charAt(i)=='$') {
+                i++;
+                while (pref.charAt(i)!='@') {
+                    presetName+=pref.charAt(i);
+                    i++;
+                }
+            }
+            if (pref.charAt(i)=='@') {
+                i++;
+                while (pref.charAt(i)!='%') {
+                    tmpPresetIndex+=pref.charAt(i);
+                    i++;
+                }
+                indexes.add(Integer.parseInt(tmpPresetIndex));
+                tmpPresetIndex="";
+            }
+            if (pref.charAt(i)=='%') {
+                i++;
+                if (pref.charAt(i)=='&') {
+                    tuningValues.add(null);
+                    i++;
+                }
+                while (pref.charAt(i)!='@' && pref.charAt(i)!='€') {
+
+                    while (pref.charAt(i)!=',') {
+                        singleTuning+=pref.charAt(i);
+                        i++;
+                    }
+                    tuningGroup.add(Integer.parseInt(singleTuning));
+                    singleTuning="";
+                    i++;
+                }
+                tuningValues.add(tuningGroup.toArray(new Integer[tuningGroup.size()]));
+                tuningGroup.clear();
+            }
+
+            if (pref.charAt(i)=='€') {
+                list.add(new FXPreset(
+                        indexes.toArray(new Integer[indexes.size()]),
+                        tuningValues.toArray(new Integer[tuningValues.size()][]),
+                        presetName
+                ));
+                indexes.clear();
+                tuningValues.clear();
+                presetName="";
+                i++;
+            }
+
+        }
+
+        return list.toArray(new FXPreset[list.size()]);
+    }
+
 
          //boolean type is just to kill the method with return
     public boolean SelectFX(int fxID) {
@@ -132,6 +184,7 @@ public class FXHandler {
         }
         return toRet;
     }
+
 
     public void enableFX(int index, FilterSurfaceView mFsv, boolean active) {
         if (index!=-1) FXList[index].fxActive=active;
@@ -386,6 +439,26 @@ public class FXHandler {
                 Log.d(FXData.DEBUG_PREFIX, "\n**********\n");
             }
         }
+    }
+
+    public String getPreset(String presetName) {
+        String toRet="";
+        toRet+="$"+presetName;
+        for (int i = 0; i < FXList.length; i++) {
+            if (FXList[i].fxActive) {
+                toRet+="@"+i;
+                toRet+="%";
+                if (FXList[i].parCount==0)
+                    toRet+="&";
+                else {
+                    for (int j = 0; j < FXList[i].parCount; j++) {
+                        toRet+=FXList[i].parValues[j]+",";
+                    }
+                }
+            }
+        }
+        toRet+="€";
+        return toRet;
     }
 
 }

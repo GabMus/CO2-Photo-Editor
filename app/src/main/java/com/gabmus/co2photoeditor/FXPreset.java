@@ -8,7 +8,7 @@ public class FXPreset {
     private int fxCount;
     private FXPresetTunings [] presetList;
     public String presetTitle;
-    public FXPreset(int [] fxID_, int [][] tuningValues_, String presetTitle_) {
+    public FXPreset(Integer [] fxID_, Integer [][] tuningValues_, String presetTitle_) {
         if (fxID_==null) return;
         fxCount=fxID_.length;
         presetList = new FXPresetTunings[fxCount];

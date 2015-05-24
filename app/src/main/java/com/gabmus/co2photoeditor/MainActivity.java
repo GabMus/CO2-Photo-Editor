@@ -2,7 +2,9 @@ package com.gabmus.co2photoeditor;
 
 import android.animation.Animator;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -23,6 +25,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -70,6 +73,9 @@ public class MainActivity extends Activity {
     public static LinearLayout fadingSliderContainer;
 
     private boolean isFsvBig=false;
+
+    public static String newPresetName="";
+    public CustomPresetAdapter presetAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -228,7 +234,8 @@ public class MainActivity extends Activity {
         });
 
         presetList = (ListView) findViewById(R.id.listViewPresets);
-        presetList.setAdapter(new CustomPresetAdapter(this, FX.getPresetNames()));
+        presetAdapter=new CustomPresetAdapter(this, FX.getPresetNames());
+        presetList.setAdapter(presetAdapter);
         presetList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -236,6 +243,13 @@ public class MainActivity extends Activity {
                 FX.resetAllFX(fsv);
                 FX.PresetList[i].toggleAllFX(FX, fsv, true);
                 fxDrawer.closeDrawers();
+            }
+        });
+        presetList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                alertDeletePreset(i);
+                return false;
             }
         });
 
@@ -278,6 +292,63 @@ public class MainActivity extends Activity {
         return true;
     }
 
+
+    public void alertDeletePreset(final int index) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setMessage(getString(R.string.deletePresetAlert_message));
+
+        alert.setPositiveButton(getString(R.string.alert_ok), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                FX.deletePreset(index);
+                presetAdapter=new CustomPresetAdapter(context, FX.getPresetNames());
+                presetList.setAdapter(presetAdapter);
+            }
+        });
+
+        alert.setNegativeButton(getString(R.string.alert_cancel), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Canceled.
+            }
+        });
+
+        alert.show();
+    }
+
+    public void savePreset() {
+        newPresetName="";
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+        //alert.setTitle("Title");
+        alert.setMessage(getString(R.string.choosePresetName));
+
+        // Set an EditText view to get user input
+        final EditText input = new EditText(this);
+        alert.setView(input);
+
+        alert.setPositiveButton(getString(R.string.alert_ok), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                newPresetName = input.getText().toString();
+                if (newPresetName.length() == 0)
+                    Toast.makeText(context, getString(R.string.presetTitleIsEmpty), Toast.LENGTH_LONG).show();
+                else if (newPresetName.contains("$") || newPresetName.contains("@") || newPresetName.contains("%") || newPresetName.contains("&") || newPresetName.contains("€") || newPresetName.contains(",") || newPresetName.contains("#"))
+                    Toast.makeText(context, getString(R.string.presetTitleIsInvalid), Toast.LENGTH_LONG).show();
+                else {
+                    FX.addPreset(newPresetName);
+                    presetAdapter=new CustomPresetAdapter(context, FX.getPresetNames());
+                    presetList.setAdapter(presetAdapter);
+                }
+            }
+        });
+
+        alert.setNegativeButton(getString(R.string.alert_cancel), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Canceled.
+            }
+        });
+
+        alert.show();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -290,6 +361,12 @@ public class MainActivity extends Activity {
         /*if (id == R.id.tmpLogVals) {
             FX.printAllVals();
         }*/
+
+        if (id == R.id.action_savePreset) {
+            savePreset();
+            //presetList.setAdapter(new CustomPresetAdapter(this, FX.getPresetNames()));
+            return true;
+        }
 
         if (id == R.id.action_settings) {
             Intent i = new Intent(this, SettingsActivity.class);

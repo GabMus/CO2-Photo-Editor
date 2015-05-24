@@ -16,7 +16,7 @@ public class CustomPresetAdapter extends BaseAdapter{
     String [] result;
     Context context;
     private static LayoutInflater inflater=null;
-    public CustomPresetAdapter(MainActivity mainActivity, String[] prgmNameList) {
+    public CustomPresetAdapter(Context mainActivity, String[] prgmNameList) {
         result=prgmNameList;
         context=mainActivity;
         inflater = ( LayoutInflater )context.

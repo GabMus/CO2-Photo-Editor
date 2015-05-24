@@ -35,6 +35,7 @@ public class MainHelper {
     public static ProgressDialog loadingDialog;
     public static int displayHeightPixels;
     public static float scale;
+    public static final String DEFAULT_PRESET_PREF="$Vintage@1%&@4%0,25,15,50,€$Vaporwave@6%80,80,60,60,44,@5%70,50,70,€$Intense@3%50,50,20,@4%20,45,30,35,@5%40,50,50,€$Old Tv@9%53,@3%100,15,0,€$Cool day@3%65,30,100,@5%35,35,72,@8%44,100,85,80,55,€$Radioactive@3%49,19,77,@5%52,64,66,€$Twilight@3%51,22,65,@4%32,0,35,56,@5%73,62,53,€$Toughts@3%51,21,17,@4%8,0,43,100,@5%59,45,58,@8%27,0,0,63,57,€#";
 
     public MainHelper(MainActivity act_) {
         act=act_;
@@ -83,6 +84,23 @@ public class MainHelper {
                 editor.commit();
             }
         }
+    }
+
+    public void writePresetPreference(String pref) {
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString("presetsStringKey", pref);
+        editor.commit();
+    }
+
+    public String getPresetsPreference() {
+        String toRet="#";
+        if (!sharedpreferences.contains("presetsStringKey")) {
+            writePresetPreference(DEFAULT_PRESET_PREF);
+        }
+        if (sharedpreferences.contains("presetsStringKey")) {
+            toRet = sharedpreferences.getString("presetsStringKey", DEFAULT_PRESET_PREF);
+        }
+        return toRet;
     }
 
     public void welcomeUser() {
