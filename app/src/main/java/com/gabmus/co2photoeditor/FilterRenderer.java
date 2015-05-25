@@ -316,7 +316,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "  );" +
                         "}";
 
-        hShaderProgramSharpness = createprogram(generalreverseVS, sharpness_FS);
+        //hShaderProgramSharpness = createprogram(generalreverseVS, sharpness_FS);
 
         //CRT
         String crt_FS =
@@ -590,7 +590,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "   \n" +
                         "\tgl_FragColor =  vec4(col,1.0);\n" +
                         "}";
-        hShaderProgramFilmGrain = createprogram(generalreverseVS, filmGrain_FS);
+        //hShaderProgramFilmGrain = createprogram(generalreverseVS, filmGrain_FS);
 
         //BLOOM EXTRACT
         String bloomextract_FS =
