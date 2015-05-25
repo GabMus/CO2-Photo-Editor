@@ -12,6 +12,9 @@ import java.util.List;
 /**
  * Created by gabmus on 19/04/15.
  */
+
+//NOTE: Commented lines are for future implementations
+
 public class FXHandler {
 
     public static FXData[] FXList;
