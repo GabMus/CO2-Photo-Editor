@@ -664,8 +664,14 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "  float x = UV.x * UV.y * randomValue *  1000.0;" +
                         "  x = mod( x, 13.0 ) * mod( x, 123.0 );" +
                         "  float dx = mod( x, 0.01 );" +
-                        "  vec3 col = c.rgb + c.rgb * clamp( 0.1 + dx * 100.0, 0.0, 1.0 );" +
-                        "  gl_FragColor = vec4(col, 1.0);" +
+                        "  vec3 col = vec3(c.r, c.g, c.b);" +
+                        "  float y = x * randomValue + randomValue;" +
+                        "  float dy = fmod(y, 0.01);" +
+                        "  float noise = (xlat_lib_saturate( (0.100000 + (dx * 100.000)) ) + (xlat_lib_saturate( (0.100000 + (dy * 100.000)) ) * randomNoiseStrength));\n" +
+                        "  float noise = ((noise * 2.00000) - 1.00000);\n" +
+                        "  float accentuateDarkNoise = pow( (1.00000 - ((color.x  + color.y  + color.z ) / 3.00000)), accentuateDarkNoisePower);\n" +
+                        "  vec4 top =  vec4(col + col * noise * accentuateDarkNoise * filmGrainStrength, 1.0);\n" +
+                        "  gl_FragColor = top;" +
                         "}" +
                                                 /*
                         "vec3 FilmGrain( vec3 color, vec2 uv ) {\n" +
@@ -862,7 +868,6 @@ public class FilterRenderer implements GLSurfaceView.Renderer
             setShaderParamPhoto(hShaderProgramSharpness, GetCurTexture());
             int shar = GLES20.glGetUniformLocation(hShaderProgramSharpness, "Sharpness");
             int rad = GLES20.glGetUniformLocation(hShaderProgramSharpness, "Radius");
-            int ph = GLES20.glGetUniformLocation(hShaderProgramSharpness, "pixheigth");
             int pw = GLES20.glGetUniformLocation(hShaderProgramSharpness, "pixwidth");
             int ph = GLES20.glGetUniformLocation(hShaderProgramSharpness, "pixheigth");
             GLES20.glUniform1f(shar, PARAMS_SharpnessIntensity);
