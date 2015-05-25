@@ -288,7 +288,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "" +
                         "void main()" +
                         "{" +
-                        "  float[9] kernel = float[]" +
+                        "  float[9] kernel = float[9]" +
                         "  (" +
                         "    -1.0, -1.0, -1.0," +
                         "    -1.0,  9.0, -1.0," +
