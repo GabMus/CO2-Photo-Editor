@@ -862,6 +862,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
             setShaderParamPhoto(hShaderProgramSharpness, GetCurTexture());
             int shar = GLES20.glGetUniformLocation(hShaderProgramSharpness, "Sharpness");
             int rad = GLES20.glGetUniformLocation(hShaderProgramSharpness, "Radius");
+            int ph = GLES20.glGetUniformLocation(hShaderProgramSharpness, "pixheigth");
             int pw = GLES20.glGetUniformLocation(hShaderProgramSharpness, "pixwidth");
             int ph = GLES20.glGetUniformLocation(hShaderProgramSharpness, "pixheigth");
             GLES20.glUniform1f(shar, PARAMS_SharpnessIntensity);
