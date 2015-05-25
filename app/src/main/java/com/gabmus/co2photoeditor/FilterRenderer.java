@@ -638,9 +638,9 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "    float noise;\n" +
                         "    float accentuateDarkNoise;\n" +
                         "\n" +
-                        "    x = ((uv.x  * uv.y ) * 1000.0);\n" +
-                        "    x = mod( x, 13.0000) * mod(x, 123.0);\n" +
-                        "    //x = (x / 2.0);\n" +
+                        "    x = ((uv.x  * abs(1-uv.y) ) * 50000.0);\n" +
+                        "    x = mod( x, 13.0000);\n" +
+                        "    x = (x * x);\n" +
                         "    dx = mod( x, 0.0100000);\n" +
                         "    y = ((x * randomValue) + randomValue);\n" +
                         "    dy = mod( y, 0.0100000);\n" +

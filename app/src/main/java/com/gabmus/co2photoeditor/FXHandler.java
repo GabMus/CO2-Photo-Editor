@@ -317,15 +317,15 @@ public class FXHandler {
             case 7:
                 switch (valIndex) {
                     case 1: //Strength
-                        finalValue = (tuningValue / 100f) * 1f;
+                        finalValue = (tuningValue / 100f) * 4f;
                         mFsv.renderer.PARAMS_ProperFilmGrainStrength = finalValue;
                         break;
                     case 2: //Dark Noise Power
-                        finalValue = ((tuningValue / 100f) * 3f) + 1;
+                        finalValue = ((tuningValue / 100f) * 4f) + 1;
                         mFsv.renderer.PARAMS_ProperFilmGrainAccentuateDarkNoisePower = finalValue;
                         break;
                     case 3: //Random noise strength
-                        finalValue = ((tuningValue / 100f) * 3f);
+                        finalValue = ((tuningValue / 100f) * 4f);
                         mFsv.renderer.PARAMS_ProperFilmGrainRandomNoiseStrength = finalValue;
                         break;
                     case 4: //randomizer seed
