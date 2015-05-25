@@ -590,7 +590,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "   \n" +
                         "\tgl_FragColor =  vec4(col,1.0);\n" +
                         "}";
-        //hShaderProgramFilmGrain = createprogram(generalreverseVS, filmGrain_FS);
+        hShaderProgramFilmGrain = createprogram(generalreverseVS, filmGrain_FS);
 
         //BLOOM EXTRACT
         String bloomextract_FS =
@@ -712,7 +712,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "    gl_FragColor = xlat_retVal;" +
                         "}\n";*/
                         "";
-        hShaderProgramProperFilmGrain = createprogram(generalreverseVS, properFilmGrain_FS);
+        //hShaderProgramProperFilmGrain = createprogram(generalreverseVS, properFilmGrain_FS);
 
         //FINALPASS
         String finalPass_FS =
