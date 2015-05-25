@@ -281,9 +281,9 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "  float toRet = 0.0;" +
                         "  for (int i = 0; i < 9; i++)" +
                         "  {" +
-                        "     res+=ker[i] * mat[i];" +
+                        "     toRet+=ker[i] * mat[i];" +
                         "  }" +
-                        "  return clamp(res, 0.0, 1.0);" +
+                        "  return clamp(toRet, 0.0, 1.0);" +
                         "}" +
                         "" +
                         "void main()" +
@@ -658,6 +658,16 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "}\n" +
                         "\n" +
                         "\n" +
+                        "void main()" +
+                        "{" +
+                        "  vec4 c = texture2D(filteredPhoto, UV);" +
+                        "  float x = UV.x * UV.y * randomValue *  1000.0;" +
+                        "  x = mod( x, 13.0 ) * mod( x, 123.0 );" +
+                        "  float dx = mod( x, 0.01 );" +
+                        "  vec3 col = c.rgb + c.rgb * clamp( 0.1 + dx * 100.0, 0.0, 1.0 );" +
+                        "  gl_FragColor = vec4(col, 1.0);" +
+                        "}" +
+                                                /*
                         "vec3 FilmGrain( vec3 color, vec2 uv ) {\n" +
                         "    float x;\n" +
                         "    float dx;\n" +
@@ -683,7 +693,8 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "    xlat_retVal = vec4(FilmGrain( vec3(xlat_retVal.r, xlat_retVal.g, xlat_retVal.b), vec2(UV)), 1.0);\n" +
                         "\n" +
                         "    gl_FragColor = xlat_retVal;" +
-                        "}\n";
+                        "}\n";*/
+                        "";
         hShaderProgramProperFilmGrain = createprogram(generalreverseVS, properFilmGrain_FS);
 
         //FINALPASS
@@ -852,9 +863,11 @@ public class FilterRenderer implements GLSurfaceView.Renderer
             int shar = GLES20.glGetUniformLocation(hShaderProgramSharpness, "Sharpness");
             int rad = GLES20.glGetUniformLocation(hShaderProgramSharpness, "Radius");
             int pw = GLES20.glGetUniformLocation(hShaderProgramSharpness, "pixwidth");
+            int ph = GLES20.glGetUniformLocation(hShaderProgramSharpness, "pixheigth");
             GLES20.glUniform1f(shar, PARAMS_SharpnessIntensity);
             GLES20.glUniform1f(rad, PARAMS_SharpnessRadius);
             GLES20.glUniform1f(pw, (float)(1.0f / (float)ImageWidth));
+            GLES20.glUniform1f(ph, (float)(1.0f / (float)ImageHeigth));
             drawquad();
         }
         if (PARAMS_EnableNegative) {
