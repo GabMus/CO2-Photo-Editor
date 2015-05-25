@@ -258,23 +258,51 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "uniform float Radius;" +
                         "uniform float Sharpness;" +
                         "uniform float pixwidth;" +
+                        "uniform float pixheigth;" +
                         "varying vec2 UV;" +
+                        "" +
+                        "float[9] getmatrix(int channel)" +
+                        "{" +
+                        "  float[9] toRet;" +
+                        "  int k = 0;" +
+                        "  for (int x = -1; x < 2; x++)" +
+                        "  {" +
+                        "    for (int y = -1; y < 2; y++)" +
+                        "    {" +
+                        "       toRet[k] = texture2D(filteredPhoto, UV + vec2(float(x) * pixwidth, float(y) * pixheigth))[channel];" +
+                        "       k++;" +
+                        "    }" +
+                        "  }" +
+                        "  return toRet;" +
+                        "}" +
+                        "" +
+                        "float Convolve(float[9] ker, float[9] mat)" +
+                        "{" +
+                        "  float toRet = 0.0;" +
+                        "  for (int i = 0; i < 9; i++)" +
+                        "  {" +
+                        "     res+=ker[i] * mat[i];" +
+                        "  }" +
+                        "  return clamp(res, 0.0, 1.0);" +
+                        "}" +
                         "" +
                         "void main()" +
                         "{" +
-                        "  vec4 c = texture2D(filteredPhoto, UV);" +
-                        "  vec4 cp1 = texture2D(filteredPhoto, UV + vec2(pixwidth * Radius, 0));" +
-                        "  vec4 cp2 = texture2D(filteredPhoto, UV - vec2(pixwidth * Radius, 0));" +
-                        "  " +
-                        "  float halfK = Sharpness / 2.0;" +
-                        "  float sK = 1.0 - Sharpness;" +
-                        "  if ( sK == 0.0 ) sK = 0.01;" +
-                        "  vec4 toRet;" +
-                        "  toRet.r = (c.r - (halfK * (cp1.r + cp2.r))) / sK;" +
-                        "  toRet.g = (c.g - (halfK * (cp1.g + cp2.g))) / sK;" +
-                        "  toRet.b = (c.b - (halfK * (cp1.b + cp2.b))) / sK;" +
-                        "  toRet.a = 1.0;" +
-                        "  gl_FragColor = toRet;" +
+                        "  float[9] kernel = float[9]" +
+                        "  (" +
+                        "    -1.0, -1.0, -1.0," +
+                        "    -1.0,  9.0, -1.0," +
+                        "    -1.0, -1.0, -1.0" +
+                        "  );" +
+                        "  float[9] matr = getmatrix(0);" +
+                        "  float[9] matg = getmatrix(1);" +
+                        "  float[9] matb = getmatrix(2);" +
+                        "  gl_FragColor = vec4(" +
+                        "  Convolve(kernel, matr)," +
+                        "  Convolve(kernel, matg)," +
+                        "  Convolve(kernel, matb)," +
+                        "  1.0" +
+                        "  );" +
                         "}";
 
         hShaderProgramSharpness = createprogram(generalreverseVS, sharpness_FS);
@@ -638,7 +666,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "    float noise;\n" +
                         "    float accentuateDarkNoise;\n" +
                         "\n" +
-                        "    x = ((uv.x  * abs(1-uv.y) ) * 50000.0);\n" +
+                        "    x = ((uv.x  * abs(1.0-uv.y) ) * 50000.0);\n" +
                         "    x = mod( x, 13.0000);\n" +
                         "    x = (x * x);\n" +
                         "    dx = mod( x, 0.0100000);\n" +
