@@ -725,8 +725,10 @@ public class FilterRenderer implements GLSurfaceView.Renderer
         GLES20.glShaderSource(shader, shaderCode);
         GLES20.glCompileShader(shader);
         ERROR = GLES20.glGetShaderInfoLog(shader);
-        if (ERROR.length() > 0) Log.e("CO2 Photo editor - ", "Exception not thrown! FilterRenderer line 688\n"+ERROR);
-        //throw(new RuntimeException(ERROR));
+        if (ERROR.length() > 0) { //Log.e("CO2 Photo editor - ", "Exception not thrown! FilterRenderer line 688\n"+ERROR);
+            Log.e("badango", ERROR);
+            throw (new RuntimeException(ERROR));
+        }
         return shader;
     }
 
@@ -864,7 +866,6 @@ public class FilterRenderer implements GLSurfaceView.Renderer
             int rad = GLES20.glGetUniformLocation(hShaderProgramSharpness, "Radius");
             int ph = GLES20.glGetUniformLocation(hShaderProgramSharpness, "pixheigth");
             int pw = GLES20.glGetUniformLocation(hShaderProgramSharpness, "pixwidth");
-            int ph = GLES20.glGetUniformLocation(hShaderProgramSharpness, "pixheigth");
             GLES20.glUniform1f(shar, PARAMS_SharpnessIntensity);
             GLES20.glUniform1f(rad, PARAMS_SharpnessRadius);
             GLES20.glUniform1f(pw, (float)(1.0f / (float)ImageWidth));
