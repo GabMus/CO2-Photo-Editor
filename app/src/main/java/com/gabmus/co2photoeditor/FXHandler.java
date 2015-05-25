@@ -207,24 +207,24 @@ public class FXHandler {
             case 4: // Tone mapping 1
                 mFsv.renderer.PARAMS_EnableToneMapping = active;
                 break;
-            case 9: //CRT
+            case 8: //CRT
                 mFsv.renderer.PARAMS_EnableCathodeRayTube = active;
                 break;
             case 6: //VHS Noise, ex Film Grain
                 mFsv.renderer.PARAMS_EnableFilmGrain = active;
                 break;
-            case 7: //Proper Film Grain
+            /*case 7: //Proper Film Grain
                 mFsv.renderer.PARAMS_EnableProperFilmGrain = active;
-                break;
-            case 8: //bloom
+                break;*/
+            case 7: //bloom
                 mFsv.renderer.PARAMS_EnableBloom = active;
                 break;
             case 5: //tonality
                 mFsv.renderer.PARAMS_EnableTonality = active;
                 break;
-            case 10: //sharpness
+            /*case 10: //sharpness
                 mFsv.renderer.PARAMS_EnableSharpness = active;
-                break;
+                break;*/
             default:
                 Log.e("CO2 Photo Editor", "enableFX: index out of range");
                 break;
@@ -279,7 +279,7 @@ public class FXHandler {
                 }
                 break;
 
-            case 9: //crt
+            case 8: //crt
                 switch (valIndex) {
                     case 1: //edit line width
                         finalValue = ((tuningValue/100f)*10)+1;
@@ -314,7 +314,7 @@ public class FXHandler {
                 }
                 break;
 
-            case 7:
+            /*case 7: //film grain
                 switch (valIndex) {
                     case 1: //Strength
                         finalValue = (tuningValue / 100f) * 4f;
@@ -332,9 +332,9 @@ public class FXHandler {
                         mFsv.renderer.PARAMS_ProperFilmGrainRandomValue=tuningValue;
                         break;
                 }
-                break;
+                break;*/
 
-            case 8: //bloom
+            case 7: //bloom
                 switch (valIndex) {
                     case 1: //threshold
                         finalValue = (tuningValue / 100f) * 1f;
@@ -375,7 +375,7 @@ public class FXHandler {
                 }
                 break;
 
-            case 10: //sharpness
+            /*case 10: //sharpness
                 switch (valIndex) {
                     case 1: //radius
                         finalValue = (tuningValue / 100f) * 4f;
@@ -386,7 +386,7 @@ public class FXHandler {
                         mFsv.renderer.PARAMS_SharpnessIntensity = finalValue;
                         break;
                 }
-                break;
+                break;*/
             //other cases
 
             default:

@@ -677,10 +677,10 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "  float dx = mod( x, 0.01 );" +
                         "  vec3 col = vec3(c.r, c.g, c.b);" +
                         "  float y = x * randomValue + randomValue;" +
-                        "  float dy = fmod(y, 0.01);" +
+                        "  float dy = mod(y, 0.01);" +
                         "  float noise = (xlat_lib_saturate( (0.100000 + (dx * 100.000)) ) + (xlat_lib_saturate( (0.100000 + (dy * 100.000)) ) * randomNoiseStrength));\n" +
-                        "  float noise = ((noise * 2.00000) - 1.00000);\n" +
-                        "  float accentuateDarkNoise = pow( (1.00000 - ((color.x  + color.y  + color.z ) / 3.00000)), accentuateDarkNoisePower);\n" +
+                        "  noise = ((noise * 2.00000) - 1.00000);\n" +
+                        "  float accentuateDarkNoise = pow( (1.00000 - ((col.x  + col.y  + col.z ) / 3.00000)), accentuateDarkNoisePower);\n" +
                         "  vec4 top =  vec4(col + col * noise * accentuateDarkNoise * filmGrainStrength, 1.0);\n" +
                         "  gl_FragColor = top;" +
                         "}" +
