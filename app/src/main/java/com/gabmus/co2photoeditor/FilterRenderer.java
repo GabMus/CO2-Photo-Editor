@@ -275,7 +275,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "  }" +
                         "  return toRet;" +
                         "}" +
-                        "" +
+                        "" +/*
                         "float Convolve(float[9] ker, float[9] mat)" +
                         "{" +
                         "  float toRet = 0.0;" +
@@ -284,7 +284,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "     toRet+=ker[i] * mat[i];" +
                         "  }" +
                         "  return clamp(toRet, 0.0, 1.0);" +
-                        "}" +
+                        "}" +*/
                         "" +
                         "void main()" +
                         "{" +
@@ -297,10 +297,21 @@ public class FilterRenderer implements GLSurfaceView.Renderer
                         "  float[9] matr = getmatrix(0);" +
                         "  float[9] matg = getmatrix(1);" +
                         "  float[9] matb = getmatrix(2);" +
+                        "  float rc = 0.0;" +
+                        "  float gc = 0.0;" +
+                        "  float bc = 0.0;" +
+                        "" +
+                        "  for (int i = 0; i < 9; i++)" +
+                        "  {" +
+                        "    rc = rc + (kernel[i] * matr[i]);" +
+                        "    gc = gc + (kernel[i] * matg[i]);" +
+                        "    bc = bc + (kernel[i] * matb[i]);" +
+                        "  }" +
+                        "" +
                         "  gl_FragColor = vec4(" +
-                        "  Convolve(kernel, matr)," +
-                        "  Convolve(kernel, matg)," +
-                        "  Convolve(kernel, matb)," +
+                        "  rc," +
+                        "  gc," +
+                        "  bc," +
                         "  1.0" +
                         "  );" +
                         "}";
@@ -871,6 +882,7 @@ public class FilterRenderer implements GLSurfaceView.Renderer
             int shar = GLES20.glGetUniformLocation(hShaderProgramSharpness, "Sharpness");
             int rad = GLES20.glGetUniformLocation(hShaderProgramSharpness, "Radius");
             int pw = GLES20.glGetUniformLocation(hShaderProgramSharpness, "pixwidth");
+            int ph = GLES20.glGetUniformLocation(hShaderProgramSharpness, "pixheigth");
             GLES20.glUniform1f(shar, PARAMS_SharpnessIntensity);
             GLES20.glUniform1f(rad, PARAMS_SharpnessRadius);
             GLES20.glUniform1f(pw, (float)(1.0f / (float)ImageWidth));
